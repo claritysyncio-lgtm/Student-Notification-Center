@@ -18,8 +18,8 @@ const fallbackTasks = [
 
 // Backend API integration to avoid CORS issues
 async function fetchFromNotion(databaseId, token) {
-  // Use claritysync.io API endpoint
-  const apiUrl = 'https://claritysync.io/api/notion';
+  // Use Vercel API endpoint for deployment
+  const apiUrl = '/api/notion';
     
   const response = await fetch(apiUrl, {
     method: 'POST',
