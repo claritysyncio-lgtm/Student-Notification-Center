@@ -105,18 +105,7 @@ export default function NotificationCenter() {
 
       <main className="nc-main">
         {overdueTasks.length > 0 && (
-          <div className="nc-section overdue">
-            <div className="nc-section-title">Overdue</div>
-            <div className="nc-section-body">
-              {overdueTasks.map(task => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  onToggleComplete={handleToggleComplete}
-                />
-              ))}
-            </div>
-          </div>
+          <Section title="Overdue" tasks={overdueTasks} onToggleComplete={handleToggleComplete} className="overdue" showCountdown={true} />
         )}
         <Section title="Due Today" tasks={dueToday} onToggleComplete={handleToggleComplete} />
         <Section title="Due Tomorrow" tasks={dueTomorrow} onToggleComplete={handleToggleComplete} />

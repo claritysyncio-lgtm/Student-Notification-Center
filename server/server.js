@@ -70,7 +70,7 @@ app.get('/api/tasks', async (_req, res) => {
         name: page.properties?.['Name']?.title?.[0]?.plain_text || 'Untitled',
         due: dueDate,
         countdown: countdown,
-        course: page.properties?.['Course']?.relation?.[0]?.id || '',
+        course: page.properties?.['Course']?.rich_text?.[0]?.plain_text || '',
         grade: page.properties?.['Worth %']?.number ?? null,
         type: page.properties?.['Type']?.select?.name || '',
         typeColor: page.properties?.['Type']?.select?.color || 'default',
