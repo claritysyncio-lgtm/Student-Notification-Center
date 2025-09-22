@@ -214,10 +214,6 @@ function WelcomeStep({ onNext, userName }) {
             </div>
           </div>
         </div>
-        
-        <button className="next-button" onClick={onNext}>
-          Let's Get Started! →
-        </button>
       </div>
     </div>
   );
