@@ -142,13 +142,15 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
                 </div>
 
                 <div className="config-field">
-                  <label>Course Database ID (Optional)</label>
+                  <label>Course Database ID *</label>
                   <input
                     type="text"
                     value={config.notion.courseDatabaseId}
                     onChange={(e) => handleConfigChange('notion.courseDatabaseId', e.target.value)}
                     placeholder="Enter course database ID for course names"
+                    required
                   />
+                  <small>Required: Find this in your Notion course database URL</small>
                 </div>
 
                 <button 

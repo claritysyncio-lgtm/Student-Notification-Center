@@ -1475,12 +1475,20 @@ body{
   color: white;
 }
 
-.next-button:hover, .connect-button:hover, .copy-button:hover {
+.next-button:hover:not(:disabled), .connect-button:hover, .copy-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(29, 202, 242, 0.4);
   background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
   background-size: 200% 200%;
   animation: buttonGradientShift 3s ease infinite;
+}
+
+.next-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
 .back-button, .restart-button {

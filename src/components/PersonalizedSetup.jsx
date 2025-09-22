@@ -440,7 +440,17 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
               </div>
             </div>
             
-            <button className="next-button" onClick={onNext}>
+            <button 
+              className="next-button" 
+              onClick={() => {
+                if (!config.notion.databaseId || !config.notion.courseDatabaseId) {
+                  alert('Please fill in both Database ID and Course Database ID before continuing.');
+                  return;
+                }
+                onNext();
+              }}
+              disabled={!config.notion.databaseId || !config.notion.courseDatabaseId}
+            >
               Continue to Customization →
             </button>
           </div>
