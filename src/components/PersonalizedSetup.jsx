@@ -228,11 +228,11 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 className="connect-button"
                 onClick={() => {
                   console.log('NotionSetupStep Connect button clicked!');
-                  // For now, just simulate a connection - user will need to add real token
+                  // Just set the connection state, don't set fake data
                   handleNotionConnect({
-                    token: 'test_token_123',
-                    databaseId: 'test_db_123',
-                    workspaceName: 'Test Workspace'
+                    token: '',
+                    databaseId: '',
+                    workspaceName: 'Your Workspace'
                   });
                 }}
               >
@@ -280,6 +280,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 </label>
                 <input
                   type="password"
+                  value={config.notion.token || ''}
                   placeholder="Enter your Notion integration token (starts with 'secret_')"
                   onChange={(e) => {
                     const token = e.target.value;
