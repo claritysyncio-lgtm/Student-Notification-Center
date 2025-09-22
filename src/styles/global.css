@@ -132,8 +132,8 @@ body{
   height: 32px;
   flex-shrink: 0;
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 8px;
+  right: 8px;
 }
 
 .refresh-button:hover {
