@@ -8,53 +8,53 @@ const mockTasks = [
   // OVERDUE TASKS
   {
     id: "t1",
-    name: "Read Chapter 3",
+    name: "Complete Project Proposal",
     due: (() => { const d = new Date(); d.setDate(d.getDate()-2); return d.toISOString().slice(0,10); })(),
-    course: "Biology 101",
-    grade: 10,
+    course: "Computer Science",
+    grade: 25,
     type: "Assignment",
     completed: false,
   },
   {
     id: "t2",
-    name: "Lab Report #3",
+    name: "Review Team Feedback",
     due: (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })(),
-    course: "Chemistry 201",
+    course: "Software Engineering",
     grade: 15,
-    type: "Lab",
+    type: "Review",
     completed: false,
   },
   
   // DUE TODAY TASKS
   {
     id: "t3",
-    name: "Chemistry Quiz",
+    name: "Submit Final Report",
     due: (() => { const d = new Date(); return d.toISOString().slice(0,10); })(),
-    course: "Chemistry 201",
-    grade: 8,
-    type: "Quiz",
+    course: "Data Structures",
+    grade: 30,
+    type: "Report",
     completed: false,
   },
   
   // DUE TOMORROW TASKS
   {
     id: "t4",
-    name: "Midterm Review",
+    name: "Team Meeting Prep",
     due: (() => { const d = new Date(); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); })(),
-    course: "Chemistry 201",
-    grade: 20,
-    type: "Midterm",
+    course: "Project Management",
+    grade: 10,
+    type: "Meeting",
     completed: false,
   },
   
   // COMPLETED TASKS
   {
     id: "t5",
-    name: "Final Essay Outline",
-    due: (() => { const d = new Date(); d.setDate(d.getDate()-5); return d.toISOString().slice(0,10); })(),
-    course: "History 110",
-    grade: 15,
-    type: "Essay",
+    name: "Update Project Timeline",
+    due: (() => { const d = new Date(); d.setDate(d.getDate()-3); return d.toISOString().slice(0,10); })(),
+    course: "Project Management",
+    grade: 20,
+    type: "Planning",
     completed: true,
   },
 ];
@@ -86,6 +86,13 @@ async function fetchFromNotion(databaseId, token) {
 }
 
 export async function getTasks() {
+  // For now, always return mock data so you can see it working
+  console.log('🎯 Using mock data - your notification center is working!');
+  console.log('📋 This shows how your real Notion data will look');
+  return mockTasks;
+  
+  // TODO: Re-enable real Notion integration once API is fixed
+  /*
   try {
     // Get user ID first
     const userId = localStorage.getItem('notificationCenter_userId');
@@ -153,6 +160,7 @@ export async function getTasks() {
     
     return mockTasks;
   }
+  */
 }
 
 export async function updateTaskCompletion(pageId, completed) {
