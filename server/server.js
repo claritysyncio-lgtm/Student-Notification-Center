@@ -39,6 +39,39 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
 });
 
+// Test Course database
+app.get('/api/test-courses', async (_req, res) => {
+  try {
+    console.log('Testing Course database access...');
+    console.log('Course Database ID:', COURSE_DATABASE_ID);
+    console.log('Course Token:', COURSE_NOTION_TOKEN ? 'Present' : 'Missing');
+    
+    const courseNotion = new Client({ auth: COURSE_NOTION_TOKEN });
+    const courseResponse = await courseNotion.databases.query({ database_id: COURSE_DATABASE_ID });
+    
+    console.log('Course database response:', JSON.stringify(courseResponse, null, 2));
+    
+    res.json({
+      success: true,
+      courseCount: courseResponse.results.length,
+      courses: courseResponse.results.map(course => ({
+        id: course.id,
+        properties: Object.keys(course.properties || {}),
+        name: course.properties?.Name?.title?.[0]?.plain_text || 'No Name',
+        title: course.properties?.Title?.title?.[0]?.plain_text || 'No Title'
+      }))
+    });
+  } catch (err) {
+    console.log('Error testing Course database:', err.message);
+    res.json({ 
+      success: false, 
+      error: err.message,
+      courseDatabaseId: COURSE_DATABASE_ID,
+      hasToken: !!COURSE_NOTION_TOKEN
+    });
+  }
+});
+
 // Fetch tasks
 app.get('/api/tasks', async (_req, res) => {
   try {
