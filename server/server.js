@@ -71,9 +71,12 @@ app.get('/api/tasks', async (_req, res) => {
       if (courseRelation) {
         try {
           const coursePage = await notion.pages.retrieve({ page_id: courseRelation.id });
+          console.log('Course page properties:', Object.keys(coursePage.properties || {}));
           courseName = coursePage.properties?.Name?.title?.[0]?.plain_text || 
                       coursePage.properties?.Title?.title?.[0]?.plain_text || 
-                      coursePage.properties?.Course?.title?.[0]?.plain_text || '';
+                      coursePage.properties?.Course?.title?.[0]?.plain_text ||
+                      coursePage.properties?.Course?.rich_text?.[0]?.plain_text || '';
+          console.log('Extracted course name:', courseName);
         } catch (err) {
           console.log('Error fetching course:', err.message);
           courseName = '';
