@@ -48,19 +48,32 @@ app.get('/api/tasks', async (_req, res) => {
     const COURSE_DATABASE_ID = '273a5ebae7ac803cb153d163c9858720';
     let courseLookup = {};
     try {
+      console.log('Fetching courses from database:', COURSE_DATABASE_ID);
       const courseResponse = await notion.databases.query({ database_id: COURSE_DATABASE_ID });
+      console.log('Course response:', courseResponse);
+      console.log('Number of courses found:', courseResponse.results.length);
+      
       courseLookup = courseResponse.results.reduce((acc, course) => {
+        console.log('Processing course:', course.id);
+        console.log('Course properties:', Object.keys(course.properties || {}));
+        console.log('Course Name property:', course.properties?.Name);
+        console.log('Course Title property:', course.properties?.Title);
+        console.log('Course Course property:', course.properties?.Course);
+        
         const courseName = course.properties?.Name?.title?.[0]?.plain_text || 
                           course.properties?.Title?.title?.[0]?.plain_text || 
                           course.properties?.Course?.title?.[0]?.plain_text || '';
+        
+        console.log('Extracted course name:', courseName);
         if (courseName) {
           acc[course.id] = courseName;
         }
         return acc;
       }, {});
-      console.log('Course lookup table:', courseLookup);
+      console.log('Final course lookup table:', courseLookup);
     } catch (err) {
       console.log('Error fetching courses:', err.message);
+      console.log('Error details:', err);
     }
     
     const response = await notion.databases.query({ database_id: DATABASE_ID });
