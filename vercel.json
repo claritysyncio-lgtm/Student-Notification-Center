@@ -22,9 +22,5 @@
       "src": "/(.*)",
       "dest": "/dist/$1"
     }
-  ],
-  "env": {
-    "NOTION_TOKEN": "@notion_token",
-    "NOTION_DATABASE_ID": "@notion_database_id"
-  }
+  ]
 }

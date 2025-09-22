@@ -24,7 +24,13 @@ import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({ path: join(__dirname, '.env') });
+
+// Try to load .env file if it exists (for local development)
+try {
+  dotenv.config({ path: join(__dirname, '.env') });
+} catch (err) {
+  // .env file doesn't exist, use environment variables from Vercel
+}
 
 const NOTION_TOKEN = process.env.NOTION_TOKEN || process.env.VITE_NOTION_TOKEN;
 const DATABASE_ID = process.env.NOTION_DATABASE_ID || process.env.VITE_NOTION_DATABASE_ID;
@@ -40,6 +46,19 @@ if (!NOTION_TOKEN || !DATABASE_ID) {
 
 const notion = new Client({ auth: NOTION_TOKEN });
 const app = express();
+
+// Enable CORS for Notion embeds
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 
 // Health
