@@ -219,8 +219,8 @@ function CustomizeStep({ config, onUpdate, onNext }) {
         <p>Make it yours! Choose colors, layout, and preferences.</p>
         
         <ConfigPanel 
-          onConfigChange={(updates) => onUpdate({ personalization: updates })}
-          initialConfig={config.personalization || {}}
+          onConfigChange={(updates) => onUpdate(updates)}
+          initialConfig={config}
         />
         
         <button className="next-button" onClick={onNext}>

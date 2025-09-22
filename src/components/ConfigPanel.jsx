@@ -3,7 +3,13 @@ import { defaultConfig, validateConfig, mergeConfig } from '../config/widgetConf
 import NotionOAuth from './NotionOAuth';
 
 export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
-  const [config, setConfig] = useState(mergeConfig(initialConfig));
+  // Handle both flat config and user config structures
+  const flatConfig = initialConfig.personalization ? {
+    ...initialConfig.personalization,
+    notion: initialConfig.notion || {}
+  } : initialConfig;
+  
+  const [config, setConfig] = useState(mergeConfig(flatConfig));
   const [errors, setErrors] = useState([]);
   const [activeTab, setActiveTab] = useState('notion');
 
@@ -29,7 +35,12 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
     setErrors(validation.errors);
     
     if (validation.isValid) {
-      onConfigChange(newConfig);
+      // If we're dealing with user config structure, wrap in personalization
+      if (initialConfig.personalization) {
+        onConfigChange({ personalization: newConfig });
+      } else {
+        onConfigChange(newConfig);
+      }
     }
   };
 
@@ -89,6 +100,18 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
                   console.log('NotionOAuth onSuccess called with:', data);
                   handleConfigChange('notion.token', data.token);
                   handleConfigChange('notion.databaseId', data.databaseId);
+                  
+                  // Also notify parent about notion updates
+                  if (initialConfig.personalization) {
+                    onConfigChange({ 
+                      personalization: config,
+                      notion: {
+                        ...config.notion,
+                        token: data.token,
+                        databaseId: data.databaseId
+                      }
+                    });
+                  }
                 }}
                 onError={(error) => {
                   console.error('OAuth error:', error);
