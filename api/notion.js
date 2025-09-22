@@ -47,22 +47,7 @@ export default async function handler(req, res) {
     }
 
     const data = await notionResponse.json();
-
-    // Transform Notion data to our task format
-    const tasks = data.results.map(page => {
-      const properties = page.properties;
-      return {
-        id: page.id,
-        name: properties.Name?.title?.[0]?.text?.content || 'Untitled Task',
-        due: properties.Due?.date?.start || null,
-        course: properties.Course?.select?.name || 'No Course',
-        grade: properties.Grade?.number || 0,
-        type: properties.Type?.select?.name || 'Task',
-        completed: properties.Completed?.checkbox || false
-      };
-    });
-
-    res.status(200).json(tasks);
+    res.status(200).json(data);
 
   } catch (error) {
     console.error('API Error:', error);
