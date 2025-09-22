@@ -44,7 +44,7 @@ app.get('/api/tasks', async (_req, res) => {
       return res.status(500).json({ error: 'Server missing Notion credentials.' });
     }
     const response = await notion.databases.query({ database_id: DATABASE_ID });
-    const tasks = response.results.map((page) => {
+    const tasks = await Promise.all(response.results.map(async (page) => {
       const dueDate = page.properties?.['Due']?.date?.start || null;
       let countdown = null;
 
@@ -65,26 +65,33 @@ app.get('/api/tasks', async (_req, res) => {
         }
       }
 
-      // Debug course property
-      const courseProperty = page.properties?.['Course'];
-      console.log('Course property:', courseProperty);
-      console.log('Course rich_text:', courseProperty?.rich_text);
-      console.log('Course title:', courseProperty?.title);
+      // Get course name from relation
+      let courseName = '';
+      const courseRelation = page.properties?.['Course']?.relation?.[0];
+      if (courseRelation) {
+        try {
+          const coursePage = await notion.pages.retrieve({ page_id: courseRelation.id });
+          courseName = coursePage.properties?.Name?.title?.[0]?.plain_text || 
+                      coursePage.properties?.Title?.title?.[0]?.plain_text || 
+                      coursePage.properties?.Course?.title?.[0]?.plain_text || '';
+        } catch (err) {
+          console.log('Error fetching course:', err.message);
+          courseName = '';
+        }
+      }
 
       return {
         id: page.id,
         name: page.properties?.['Name']?.title?.[0]?.plain_text || 'Untitled',
         due: dueDate,
         countdown: countdown,
-        course: page.properties?.['Course']?.rich_text?.[0]?.plain_text || 
-                page.properties?.['Course']?.title?.[0]?.plain_text || 
-                page.properties?.['Course']?.select?.name || '',
+        course: courseName,
         grade: page.properties?.['Worth %']?.number ?? null,
         type: page.properties?.['Type']?.select?.name || '',
         typeColor: page.properties?.['Type']?.select?.color || 'default',
         completed: page.properties?.['Done']?.checkbox || page.properties?.['Status']?.select?.name === 'Completed' || false,
       };
-    });
+    }));
     res.json(tasks);
   } catch (err) {
     console.error('[GET /api/tasks] Error:', err);
