@@ -13,6 +13,7 @@ export default function TaskItem({ task, onToggleComplete, showCountdown = false
         </button>
         <div className="task-meta">
           <div className="task-name">{task.name}</div>
+          <div className="course">{task.course}</div>
           <div className="task-sub">
             <span className="due-label">
               Due: <strong>{task.due ? new Date(task.due).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : '—'}</strong>
@@ -20,7 +21,6 @@ export default function TaskItem({ task, onToggleComplete, showCountdown = false
                 <span className="countdown"> • {task.countdown}</span>
               )}
             </span>
-            <div className="course">{task.course}</div>
           </div>
         </div>
       </div>
