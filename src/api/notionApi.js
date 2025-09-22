@@ -108,13 +108,8 @@ export async function getTasks() {
       return mockTasks;
     }
     
-    // Check if token looks like a real Notion token
-    if (!notionConfig.token.startsWith('secret_') && notionConfig.token !== 'test_token_123') {
-      console.warn('Token does not look like a real Notion token, using mock data', {
-        token: notionConfig.token
-      });
-      return mockTasks;
-    }
+    // Skip token validation for testing
+    console.log('Using token for API call:', notionConfig.token);
     
     console.log('Fetching real data from Notion...', {
       databaseId: notionConfig.databaseId,
