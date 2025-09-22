@@ -250,7 +250,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
             }}>
               <h3 style={{ margin: '0 0 15px 0', color: '#166534', fontSize: '16px' }}>🗄️ Database Setup</h3>
               <p style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '14px' }}>
-                Now we need to connect to your specific task database. Here's how to find your Database ID:
+                Now we need to connect to your specific task database. Simply paste your Notion database URL below and we'll handle the rest!
               </p>
               
               <div style={{ 
@@ -261,33 +261,73 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 margin: '15px 0',
                 fontSize: '13px'
               }}>
-                <strong>📝 How to find your Database ID:</strong>
-                <ol style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
-                  <li>Open your Notion database in a web browser</li>
-                  <li>Look at the URL - it will look like: <code>notion.so/your-workspace/32-character-id</code></li>
-                  <li>Copy the 32-character ID (the part after the last slash)</li>
-                  <li>Paste it in the field below</li>
-                </ol>
+                <strong>📝 Easy way - just paste your Notion URL:</strong>
+                <p style={{ margin: '8px 0 0 0' }}>
+                  Copy the URL from your Notion database and paste it below. We'll automatically extract the Database ID for you!
+                </p>
               </div>
               
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#374151' }}>
-                Database ID:
-              </label>
-              <input
-                type="text"
-                value={config.notion.databaseId}
-                onChange={(e) => onUpdate({
-                  notion: { ...config.notion, databaseId: e.target.value }
-                })}
-                placeholder="Enter your 32-character Notion database ID"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px'
-                }}
-              />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#374151' }}>
+                  Notion Database URL:
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://notion.so/your-workspace/32-character-id"
+                  onChange={(e) => {
+                    const url = e.target.value;
+                    // Extract database ID from Notion URL
+                    const match = url.match(/notion\.so\/[^\/]+\/([a-f0-9]{32})/);
+                    if (match) {
+                      const databaseId = match[1];
+                      onUpdate({
+                        notion: { ...config.notion, databaseId: databaseId }
+                      });
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#374151' }}>
+                  Database ID (auto-detected):
+                </label>
+                <input
+                  type="text"
+                  value={config.notion.databaseId}
+                  onChange={(e) => onUpdate({
+                    notion: { ...config.notion, databaseId: e.target.value }
+                  })}
+                  placeholder="Will be filled automatically when you paste the URL above"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    backgroundColor: config.notion.databaseId ? '#f0fdf4' : '#f9fafb'
+                  }}
+                />
+                {config.notion.databaseId && (
+                  <div style={{ 
+                    color: '#059669', 
+                    fontSize: '12px', 
+                    marginTop: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    ✅ Database ID detected successfully!
+                  </div>
+                )}
+              </div>
             </div>
             
             <button className="next-button" onClick={onNext}>
