@@ -71,68 +71,61 @@ export default function NotificationCenter() {
 
   return (
     <div className="nc-root">
-      <div className="notion-callout">
-        <div className="callout-icon">🔔</div>
-        <div className="callout-content">
-          <div className="callout-title">Notification Center</div>
-          
-          <header className="nc-header">
-            <div className="nc-filters">
-              <Dropdown label="All Courses" options={["All Courses", ...courses]} value={courseFilter} onChange={setCourseFilter} />
-              <Dropdown label="All Types" options={["All Types", ...types]} value={typeFilter} onChange={setTypeFilter} />
-            </div>
-            <button className="refresh-button" onClick={() => window.location.reload()} title="Refresh tasks">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                <path d="M21 3v5h-5"/>
-                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                <path d="M3 21v-5h5"/>
-              </svg>
-            </button>
-          </header>
-
-          {loading && (
-            <div className="nc-loading">Loading tasks from Notion...</div>
-          )}
-
-          {error && (
-            <div className="nc-error">
-              <h3>Error Loading Tasks</h3>
-              <p>There was an issue fetching tasks from Notion. This is often a CORS issue or a problem with your API token or database permissions.</p>
-              <pre>
-                {error.message}
-              </pre>
-            </div>
-          )}
-
-          <main className="nc-main">
-            {overdueTasks.length > 0 && (
-              <div className="nc-section overdue">
-                <div className="nc-section-title">Overdue</div>
-                <div className="nc-section-body">
-                  {overdueTasks.map(task => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      onToggleComplete={handleToggleComplete}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            <Section title="Due Today" tasks={dueToday} onToggleComplete={handleToggleComplete} />
-            <Section title="Due Tomorrow" tasks={dueTomorrow} onToggleComplete={handleToggleComplete} />
-            <Section title="Due This Week" tasks={dueWeek} onToggleComplete={handleToggleComplete} showCountdown={true} />
-            <CompletedSection
-              title="Completed"
-              tasks={completed}
-              open={completedOpen}
-              onToggle={() => setCompletedOpen(v => !v)}
-              onToggleComplete={handleToggleComplete}
-            />
-          </main>
+      <header className="nc-header">
+        <div className="nc-filters">
+          <Dropdown label="All Courses" options={["All Courses", ...courses]} value={courseFilter} onChange={setCourseFilter} />
+          <Dropdown label="All Types" options={["All Types", ...types]} value={typeFilter} onChange={setTypeFilter} />
         </div>
-      </div>
+        <button className="refresh-button" onClick={() => window.location.reload()} title="Refresh tasks">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M3 21v-5h5"/>
+          </svg>
+        </button>
+      </header>
+
+      {loading && (
+        <div className="nc-loading">Loading tasks from Notion...</div>
+      )}
+
+      {error && (
+        <div className="nc-error">
+          <h3>Error Loading Tasks</h3>
+          <p>There was an issue fetching tasks from Notion. This is often a CORS issue or a problem with your API token or database permissions.</p>
+          <pre>
+            {error.message}
+          </pre>
+        </div>
+      )}
+
+      <main className="nc-main">
+        {overdueTasks.length > 0 && (
+          <div className="nc-section overdue">
+            <div className="nc-section-title">Overdue</div>
+            <div className="nc-section-body">
+              {overdueTasks.map(task => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onToggleComplete={handleToggleComplete}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        <Section title="Due Today" tasks={dueToday} onToggleComplete={handleToggleComplete} />
+        <Section title="Due Tomorrow" tasks={dueTomorrow} onToggleComplete={handleToggleComplete} />
+        <Section title="Due This Week" tasks={dueWeek} onToggleComplete={handleToggleComplete} showCountdown={true} />
+        <CompletedSection
+          title="Completed"
+          tasks={completed}
+          open={completedOpen}
+          onToggle={() => setCompletedOpen(v => !v)}
+          onToggleComplete={handleToggleComplete}
+        />
+      </main>
     </div>
   );
 }
