@@ -65,18 +65,37 @@ app.get('/api/tasks', async (_req, res) => {
         }
       }
 
-      // Get course name from relation
+      // Get course name from relation - simplified approach
       let courseName = '';
       const courseRelation = page.properties?.['Course']?.relation?.[0];
       if (courseRelation) {
         try {
           const coursePage = await notion.pages.retrieve({ page_id: courseRelation.id });
+          console.log('Course page:', coursePage);
           console.log('Course page properties:', Object.keys(coursePage.properties || {}));
-          courseName = coursePage.properties?.Name?.title?.[0]?.plain_text || 
-                      coursePage.properties?.Title?.title?.[0]?.plain_text || 
-                      coursePage.properties?.Course?.title?.[0]?.plain_text ||
-                      coursePage.properties?.Course?.rich_text?.[0]?.plain_text || '';
-          console.log('Extracted course name:', courseName);
+          
+          // Try to find the title property
+          for (const [key, value] of Object.entries(coursePage.properties || {})) {
+            if (value.type === 'title' && value.title?.[0]?.plain_text) {
+              courseName = value.title[0].plain_text;
+              console.log('Found course name in property:', key, '=', courseName);
+              break;
+            }
+          }
+          
+          if (!courseName) {
+            console.log('No title found, trying other properties...');
+            // Fallback to any text property
+            for (const [key, value] of Object.entries(coursePage.properties || {})) {
+              if (value.type === 'rich_text' && value.rich_text?.[0]?.plain_text) {
+                courseName = value.rich_text[0].plain_text;
+                console.log('Found course name in rich_text property:', key, '=', courseName);
+                break;
+              }
+            }
+          }
+          
+          console.log('Final course name:', courseName);
         } catch (err) {
           console.log('Error fetching course:', err.message);
           courseName = '';
