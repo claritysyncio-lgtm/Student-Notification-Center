@@ -78,8 +78,8 @@ body{
 }
 
 .nc-callout {
-  background: #ffffff;
-  border: 1px solid #e1e5e9;
+  background: var(--nc-background, #ffffff);
+  border: 1px solid var(--nc-border, #e1e5e9);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -90,7 +90,7 @@ body{
 .nc-callout-title {
   font-size: 16px;
   font-weight: 600;
-  color: #37352f;
+  color: var(--nc-text, #37352f);
   margin-bottom: -4px;
   text-align: center;
 }
@@ -328,4 +328,632 @@ body{
   color: #7f1d1d;
   margin-top: 12px;
   font-size: 13px;
+}
+
+/* Configuration Panel Styles */
+.config-panel {
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.config-header {
+  margin-bottom: 20px;
+}
+
+.config-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.config-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.config-tabs button {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.config-tabs button:hover {
+  color: #374151;
+}
+
+.config-tabs button.active {
+  color: #111827;
+  border-bottom-color: #374151;
+}
+
+.config-errors {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.config-errors h4 {
+  margin: 0 0 8px 0;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.config-errors ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.config-section {
+  margin-bottom: 20px;
+}
+
+.config-section h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.config-section h5 {
+  margin: 15px 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.config-field {
+  margin-bottom: 15px;
+}
+
+.config-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.config-field input[type="text"],
+.config-field input[type="password"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.config-field input[type="text"]:focus,
+.config-field input[type="password"]:focus {
+  outline: none;
+  border-color: #374151;
+  box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+}
+
+.config-field input[type="color"] {
+  width: 50px;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.config-field input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.config-field small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.config-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.reset-button,
+.export-button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover,
+.export-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.export-button {
+  background: #374151;
+  color: #ffffff;
+  border-color: #374151;
+}
+
+.export-button:hover {
+  background: #1f2937;
+  border-color: #1f2937;
+}
+
+/* Setup Page Styles */
+.setup-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.setup-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.setup-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.setup-header p {
+  margin: 0;
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.setup-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  flex: 1;
+  padding: 0 10px;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #374151;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.step-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.setup-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.preview-button,
+.complete-button,
+.edit-config-button,
+.back-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 8px;
+}
+
+.preview-button,
+.complete-button {
+  background: #374151;
+  color: white;
+}
+
+.preview-button:hover,
+.complete-button:hover {
+  background: #1f2937;
+}
+
+.preview-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.edit-config-button,
+.back-button {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.edit-config-button:hover,
+.back-button:hover {
+  background: #e5e7eb;
+}
+
+.setup-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.setup-complete-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+.setup-complete-content h1 {
+  font-size: 48px;
+  margin: 0 0 20px 0;
+  color: #111827;
+}
+
+.setup-complete-content p {
+  font-size: 20px;
+  color: #6b7280;
+  margin: 0 0 30px 0;
+}
+
+.embed-instructions {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.embed-instructions h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #111827;
+}
+
+.embed-instructions ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.embed-instructions li {
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.embed-instructions code {
+  background: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 14px;
+}
+
+.preview-mode {
+  padding: 20px;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #111827;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.preview-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f9fafb;
+}
+
+@media (max-width: 768px) {
+  .setup-steps {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .step {
+    padding: 0;
+  }
+  
+  .preview-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .preview-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* OAuth Callback Styles */
+.auth-callback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.auth-loading,
+.auth-success,
+.auth-error {
+  text-align: center;
+  max-width: 400px;
+  padding: 40px;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #374151;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.success-icon,
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.auth-loading h2,
+.auth-success h2,
+.auth-error h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: #111827;
+}
+
+.auth-loading p,
+.auth-success p,
+.auth-error p {
+  margin: 0 0 10px 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.retry-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #374151;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retry-button:hover {
+  background: #1f2937;
+}
+
+/* Notion OAuth Styles */
+.notion-oauth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 20px;
+}
+
+.oauth-card {
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.oauth-header {
+  margin-bottom: 30px;
+}
+
+.notion-logo {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.oauth-header h3 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: #111827;
+  font-weight: 600;
+}
+
+.oauth-header p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.connect-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #000000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 30px;
+}
+
+.connect-button:hover:not(:disabled) {
+  background: #333333;
+  transform: translateY(-1px);
+}
+
+.connect-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff40;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.oauth-info {
+  text-align: left;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.oauth-info p {
+  margin: 0 0 15px 0;
+  color: #374151;
+  font-weight: 600;
+}
+
+.oauth-info ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6b7280;
+}
+
+.oauth-info li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* OAuth Success Styles */
+.oauth-success {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.success-icon {
+  font-size: 24px;
+  color: #059669;
+}
+
+.success-message h4 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+}
+
+.success-message p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.disconnect-button {
+  padding: 8px 16px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.disconnect-button:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
 }
