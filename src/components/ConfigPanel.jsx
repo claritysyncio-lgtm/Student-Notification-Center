@@ -197,7 +197,38 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
                 </div>
 
                 <div className="config-field">
-                  <label>Course Database URL:</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    Course Database URL:
+                    <div className="info-icon-container">
+                      <div className="info-icon">
+                        i
+                      </div>
+                      <div className="info-tooltip">
+                        <div style={{ fontWeight: '600', marginBottom: '8px' }}>How to find your Notion course database URL:</div>
+                        <ol style={{ margin: '0', paddingLeft: '16px', lineHeight: '1.5' }}>
+                          <li>Open your Notion course database in a web browser</li>
+                          <li>Look for the database name at the top</li>
+                          <li>Hover over the database name and click the <strong>3 dots "..."</strong> menu</li>
+                          <li>Click <strong>"Copy link to view"</strong></li>
+                          <li>Paste the copied link in the field above</li>
+                        </ol>
+                        <div style={{ marginTop: '8px', fontSize: '11px', color: '#9ca3af', fontStyle: 'italic' }}>
+                          The link should look like: <code style={{ backgroundColor: '#374151', padding: '2px 4px', borderRadius: '3px' }}>notion.so/workspace/32-char-id</code> or <code style={{ backgroundColor: '#374151', padding: '2px 4px', borderRadius: '3px' }}>notion.site/workspace/32-char-id</code>
+                        </div>
+                        <div style={{ 
+                          position: 'absolute', 
+                          top: '100%', 
+                          left: '50%', 
+                          transform: 'translateX(-50%)', 
+                          width: '0', 
+                          height: '0', 
+                          borderLeft: '6px solid transparent', 
+                          borderRight: '6px solid transparent', 
+                          borderTop: '6px solid #1f2937' 
+                        }}></div>
+                      </div>
+                    </div>
+                  </label>
                   <input
                     type="url"
                     placeholder="https://notion.so/your-workspace/32-character-id or https://notion.site/your-workspace/32-character-id"

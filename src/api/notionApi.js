@@ -3,68 +3,25 @@
 
 const API_BASE = "/api"; // Backend API endpoint
 
-// Mock data for demonstration purposes
-const mockTasks = [
-  // OVERDUE TASKS
+// Fallback data when Notion API is not available
+const fallbackTasks = [
   {
-    id: "t1",
-    name: "Complete Project Proposal",
-    due: (() => { const d = new Date(); d.setDate(d.getDate()-2); return d.toISOString().slice(0,10); })(),
-    course: "Computer Science",
-    grade: 25,
-    type: "Assignment",
+    id: "no-data",
+    name: "No tasks found",
+    due: null,
+    course: "Setup Required",
+    grade: 0,
+    type: "Info",
     completed: false,
-  },
-  {
-    id: "t2",
-    name: "Review Team Feedback",
-    due: (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })(),
-    course: "Software Engineering",
-    grade: 15,
-    type: "Review",
-    completed: false,
-  },
-  
-  // DUE TODAY TASKS
-  {
-    id: "t3",
-    name: "Submit Final Report",
-    due: (() => { const d = new Date(); return d.toISOString().slice(0,10); })(),
-    course: "Data Structures",
-    grade: 30,
-    type: "Report",
-    completed: false,
-  },
-  
-  // DUE TOMORROW TASKS
-  {
-    id: "t4",
-    name: "Team Meeting Prep",
-    due: (() => { const d = new Date(); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); })(),
-    course: "Project Management",
-    grade: 10,
-    type: "Meeting",
-    completed: false,
-  },
-  
-  // COMPLETED TASKS
-  {
-    id: "t5",
-    name: "Update Project Timeline",
-    due: (() => { const d = new Date(); d.setDate(d.getDate()-3); return d.toISOString().slice(0,10); })(),
-    course: "Project Management",
-    grade: 20,
-    type: "Planning",
-    completed: true,
-  },
+  }
 ];
 
 // Backend API integration to avoid CORS issues
 async function fetchFromNotion(databaseId, token) {
-  // Use Vercel API even in development
+  // Use local proxy in development, direct API in production
   const apiUrl = import.meta.env.DEV 
-    ? 'https://notification-center-for-customers.vercel.app/api/notion'
-    : '/api/notion';
+    ? '/api/notion'
+    : 'https://notification-center-for-customers.vercel.app/api/notion';
     
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -86,36 +43,31 @@ async function fetchFromNotion(databaseId, token) {
 }
 
 export async function getTasks() {
-  // For now, always return mock data so you can see it working
-  console.log('🎯 Using mock data - your notification center is working!');
-  console.log('📋 This shows how your real Notion data will look');
-  return mockTasks;
-  
-  // TODO: Re-enable real Notion integration once API is fixed
-  /*
   try {
     // Get user ID first
     const userId = localStorage.getItem('notificationCenter_userId');
     if (!userId) {
-      console.warn('No user ID found, using mock data');
-      return mockTasks;
+      console.warn('No user ID found, using fallback data');
+      return fallbackTasks;
     }
     
     // Get user config from localStorage using the correct key
     const userConfig = JSON.parse(localStorage.getItem(`notificationCenter_${userId}`) || '{}');
     const notionConfig = userConfig.notion || {};
     
+    console.log('🔍 User config from localStorage:', userConfig);
+    console.log('🔍 Notion config:', notionConfig);
+    
     // Check if we have the required database IDs and token
     if (!notionConfig.databaseId || !notionConfig.token) {
-      console.warn('No Notion database ID or token found, using mock data', {
+      console.warn('No Notion database ID or token found, using fallback data', {
         databaseId: notionConfig.databaseId,
         hasToken: !!notionConfig.token,
         tokenValue: notionConfig.token
       });
-      return mockTasks;
+      return fallbackTasks;
     }
     
-    // Skip token validation for testing
     console.log('🔑 Using token for API call:', notionConfig.token);
     console.log('📊 Database ID:', notionConfig.databaseId);
     console.log('🚀 About to fetch from Notion API...');
@@ -142,7 +94,7 @@ export async function getTasks() {
       };
     });
     
-    console.log('Fetched tasks from Notion:', tasks);
+    console.log('✅ Successfully fetched tasks from Notion:', tasks);
     return tasks;
     
   } catch (err) {
@@ -153,14 +105,13 @@ export async function getTasks() {
     if (err.message.includes('Failed to fetch') || err.message.includes('API error')) {
       console.log('🚫 API Error: Unable to connect to backend API.');
       console.log('💡 This might be a deployment issue or the API endpoint is not available.');
-      console.log('📋 Showing demo data instead to demonstrate the functionality.');
+      console.log('📋 Please check your Notion integration and try again.');
     } else {
-      console.log('Using mock data instead');
+      console.log('Using fallback data instead');
     }
     
-    return mockTasks;
+    return fallbackTasks;
   }
-  */
 }
 
 export async function updateTaskCompletion(pageId, completed) {
@@ -178,12 +129,7 @@ export async function updateTaskCompletion(pageId, completed) {
     return await res.json().catch(() => ({}));
   } catch (err) {
     // For demo purposes, just log the update
-    console.warn("Update failed (using mock data):", err.message);
-    
-    // Update mock data locally
-    const taskIndex = mockTasks.findIndex(task => task.id === pageId);
-    if (taskIndex !== -1) {
-      mockTasks[taskIndex].completed = completed;
-    }
+    console.warn("Update failed:", err.message);
+    console.log("Task completion updates require a valid Notion integration.");
   }
 }

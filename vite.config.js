@@ -6,6 +6,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'https://notification-center-for-customers.vercel.app',
+        changeOrigin: true,
+        secure: true,
+      }
+    }
   },
   build: {
     outDir: 'dist',
