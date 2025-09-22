@@ -44,15 +44,39 @@ app.get('/api/tasks', async (_req, res) => {
       return res.status(500).json({ error: 'Server missing Notion credentials.' });
     }
     const response = await notion.databases.query({ database_id: DATABASE_ID });
-    const tasks = response.results.map((page) => ({
-      id: page.id,
-      name: page.properties?.Name?.title?.[0]?.plain_text || 'Untitled',
-      due: page.properties?.Due?.date?.start || null,
-      course: page.properties?.Course?.rich_text?.[0]?.plain_text || '',
-      grade: page.properties?.Grade?.number ?? null,
-      type: page.properties?.Type?.select?.name || '',
-      completed: page.properties?.Completed?.checkbox || false,
-    }));
+    const tasks = response.results.map((page) => {
+      const dueDate = page.properties?.['Due']?.date?.start || null;
+      let countdown = null;
+
+      if (dueDate) {
+        const today = new Date();
+        const due = new Date(dueDate);
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          countdown = 'Today';
+        } else if (diffDays === 1) {
+          countdown = 'Tomorrow';
+        } else if (diffDays > 1) {
+          countdown = `${diffDays} days`;
+        } else {
+          countdown = `${Math.abs(diffDays)} days overdue`;
+        }
+      }
+
+      return {
+        id: page.id,
+        name: page.properties?.['Name']?.title?.[0]?.plain_text || 'Untitled',
+        due: dueDate,
+        countdown: countdown,
+        course: page.properties?.['Course']?.relation?.[0]?.id || '',
+        grade: page.properties?.['Worth %']?.number ?? null,
+        type: page.properties?.['Type']?.select?.name || '',
+        typeColor: page.properties?.['Type']?.select?.color || 'default',
+        completed: page.properties?.['Done']?.checkbox || page.properties?.['Status']?.select?.name === 'Completed' || false,
+      };
+    });
     res.json(tasks);
   } catch (err) {
     console.error('[GET /api/tasks] Error:', err);
@@ -73,7 +97,11 @@ app.patch('/api/tasks/:id', async (req, res) => {
     }
     await notion.pages.update({
       page_id: id,
-      properties: { Completed: { checkbox: completed } },
+      properties: {
+        'Done': {
+          checkbox: completed
+        }
+      },
     });
     res.json({ ok: true });
   } catch (err) {
