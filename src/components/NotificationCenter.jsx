@@ -71,6 +71,13 @@ export default function NotificationCenter() {
 
   return (
     <div className="nc-root">
+      <div className="notion-callout">
+        <div className="callout-icon">🔔</div>
+        <div className="callout-content">
+          <div className="callout-title">Notification Center</div>
+        </div>
+      </div>
+      
       <header className="nc-header">
         <div className="nc-filters">
           <Dropdown label="All Courses" options={["All Courses", ...courses]} value={courseFilter} onChange={setCourseFilter} />
