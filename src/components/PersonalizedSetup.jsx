@@ -83,30 +83,9 @@ export default function PersonalizedSetup() {
     );
   }
 
-  console.log('PersonalizedSetup render - setupStep:', setupStep, 'userConfig:', userConfig);
-  
-  // Debug: Show current step
-  if (setupStep !== 'notion') {
-    console.log('Not on notion step, current step:', setupStep);
-  }
   
   return (
     <div className="personalized-setup">
-      
-      {/* Debug panel */}
-      <div style={{ 
-        position: 'fixed', 
-        top: '10px', 
-        right: '10px', 
-        background: 'red', 
-        color: 'white', 
-        padding: '10px', 
-        borderRadius: '5px', 
-        zIndex: 9999,
-        fontSize: '12px'
-      }}>
-        Current Step: {setupStep}
-      </div>
       
       {setupStep === 'welcome' && (
         <WelcomeStep 

@@ -23,24 +23,16 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('App useEffect running');
     // Check URL parameters for user-specific configuration
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
     const isEmbedMode = window.location.pathname.includes('embed');
     const isPreviewMode = urlParams.get('embed') === 'preview';
     
-    console.log('URL pathname:', window.location.pathname);
-    console.log('isEmbedMode:', isEmbedMode);
-    console.log('isPreviewMode:', isPreviewMode);
-    console.log('userId:', userId);
-    
     if (isPreviewMode) {
-      console.log('Loading preview embed mode');
       setShowSetup(false);
       setConfig({ isPreview: true });
     } else if (isEmbedMode) {
-      console.log('Loading embed mode');
       // In embed mode, load user-specific config
       if (userId) {
         // Load specific user's configuration
@@ -53,7 +45,6 @@ export default function App() {
       }
       setShowSetup(false);
     } else {
-      console.log('Loading setup mode');
       // In setup mode - show personalized setup
       setShowSetup(true);
     }
@@ -61,24 +52,19 @@ export default function App() {
     setIsLoading(false);
   }, []);
 
-  console.log('App render - isLoading:', isLoading, 'showSetup:', showSetup, 'config:', config);
-
   if (isLoading) {
-    console.log('Showing loading screen');
     return (
-      <div className="loading-container" style={{ backgroundColor: 'red', padding: '20px' }}>
+      <div className="loading-container">
         <div className="loading-spinner">Loading...</div>
       </div>
     );
   }
 
   if (showSetup) {
-    console.log('Showing PersonalizedSetup');
     return <PersonalizedSetup />;
   }
 
   if (config && config.isPreview) {
-    console.log('Showing EmbeddablePreview');
     return <EmbeddablePreview />;
   }
 
