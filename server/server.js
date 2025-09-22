@@ -65,12 +65,20 @@ app.get('/api/tasks', async (_req, res) => {
         }
       }
 
+      // Debug course property
+      const courseProperty = page.properties?.['Course'];
+      console.log('Course property:', courseProperty);
+      console.log('Course rich_text:', courseProperty?.rich_text);
+      console.log('Course title:', courseProperty?.title);
+
       return {
         id: page.id,
         name: page.properties?.['Name']?.title?.[0]?.plain_text || 'Untitled',
         due: dueDate,
         countdown: countdown,
-        course: page.properties?.['Course']?.rich_text?.[0]?.plain_text || '',
+        course: page.properties?.['Course']?.rich_text?.[0]?.plain_text || 
+                page.properties?.['Course']?.title?.[0]?.plain_text || 
+                page.properties?.['Course']?.select?.name || '',
         grade: page.properties?.['Worth %']?.number ?? null,
         type: page.properties?.['Type']?.select?.name || '',
         typeColor: page.properties?.['Type']?.select?.color || 'default',
