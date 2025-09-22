@@ -464,7 +464,7 @@ function CustomizeStep({ config, onUpdate, onNext }) {
         />
         
         <button className="next-button" onClick={onNext}>
-          Preview Your Widget →
+          View Notification Center →
         </button>
       </div>
     </div>
@@ -476,11 +476,33 @@ function PreviewStep({ config, onUpdate, onNext }) {
   return (
     <div className="setup-step preview-step">
       <div className="step-content">
-        <h2>👀 Preview Your Widget</h2>
+        <h2>👀 View Your Notification Center</h2>
         <p>Here's how your personalized notification center will look:</p>
         
         <div className="preview-container">
-          <NotificationCenter config={config} />
+          <NotificationCenter config={{
+            ...config,
+            theme: config.theme || {
+              primaryColor: '#374151',
+              backgroundColor: '#ffffff',
+              borderColor: '#e1e5e9',
+              textColor: '#111827',
+              mutedColor: '#6b7280'
+            },
+            showTitle: config.showTitle !== false,
+            showRefreshButton: config.showRefreshButton !== false,
+            showFilters: config.showFilters !== false,
+            title: config.title || 'My Task Center',
+            sections: {
+              overdue: { enabled: true, title: 'Overdue', showCountdown: true },
+              dueToday: { enabled: true, title: 'Due Today', showCountdown: true },
+              dueTomorrow: { enabled: true, title: 'Due Tomorrow', showCountdown: true },
+              dueThisWeek: { enabled: true, title: 'Due This Week', showCountdown: true },
+              completed: { enabled: true, title: 'Completed', collapsible: true }
+            },
+            defaultCourseFilter: config.defaultCourseFilter || 'all',
+            defaultTypeFilter: config.defaultTypeFilter || 'all'
+          }} />
         </div>
         
         <div className="preview-actions">

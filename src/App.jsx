@@ -27,7 +27,13 @@ export default function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
     const isEmbedMode = window.location.pathname.includes('embed');
-    const isPreviewMode = urlParams.get('embed') === 'preview';
+    const isPreviewMode = urlParams.get('embed') === 'preview' || window.location.pathname.includes('preview');
+    
+    console.log('App useEffect - URL:', window.location.href);
+    console.log('App useEffect - pathname:', window.location.pathname);
+    console.log('App useEffect - search:', window.location.search);
+    console.log('App useEffect - isPreviewMode:', isPreviewMode);
+    console.log('App useEffect - isEmbedMode:', isEmbedMode);
     
     if (isPreviewMode) {
       console.log('Preview mode detected, setting config');
@@ -53,7 +59,10 @@ export default function App() {
     setIsLoading(false);
   }, []);
 
+  console.log('App render - isLoading:', isLoading, 'showSetup:', showSetup, 'config:', config);
+
   if (isLoading) {
+    console.log('Showing loading screen');
     return (
       <div className="loading-container">
         <div className="loading-spinner">Loading...</div>
@@ -62,6 +71,7 @@ export default function App() {
   }
 
   if (showSetup) {
+    console.log('Showing PersonalizedSetup');
     return <PersonalizedSetup />;
   }
 

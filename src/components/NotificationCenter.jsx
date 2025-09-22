@@ -72,7 +72,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
 
   return (
     <div className="nc-root">
-      <style>{generateThemeCSS(config.theme)}</style>
+      <style>{generateThemeCSS(config.theme || {})}</style>
       <div className="nc-callout">
         {config.showTitle && (
           <div className="nc-callout-title">{config.title}</div>
