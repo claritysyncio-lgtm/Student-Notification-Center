@@ -85,8 +85,28 @@ export default function PersonalizedSetup() {
 
   console.log('PersonalizedSetup render - setupStep:', setupStep, 'userConfig:', userConfig);
   
+  // Debug: Show current step
+  if (setupStep !== 'notion') {
+    console.log('Not on notion step, current step:', setupStep);
+  }
+  
   return (
     <div className="personalized-setup">
+      
+      {/* Debug panel */}
+      <div style={{ 
+        position: 'fixed', 
+        top: '10px', 
+        right: '10px', 
+        background: 'red', 
+        color: 'white', 
+        padding: '10px', 
+        borderRadius: '5px', 
+        zIndex: 9999,
+        fontSize: '12px'
+      }}>
+        Current Step: {setupStep}
+      </div>
       
       {setupStep === 'welcome' && (
         <WelcomeStep 
@@ -148,6 +168,51 @@ function WelcomeStep({ onNext, userName }) {
             <li>✅ Mobile-responsive design</li>
             <li>✅ Your own unique configuration</li>
           </ul>
+        </div>
+        
+        {/* Preview on welcome step */}
+        <div className="preview-container">
+          <div className="preview-header">
+            <h3>📋 Preview of Your Notification Center</h3>
+            <p>Connect to Notion to unlock this beautiful task management widget!</p>
+          </div>
+          
+          <div className="notification-preview">
+            <div className="preview-overlay">
+              <div className="preview-content">
+                <div className="preview-title">My Task Center</div>
+                <div className="preview-filters">
+                  <div className="preview-filter">All Courses</div>
+                  <div className="preview-filter">All Types</div>
+                </div>
+                <div className="preview-sections">
+                  <div className="preview-section">
+                    <div className="preview-section-title">📅 Due Today (3)</div>
+                    <div className="preview-task">Complete project proposal</div>
+                    <div className="preview-task">Review team feedback</div>
+                  </div>
+                  <div className="preview-section">
+                    <div className="preview-section-title">⏰ Overdue (1)</div>
+                    <div className="preview-task">Submit final report</div>
+                  </div>
+                </div>
+              </div>
+              <div className="blur-overlay"></div>
+              <div className="connect-overlay">
+                <div className="connect-content">
+                  <div className="connect-icon">🔗</div>
+                  <h4>Connect to Notion</h4>
+                  <p>Unlock your personalized task center</p>
+                  <button 
+                    className="connect-button"
+                    onClick={onNext}
+                  >
+                    Get Started →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
         <button className="next-button" onClick={onNext}>

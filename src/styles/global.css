@@ -1025,6 +1025,52 @@ body{
   box-shadow: 0 8px 20px rgba(29, 202, 242, 0.4);
 }
 
+/* Embeddable preview styles */
+.embeddable-preview {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.embeddable-preview .preview-container {
+  margin: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.embeddable-preview .notification-preview {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Responsive adjustments for embeddable preview */
+@media (max-width: 600px) {
+  .embeddable-preview {
+    padding: 10px;
+  }
+  
+  .embeddable-preview .preview-content {
+    padding: 15px;
+  }
+  
+  .embeddable-preview .preview-title {
+    font-size: 18px;
+  }
+  
+  .embeddable-preview .preview-sections {
+    gap: 10px;
+  }
+  
+  .embeddable-preview .preview-section {
+    padding: 10px;
+  }
+}
+
 .success-icon,
 .error-icon {
   font-size: 48px;

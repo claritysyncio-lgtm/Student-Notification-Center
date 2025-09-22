@@ -15,6 +15,7 @@ function TestApp() {
 import { getUserConfig } from "./config/userConfig";
 import NotificationCenter from "./components/NotificationCenter";
 import PersonalizedSetup from "./components/PersonalizedSetup";
+import EmbeddablePreview from "./components/EmbeddablePreview";
 
 export default function App() {
   const [showSetup, setShowSetup] = useState(false);
@@ -27,12 +28,18 @@ export default function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
     const isEmbedMode = window.location.pathname.includes('embed');
+    const isPreviewMode = urlParams.get('embed') === 'preview';
     
     console.log('URL pathname:', window.location.pathname);
     console.log('isEmbedMode:', isEmbedMode);
+    console.log('isPreviewMode:', isPreviewMode);
     console.log('userId:', userId);
     
-    if (isEmbedMode) {
+    if (isPreviewMode) {
+      console.log('Loading preview embed mode');
+      setShowSetup(false);
+      setConfig({ isPreview: true });
+    } else if (isEmbedMode) {
       console.log('Loading embed mode');
       // In embed mode, load user-specific config
       if (userId) {
@@ -68,6 +75,11 @@ export default function App() {
   if (showSetup) {
     console.log('Showing PersonalizedSetup');
     return <PersonalizedSetup />;
+  }
+
+  if (config && config.isPreview) {
+    console.log('Showing EmbeddablePreview');
+    return <EmbeddablePreview />;
   }
 
   if (!config) {
