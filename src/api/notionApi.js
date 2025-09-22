@@ -18,10 +18,8 @@ const fallbackTasks = [
 
 // Backend API integration to avoid CORS issues
 async function fetchFromNotion(databaseId, token) {
-  // Use local proxy in development, direct API in production
-  const apiUrl = import.meta.env.DEV 
-    ? '/api/notion'
-    : 'https://notification-center-for-customers.vercel.app/api/notion';
+  // Always use the Vercel API endpoint
+  const apiUrl = 'https://notification-center-for-customers.vercel.app/api/notion';
     
   const response = await fetch(apiUrl, {
     method: 'POST',
