@@ -178,6 +178,33 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
         <h2>🔗 Connect to Notion</h2>
         <p>Connect your Notion workspace to sync your tasks automatically.</p>
         
+        <div className="setup-instructions" style={{ 
+          backgroundColor: '#f8fafc', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          padding: '20px', 
+          margin: '20px 0',
+          fontSize: '14px',
+          lineHeight: '1.6'
+        }}>
+          <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '16px' }}>📋 What you'll need:</h3>
+          <ol style={{ margin: '0', paddingLeft: '20px' }}>
+            <li><strong>Notion account</strong> - Make sure you're logged into Notion</li>
+            <li><strong>Task database</strong> - A Notion database with your tasks/projects</li>
+            <li><strong>Database ID</strong> - We'll help you find this in the next step</li>
+          </ol>
+          
+          <div style={{ 
+            backgroundColor: '#dbeafe', 
+            border: '1px solid #93c5fd', 
+            borderRadius: '6px', 
+            padding: '12px', 
+            margin: '15px 0'
+          }}>
+            <strong>💡 Don't worry!</strong> This is a one-time setup. Once connected, your tasks will sync automatically.
+          </div>
+        </div>
+        
         {!isConnected ? (
           <div className="notion-connect">
             <p>Click the button below to connect your Notion account:</p>
@@ -214,15 +241,52 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
               <p>Your workspace is connected and ready to use.</p>
             </div>
             
-            <div className="database-setup">
-              <label>Database ID:</label>
+            <div className="database-setup" style={{ 
+              backgroundColor: '#f0fdf4', 
+              border: '1px solid #bbf7d0', 
+              borderRadius: '8px', 
+              padding: '20px', 
+              margin: '20px 0'
+            }}>
+              <h3 style={{ margin: '0 0 15px 0', color: '#166534', fontSize: '16px' }}>🗄️ Database Setup</h3>
+              <p style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '14px' }}>
+                Now we need to connect to your specific task database. Here's how to find your Database ID:
+              </p>
+              
+              <div style={{ 
+                backgroundColor: '#fef3c7', 
+                border: '1px solid #fcd34d', 
+                borderRadius: '6px', 
+                padding: '12px', 
+                margin: '15px 0',
+                fontSize: '13px'
+              }}>
+                <strong>📝 How to find your Database ID:</strong>
+                <ol style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                  <li>Open your Notion database in a web browser</li>
+                  <li>Look at the URL - it will look like: <code>notion.so/your-workspace/32-character-id</code></li>
+                  <li>Copy the 32-character ID (the part after the last slash)</li>
+                  <li>Paste it in the field below</li>
+                </ol>
+              </div>
+              
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#374151' }}>
+                Database ID:
+              </label>
               <input
                 type="text"
                 value={config.notion.databaseId}
                 onChange={(e) => onUpdate({
                   notion: { ...config.notion, databaseId: e.target.value }
                 })}
-                placeholder="Enter your Notion database ID"
+                placeholder="Enter your 32-character Notion database ID"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '14px'
+                }}
               />
             </div>
             
