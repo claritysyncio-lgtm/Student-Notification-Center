@@ -70,8 +70,9 @@ app.get('/api/tasks', async (_req, res) => {
       const courseRelation = page.properties?.['Course']?.relation?.[0];
       if (courseRelation) {
         try {
+          console.log('Fetching course page with ID:', courseRelation.id);
           const coursePage = await notion.pages.retrieve({ page_id: courseRelation.id });
-          console.log('Course page title:', coursePage.properties?.Name?.title?.[0]?.plain_text);
+          console.log('Course page object:', JSON.stringify(coursePage, null, 2));
           console.log('Course page properties:', Object.keys(coursePage.properties || {}));
           
           // Most common: Course name is in the 'Name' title property
@@ -79,9 +80,12 @@ app.get('/api/tasks', async (_req, res) => {
                       coursePage.properties?.Title?.title?.[0]?.plain_text || 
                       coursePage.properties?.Course?.title?.[0]?.plain_text || '';
           
+          console.log('Course name from common properties:', courseName);
+          
           // If still no name, try to find any title property
           if (!courseName) {
             for (const [key, value] of Object.entries(coursePage.properties || {})) {
+              console.log(`Checking property ${key}:`, value.type, value);
               if (value.type === 'title' && value.title?.[0]?.plain_text) {
                 courseName = value.title[0].plain_text;
                 console.log('Found course name in property:', key, '=', courseName);
@@ -95,6 +99,8 @@ app.get('/api/tasks', async (_req, res) => {
           console.log('Error fetching course:', err.message);
           courseName = '';
         }
+      } else {
+        console.log('No course relation found for task:', page.properties?.['Name']?.title?.[0]?.plain_text);
       }
 
       return {
