@@ -78,7 +78,7 @@ async function fetchFromNotion(databaseId, token) {
   });
   
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({ error: 'Unknown error, not valid JSON' }));
     throw new Error(`API error: ${response.status} - ${errorData.error || 'Unknown error'}`);
   }
   
@@ -102,7 +102,16 @@ export async function getTasks() {
     if (!notionConfig.databaseId || !notionConfig.token) {
       console.warn('No Notion database ID or token found, using mock data', {
         databaseId: notionConfig.databaseId,
-        hasToken: !!notionConfig.token
+        hasToken: !!notionConfig.token,
+        tokenValue: notionConfig.token
+      });
+      return mockTasks;
+    }
+    
+    // Check if token looks like a real Notion token
+    if (!notionConfig.token.startsWith('secret_')) {
+      console.warn('Token does not look like a real Notion token, using mock data', {
+        token: notionConfig.token
       });
       return mockTasks;
     }
@@ -113,7 +122,21 @@ export async function getTasks() {
     });
     
     // Fetch from Notion via our backend API
-    const tasks = await fetchFromNotion(notionConfig.databaseId, notionConfig.token);
+    const data = await fetchFromNotion(notionConfig.databaseId, notionConfig.token);
+    
+    // Transform Notion data to our task format
+    const tasks = data.results.map(page => {
+      const properties = page.properties;
+      return {
+        id: page.id,
+        name: properties.Name?.title?.[0]?.text?.content || 'Untitled Task',
+        due: properties.Due?.date?.start || null,
+        course: properties.Course?.select?.name || 'No Course',
+        grade: properties.Grade?.number || 0,
+        type: properties.Type?.select?.name || 'Task',
+        completed: properties.Completed?.checkbox || false
+      };
+    });
     
     console.log('Fetched tasks from Notion:', tasks);
     return tasks;
