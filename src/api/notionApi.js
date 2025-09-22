@@ -109,7 +109,9 @@ export async function getTasks() {
     }
     
     // Skip token validation for testing
-    console.log('Using token for API call:', notionConfig.token);
+    console.log('🔑 Using token for API call:', notionConfig.token);
+    console.log('📊 Database ID:', notionConfig.databaseId);
+    console.log('🚀 About to fetch from Notion API...');
     
     console.log('Fetching real data from Notion...', {
       databaseId: notionConfig.databaseId,
@@ -137,6 +139,7 @@ export async function getTasks() {
     return tasks;
     
   } catch (err) {
+    console.error('❌ ERROR DETAILS:', err);
     console.warn(`Failed to fetch from Notion: ${err.message}`);
     
     // Check if it's a network or API error
