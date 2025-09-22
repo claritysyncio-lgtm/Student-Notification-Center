@@ -74,7 +74,10 @@ body{
 }
 
 .nc-root{
-  width: 420px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
 }
 
 .notion-callout {
@@ -86,6 +89,8 @@ body{
   align-items: flex-start;
   gap: 8px;
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  width: 420px;
+  max-width: 420px;
 }
 
 .callout-icon {
