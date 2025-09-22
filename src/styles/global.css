@@ -797,6 +797,24 @@ body{
   }
 }
 
+/* Info tooltip styles */
+.info-tooltip {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.info-tooltip:hover {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Show tooltip on parent hover */
+div:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 .success-icon,
 .error-icon {
   font-size: 48px;
