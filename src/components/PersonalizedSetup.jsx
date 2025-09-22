@@ -274,33 +274,19 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 </p>
               </div>
               
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#374151' }}>
-                  Notion Integration Token:
-                </label>
-                <input
-                  type="password"
-                  value={config.notion.token || ''}
-                  placeholder="Enter your Notion integration token (starts with 'secret_')"
-                  onChange={(e) => {
-                    const token = e.target.value;
-                    console.log('Token input:', token);
-                    onUpdate({
-                      notion: { ...config.notion, token: token }
-                    });
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    marginBottom: '8px'
-                  }}
-                />
-                <small style={{ color: '#6b7280', fontSize: '12px' }}>
-                  Get your token from <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener noreferrer" style={{ color: '#1dcaf2' }}>Notion Integrations</a>
-                </small>
+              <div style={{ 
+                backgroundColor: '#f0f9ff', 
+                border: '1px solid #0ea5e9', 
+                borderRadius: '6px', 
+                padding: '12px', 
+                margin: '15px 0',
+                fontSize: '14px'
+              }}>
+                <div style={{ fontWeight: '600', color: '#0c4a6e', marginBottom: '8px' }}>✅ No Token Required!</div>
+                <p style={{ margin: '0', color: '#0369a1' }}>
+                  This app uses a shared integration, so you don't need to create your own Notion integration. 
+                  Just provide your database URLs below and we'll handle the rest!
+                </p>
               </div>
               
               <div style={{ marginBottom: '15px' }}>
@@ -414,21 +400,16 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
               className="next-button" 
               onClick={() => {
                 console.log('Button clicked, config.notion.databaseId:', config.notion.databaseId);
-                console.log('Button clicked, config.notion.token:', config.notion.token);
                 if (!config.notion.databaseId) {
                   alert('Please fill in the Database ID before continuing.');
                   return;
                 }
-                if (!config.notion.token) {
-                  alert('Please fill in the Notion Integration Token before continuing.');
-                  return;
-                }
                 onNext();
               }}
-              disabled={!config.notion.databaseId || !config.notion.token}
-              style={{ 
-                backgroundColor: (config.notion.databaseId && config.notion.token) ? '#1dcaf2' : '#9ca3af',
-                opacity: (config.notion.databaseId && config.notion.token) ? 1 : 0.6
+              disabled={!config.notion.databaseId}
+              style={{
+                backgroundColor: config.notion.databaseId ? '#1dcaf2' : '#9ca3af',
+                opacity: config.notion.databaseId ? 1 : 0.6
               }}
             >
               Continue to Customization →
@@ -481,7 +462,6 @@ function CustomizeStep({ config, onUpdate, onNext, onBack }) {
               console.log('Button clicked - config:', config);
               console.log('databaseId:', config.notion.databaseId);
               console.log('courseDatabaseId:', config.notion.courseDatabaseId);
-              console.log('token:', config.notion.token);
               if (!config.notion.databaseId) {
                 alert('Please fill in the Main Database ID before continuing.');
                 return;
@@ -490,16 +470,12 @@ function CustomizeStep({ config, onUpdate, onNext, onBack }) {
                 alert('Please fill in the Course Database ID before continuing.');
                 return;
               }
-              if (!config.notion.token) {
-                alert('Please fill in the Notion Integration Token before continuing.');
-                return;
-              }
               onNext();
             }}
-            disabled={!config.notion.databaseId || !config.notion.courseDatabaseId || !config.notion.token}
+            disabled={!config.notion.databaseId || !config.notion.courseDatabaseId}
             style={{
-              backgroundColor: (!config.notion.databaseId || !config.notion.courseDatabaseId || !config.notion.token) ? '#9ca3af' : '#1dcaf2',
-              cursor: (!config.notion.databaseId || !config.notion.courseDatabaseId || !config.notion.token) ? 'not-allowed' : 'pointer'
+              backgroundColor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? '#9ca3af' : '#1dcaf2',
+              cursor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? 'not-allowed' : 'pointer'
             }}
           >
             Complete Setup →
@@ -591,10 +567,9 @@ function LiveStep({ config, onBack }) {
             <h4 style={{ margin: '0 0 10px 0', color: '#0c4a6e' }}>🔍 Debug Information</h4>
             <p><strong>User ID:</strong> {debugInfo.userId}</p>
             <p><strong>Database ID:</strong> {debugInfo.notionConfig.databaseId || 'NOT SET'}</p>
-            <p><strong>Token:</strong> {debugInfo.hasToken ? 'SET' : 'NOT SET'}</p>
             <p><strong>Course Database ID:</strong> {debugInfo.notionConfig.courseDatabaseId || 'NOT SET'}</p>
-            <p><strong>Configuration Valid:</strong> {debugInfo.hasDatabaseId && debugInfo.hasToken ? '✅ YES' : '❌ NO'}</p>
-            <p><strong>Will use real data:</strong> {debugInfo.hasDatabaseId && debugInfo.hasToken ? '✅ YES' : '❌ NO (will show mock data)'}</p>
+            <p><strong>Configuration Valid:</strong> {debugInfo.hasDatabaseId ? '✅ YES' : '❌ NO'}</p>
+            <p><strong>Will use real data:</strong> {debugInfo.hasDatabaseId ? '✅ YES' : '❌ NO (will show mock data)'}</p>
           </div>
         )}
         

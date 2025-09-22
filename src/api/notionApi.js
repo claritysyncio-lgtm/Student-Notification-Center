@@ -56,27 +56,26 @@ export async function getTasks() {
     console.log('🔍 User config from localStorage:', userConfig);
     console.log('🔍 Notion config:', notionConfig);
     
-    // Check if we have the required database IDs and token
-    if (!notionConfig.databaseId || !notionConfig.token) {
-      console.warn('No Notion database ID or token found, using fallback data', {
-        databaseId: notionConfig.databaseId,
-        hasToken: !!notionConfig.token,
-        tokenValue: notionConfig.token
+    // Check if we have the required database ID (token is now optional)
+    if (!notionConfig.databaseId) {
+      console.warn('No Notion database ID found, using fallback data', {
+        databaseId: notionConfig.databaseId
       });
       return fallbackTasks;
     }
     
-    console.log('🔑 Using token for API call:', notionConfig.token);
     console.log('📊 Database ID:', notionConfig.databaseId);
     console.log('🚀 About to fetch from Notion API...');
     
     console.log('Fetching real data from Notion...', {
-      databaseId: notionConfig.databaseId,
-      hasToken: !!notionConfig.token
+      databaseId: notionConfig.databaseId
     });
     
+    // Use a shared integration token (you'll need to set this)
+    const sharedToken = 'secret_your_shared_integration_token_here';
+    
     // Fetch from Notion via our backend API
-    const data = await fetchFromNotion(notionConfig.databaseId, notionConfig.token);
+    const data = await fetchFromNotion(notionConfig.databaseId, sharedToken);
     
     // Transform Notion data to our task format
     const tasks = data.results.map(page => {
