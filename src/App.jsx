@@ -1,8 +1,20 @@
 
 import React, { useState, useEffect } from "react";
+
+// Simple test component first
+function TestApp() {
+  return (
+    <div style={{ backgroundColor: 'green', padding: '20px', color: 'white' }}>
+      <h1>TEST APP IS WORKING!</h1>
+      <p>If you see this, React is working</p>
+    </div>
+  );
+}
+
+// All imports working, restore full functionality
+import { getUserConfig } from "./config/userConfig";
 import NotificationCenter from "./components/NotificationCenter";
 import PersonalizedSetup from "./components/PersonalizedSetup";
-import { getUserConfig } from "./config/userConfig";
 
 export default function App() {
   const [showSetup, setShowSetup] = useState(false);
@@ -10,12 +22,18 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log('App useEffect running');
     // Check URL parameters for user-specific configuration
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
     const isEmbedMode = window.location.pathname.includes('embed');
     
+    console.log('URL pathname:', window.location.pathname);
+    console.log('isEmbedMode:', isEmbedMode);
+    console.log('userId:', userId);
+    
     if (isEmbedMode) {
+      console.log('Loading embed mode');
       // In embed mode, load user-specific config
       if (userId) {
         // Load specific user's configuration
@@ -28,6 +46,7 @@ export default function App() {
       }
       setShowSetup(false);
     } else {
+      console.log('Loading setup mode');
       // In setup mode - show personalized setup
       setShowSetup(true);
     }
@@ -35,15 +54,19 @@ export default function App() {
     setIsLoading(false);
   }, []);
 
+  console.log('App render - isLoading:', isLoading, 'showSetup:', showSetup, 'config:', config);
+
   if (isLoading) {
+    console.log('Showing loading screen');
     return (
-      <div className="loading-container">
+      <div className="loading-container" style={{ backgroundColor: 'red', padding: '20px' }}>
         <div className="loading-spinner">Loading...</div>
       </div>
     );
   }
 
   if (showSetup) {
+    console.log('Showing PersonalizedSetup');
     return <PersonalizedSetup />;
   }
 

@@ -99,7 +99,7 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
           <div className="config-section">
             <h4>Notion Integration</h4>
             
-            {!config.notion.token ? (
+            {!config.notion?.token ? (
               <NotionOAuth 
                 onSuccess={(data) => {
                   console.log('NotionOAuth onSuccess called with:', data);

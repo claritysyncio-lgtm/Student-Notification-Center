@@ -10,6 +10,7 @@ export default function NotionOAuth({ onSuccess, onError }) {
 
   const handleConnect = () => {
     console.log('Connect button clicked!');
+    alert('CONNECT BUTTON CLICKED!');
     setShowManualSetup(true);
   };
 
@@ -108,6 +109,8 @@ export default function NotionOAuth({ onSuccess, onError }) {
     );
   }
 
+  console.log('NotionOAuth rendering, showManualSetup:', showManualSetup);
+  
   return (
     <div className="notion-oauth">
       <div className="oauth-card">
@@ -120,35 +123,11 @@ export default function NotionOAuth({ onSuccess, onError }) {
         <button 
           className="connect-button"
           onClick={handleConnect}
-          style={{ 
-            cursor: 'pointer', 
-            zIndex: 999, 
-            position: 'relative',
-            pointerEvents: 'auto',
-            backgroundColor: 'red',
-            border: '2px solid blue'
-          }}
-          onMouseDown={() => console.log('Button mouse down!')}
-          onMouseUp={() => console.log('Button mouse up!')}
-          onMouseEnter={() => console.log('Button mouse enter!')}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M4.459 4.208c.746-.606 1.026-.56 2.428.466l13.967 10.873c.763.646.763 1.169 0 1.815L6.887 21.82c-1.402 1.026-1.682 1.072-2.428.466-.746-.606-.746-1.169 0-1.815L15.437 12 4.459 6.023c-.746-.606-.746-1.169 0-1.815z"/>
           </svg>
           Connect with Notion
-        </button>
-        
-        <button 
-          onClick={() => console.log('TEST BUTTON CLICKED!')}
-          style={{ 
-            backgroundColor: 'green', 
-            color: 'white', 
-            padding: '10px', 
-            margin: '10px',
-            cursor: 'pointer'
-          }}
-        >
-          TEST BUTTON
         </button>
         
         <div className="oauth-info">

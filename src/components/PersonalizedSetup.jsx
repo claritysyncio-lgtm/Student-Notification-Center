@@ -83,8 +83,11 @@ export default function PersonalizedSetup() {
     );
   }
 
+  console.log('PersonalizedSetup render - setupStep:', setupStep, 'userConfig:', userConfig);
+  
   return (
     <div className="personalized-setup">
+      
       {setupStep === 'welcome' && (
         <WelcomeStep 
           onNext={() => handleStepComplete('welcome')}
@@ -178,7 +181,28 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
         {!isConnected ? (
           <div className="notion-connect">
             <p>Click the button below to connect your Notion account:</p>
-            <button className="connect-button">
+            <button 
+              className="connect-button"
+              onClick={() => {
+                console.log('NotionSetupStep Connect button clicked!');
+                alert('NotionSetupStep Connect button clicked!');
+                // For now, just simulate a connection
+                handleNotionConnect({
+                  token: 'test_token_123',
+                  databaseId: 'test_db_123',
+                  workspaceName: 'Test Workspace'
+                });
+              }}
+              style={{ 
+                backgroundColor: 'blue', 
+                color: 'white', 
+                padding: '15px 30px', 
+                fontSize: '16px',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
               Connect with Notion
             </button>
           </div>
@@ -224,7 +248,6 @@ function CustomizeStep({ config, onUpdate, onNext }) {
           onConfigChange={(updates) => onUpdate(updates)}
           initialConfig={config}
         />
-        {console.log('Passing config to ConfigPanel:', config)}
         
         <button className="next-button" onClick={onNext}>
           Preview Your Widget →
