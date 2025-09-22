@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function EmbeddablePreview() {
+  console.log('EmbeddablePreview component rendering');
+  
   const handleConnect = () => {
     // Open the main app in a new tab/window
     window.open('/', '_blank');
@@ -8,6 +10,9 @@ export default function EmbeddablePreview() {
 
   return (
     <div className="embeddable-preview">
+      <div style={{ background: 'red', color: 'white', padding: '20px', margin: '20px' }}>
+        DEBUG: EmbeddablePreview is rendering!
+      </div>
       <div className="preview-container">
         <div className="preview-header">
           <h3>📋 Your Personal Task Center</h3>

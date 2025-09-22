@@ -30,6 +30,7 @@ export default function App() {
     const isPreviewMode = urlParams.get('embed') === 'preview';
     
     if (isPreviewMode) {
+      console.log('Preview mode detected, setting config');
       setShowSetup(false);
       setConfig({ isPreview: true });
     } else if (isEmbedMode) {
@@ -65,6 +66,7 @@ export default function App() {
   }
 
   if (config && config.isPreview) {
+    console.log('Rendering EmbeddablePreview');
     return <EmbeddablePreview />;
   }
 
