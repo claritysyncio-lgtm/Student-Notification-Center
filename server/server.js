@@ -24,7 +24,7 @@ dotenv.config({ path: new URL('./.env', import.meta.url).pathname });
 const NOTION_TOKEN = process.env.NOTION_TOKEN || process.env.VITE_NOTION_TOKEN;
 const DATABASE_ID = process.env.NOTION_DATABASE_ID || process.env.VITE_NOTION_DATABASE_ID;
 const COURSE_DATABASE_ID = process.env.COURSE_DATABASE_ID || '273a5ebae7ac803cb153d163c9858720';
-const COURSE_NOTION_TOKEN = process.env.COURSE_NOTION_TOKEN || NOTION_TOKEN;
+const COURSE_NOTION_TOKEN = NOTION_TOKEN; // Use main token for now
 
 if (!NOTION_TOKEN || !DATABASE_ID) {
   console.warn('[server] Missing NOTION_TOKEN or NOTION_DATABASE_ID in server/.env');
@@ -102,8 +102,8 @@ app.get('/api/tasks', async (_req, res) => {
         const courseName = course.properties?.Name?.title?.[0]?.plain_text || 
                           course.properties?.Title?.title?.[0]?.plain_text || 
                           course.properties?.Course?.title?.[0]?.plain_text ||
-                          course.properties?.Course Name?.title?.[0]?.plain_text ||
-                          course.properties?.Course Title?.title?.[0]?.plain_text || '';
+                          course.properties?.['Course Name']?.title?.[0]?.plain_text ||
+                          course.properties?.['Course Title']?.title?.[0]?.plain_text || '';
         
         console.log('Extracted course name:', courseName);
         if (courseName) {
