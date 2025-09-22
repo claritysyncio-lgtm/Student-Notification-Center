@@ -350,7 +350,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                         <li>Paste the copied link in the field above</li>
                       </ol>
                       <div style={{ marginTop: '8px', fontSize: '11px', color: '#9ca3af', fontStyle: 'italic' }}>
-                        The link should look like: <code style={{ backgroundColor: '#374151', padding: '2px 4px', borderRadius: '3px' }}>notion.so/workspace/32-char-id</code>
+                        The link should look like: <code style={{ backgroundColor: '#374151', padding: '2px 4px', borderRadius: '3px' }}>notion.so/workspace/32-char-id</code> or <code style={{ backgroundColor: '#374151', padding: '2px 4px', borderRadius: '3px' }}>notion.site/workspace/32-char-id</code>
                       </div>
                       <div style={{ 
                         position: 'absolute', 
@@ -368,16 +368,31 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 </label>
                 <input
                   type="url"
-                  placeholder="https://notion.so/your-workspace/32-character-id"
+                  placeholder="https://notion.so/your-workspace/32-character-id or https://notion.site/your-workspace/32-character-id"
                   onChange={(e) => {
                     const url = e.target.value;
-                    // Extract database ID from Notion URL
-                    const match = url.match(/notion\.so\/[^\/]+\/([a-f0-9]{32})/);
+                    console.log('URL input:', url);
+                    // Extract database ID from Notion URL - handle different formats
+                    // Pattern 1: notion.so/workspace/databaseId or notion.so/databaseId
+                    // Pattern 2: notion.so/databaseId?v=... (with query params)
+                    let match = url.match(/(?:notion\.so|notion\.site|www\.notion\.so)\/(?:[^\/]+\/)?([a-f0-9]{32})(?:\?|$)/);
+                    
+                    // If no match, try to extract from query parameter
+                    if (!match) {
+                      const queryMatch = url.match(/[?&]v=([a-f0-9]{32})/);
+                      if (queryMatch) {
+                        match = queryMatch;
+                      }
+                    }
+                    console.log('Regex match:', match);
                     if (match) {
                       const databaseId = match[1];
+                      console.log('Extracted database ID:', databaseId);
                       onUpdate({
                         notion: { ...config.notion, databaseId: databaseId }
                       });
+                    } else {
+                      console.log('No database ID found in URL');
                     }
                   }}
                   style={{
