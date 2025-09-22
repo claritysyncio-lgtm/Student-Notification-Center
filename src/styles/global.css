@@ -87,31 +87,41 @@ body{
   margin-bottom: 18px;
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-.nc-title{
-  font-size: 28px;
-  transform: translateY(6px);
-  margin-right: 8px;
-}
-.nc-h1{
-  margin: 0;
-  font-weight: 600;
-  font-size: 22px;
-  display:inline-block;
-}
-.nc-title-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
+  justify-content: space-between;
 }
 .nc-filters{
   display:flex;
   justify-content:center;
   gap: 20px;
+  flex: 1;
+}
+
+.refresh-button {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.refresh-button:hover {
+  background: #e5e7eb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.refresh-button:active {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 .dropdown {
   display: flex;
@@ -169,7 +179,7 @@ body{
 
 .nc-section-title{
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 8px;
 }
 

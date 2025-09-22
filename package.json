@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node ./server/server.js",
-    "dev:full": "npm-run-all --parallel server dev",
-    "start": "node ./server/server.js"
+    "dev:full": "npm-run-all --parallel server dev"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.14",

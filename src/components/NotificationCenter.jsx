@@ -72,14 +72,13 @@ export default function NotificationCenter() {
   return (
     <div className="nc-root">
       <header className="nc-header">
-        <div className="nc-title-container">
-          <div className="nc-title">🔔</div>
-          <h1 className="nc-h1">Notification Center</h1>
-        </div>
         <div className="nc-filters">
           <Dropdown label="All Courses" options={["All Courses", ...courses]} value={courseFilter} onChange={setCourseFilter} />
           <Dropdown label="All Types" options={["All Types", ...types]} value={typeFilter} onChange={setTypeFilter} />
         </div>
+        <button className="refresh-button" onClick={() => window.location.reload()} title="Refresh tasks">
+          ↻
+        </button>
       </header>
 
       {loading && (
