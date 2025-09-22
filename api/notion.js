@@ -1,5 +1,6 @@
 // Vercel serverless function to proxy Notion API requests
 // This avoids CORS issues by making the request from the server
+// Updated: Force deployment refresh
 
 export default async function handler(req, res) {
   // Enable CORS for all origins
