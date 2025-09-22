@@ -145,8 +145,13 @@ app.get('/api/tasks', async (_req, res) => {
       const courseRelation = page.properties?.['Course']?.relation?.[0];
       if (courseRelation) {
         courseName = courseLookup[courseRelation.id] || '';
+        console.log('Task:', page.properties?.['Name']?.title?.[0]?.plain_text);
         console.log('Course relation ID:', courseRelation.id);
         console.log('Course name from lookup:', courseName);
+        console.log('Available course IDs in lookup:', Object.keys(courseLookup));
+        if (!courseName) {
+          console.log('Course ID not found in lookup table!');
+        }
       } else {
         console.log('No course relation found for task:', page.properties?.['Name']?.title?.[0]?.plain_text);
       }
