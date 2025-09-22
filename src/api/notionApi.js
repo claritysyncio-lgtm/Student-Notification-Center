@@ -61,7 +61,12 @@ const mockTasks = [
 
 // Backend API integration to avoid CORS issues
 async function fetchFromNotion(databaseId, token) {
-  const response = await fetch('/api/notion', {
+  // Use Vercel API even in development
+  const apiUrl = import.meta.env.DEV 
+    ? 'https://notification-center-for-customers.vercel.app/api/notion'
+    : '/api/notion';
+    
+  const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
