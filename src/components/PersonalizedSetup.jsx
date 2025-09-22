@@ -270,40 +270,11 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
               <div style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', fontWeight: '600', color: '#374151', gap: '8px' }}>
                   Notion Database URL:
-                  <div style={{ position: 'relative', display: 'inline-block' }}>
-                    <div style={{ 
-                      width: '16px', 
-                      height: '16px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#3b82f6', 
-                      color: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      fontSize: '12px', 
-                      fontWeight: 'bold',
-                      cursor: 'help'
-                    }}>
+                  <div className="info-icon-container">
+                    <div className="info-icon">
                       i
                     </div>
-                    <div style={{
-                      position: 'absolute',
-                      bottom: '125%',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      backgroundColor: '#1f2937',
-                      color: 'white',
-                      padding: '12px',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      lineHeight: '1.4',
-                      width: '280px',
-                      zIndex: 1000,
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      opacity: 0,
-                      visibility: 'hidden',
-                      transition: 'opacity 0.2s, visibility 0.2s'
-                    }} className="info-tooltip">
+                    <div className="info-tooltip">
                       <div style={{ fontWeight: '600', marginBottom: '6px' }}>How to find your Notion database URL:</div>
                       <ol style={{ margin: '0', paddingLeft: '16px' }}>
                         <li>Open your Notion database in a web browser</li>
