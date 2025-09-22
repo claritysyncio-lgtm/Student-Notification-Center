@@ -28,10 +28,12 @@ export default function PersonalizedSetup() {
   }, []);
 
   const handleConfigUpdate = (updates) => {
+    console.log('PersonalizedSetup handleConfigUpdate called with:', updates);
     try {
       if (userConfig) {
         const updatedConfig = updateUserConfig(userConfig.userId, updates);
         if (updatedConfig) {
+          console.log('Updated config:', updatedConfig);
           setUserConfig(updatedConfig);
         }
       }
@@ -222,6 +224,7 @@ function CustomizeStep({ config, onUpdate, onNext }) {
           onConfigChange={(updates) => onUpdate(updates)}
           initialConfig={config}
         />
+        {console.log('Passing config to ConfigPanel:', config)}
         
         <button className="next-button" onClick={onNext}>
           Preview Your Widget →

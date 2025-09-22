@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 export default function NotionOAuth({ onSuccess, onError }) {
   console.log('NotionOAuth component rendered');
+  console.log('onSuccess function:', onSuccess);
+  console.log('onError function:', onError);
   const [showManualSetup, setShowManualSetup] = useState(false);
   const [token, setToken] = useState('');
   const [databaseId, setDatabaseId] = useState('');

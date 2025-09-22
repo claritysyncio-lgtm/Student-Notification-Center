@@ -3,11 +3,16 @@ import { defaultConfig, validateConfig, mergeConfig } from '../config/widgetConf
 import NotionOAuth from './NotionOAuth';
 
 export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
+  console.log('ConfigPanel rendered with initialConfig:', initialConfig);
+  
   // Handle both flat config and user config structures
   const flatConfig = initialConfig.personalization ? {
     ...initialConfig.personalization,
     notion: initialConfig.notion || {}
   } : initialConfig;
+  
+  console.log('Flat config:', flatConfig);
+  console.log('Notion token:', flatConfig.notion?.token);
   
   const [config, setConfig] = useState(mergeConfig(flatConfig));
   const [errors, setErrors] = useState([]);
