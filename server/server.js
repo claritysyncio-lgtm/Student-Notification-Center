@@ -19,12 +19,18 @@ import dotenv from 'dotenv';
 import { Client } from '@notionhq/client';
 
 // Load server-only env
-dotenv.config({ path: new URL('./.env', import.meta.url).pathname });
+dotenv.config();
 
 const NOTION_TOKEN = process.env.NOTION_TOKEN || process.env.VITE_NOTION_TOKEN;
 const DATABASE_ID = process.env.NOTION_DATABASE_ID || process.env.VITE_NOTION_DATABASE_ID;
 const COURSE_DATABASE_ID = process.env.COURSE_DATABASE_ID || '273a5ebae7ac803cb153d163c9858720';
-const COURSE_NOTION_TOKEN = NOTION_TOKEN; // Use main token for now
+const COURSE_NOTION_TOKEN = process.env.COURSE_NOTION_TOKEN || NOTION_TOKEN;
+
+console.log('Environment variables loaded:');
+console.log('NOTION_TOKEN:', NOTION_TOKEN ? 'Present' : 'Missing');
+console.log('DATABASE_ID:', DATABASE_ID ? 'Present' : 'Missing');
+console.log('COURSE_DATABASE_ID:', COURSE_DATABASE_ID);
+console.log('COURSE_NOTION_TOKEN:', COURSE_NOTION_TOKEN ? 'Present' : 'Missing');
 
 if (!NOTION_TOKEN || !DATABASE_ID) {
   console.warn('[server] Missing NOTION_TOKEN or NOTION_DATABASE_ID in server/.env');
@@ -39,39 +45,6 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
 });
 
-// Test Course database
-app.get('/api/test-courses', async (_req, res) => {
-  try {
-    console.log('Testing Course database access...');
-    console.log('Course Database ID:', COURSE_DATABASE_ID);
-    console.log('Course Token:', COURSE_NOTION_TOKEN ? 'Present' : 'Missing');
-    
-    const courseNotion = new Client({ auth: COURSE_NOTION_TOKEN });
-    const courseResponse = await courseNotion.databases.query({ database_id: COURSE_DATABASE_ID });
-    
-    console.log('Course database response:', JSON.stringify(courseResponse, null, 2));
-    
-    res.json({
-      success: true,
-      courseCount: courseResponse.results.length,
-      courses: courseResponse.results.map(course => ({
-        id: course.id,
-        properties: Object.keys(course.properties || {}),
-        name: course.properties?.Name?.title?.[0]?.plain_text || 'No Name',
-        title: course.properties?.Title?.title?.[0]?.plain_text || 'No Title'
-      }))
-    });
-  } catch (err) {
-    console.log('Error testing Course database:', err.message);
-    res.json({ 
-      success: false, 
-      error: err.message,
-      courseDatabaseId: COURSE_DATABASE_ID,
-      hasToken: !!COURSE_NOTION_TOKEN
-    });
-  }
-});
-
 // Fetch tasks
 app.get('/api/tasks', async (_req, res) => {
   try {
@@ -79,43 +52,40 @@ app.get('/api/tasks', async (_req, res) => {
       return res.status(500).json({ error: 'Server missing Notion credentials.' });
     }
     
-    // First, get all courses to create a lookup table using Course database token
+    // Simple course lookup - if it fails, we'll just show empty course names
     let courseLookup = {};
     try {
-      console.log('Fetching courses from database:', COURSE_DATABASE_ID);
-      console.log('Using Course token:', COURSE_NOTION_TOKEN ? 'Present' : 'Missing');
-      
-      if (!COURSE_NOTION_TOKEN) {
-        console.log('No Course token found, using main token');
-      }
-      
+      console.log('Fetching courses...');
       const courseNotion = new Client({ auth: COURSE_NOTION_TOKEN });
-      const courseResponse = await courseNotion.databases.query({ database_id: COURSE_DATABASE_ID });
-      console.log('Course response:', courseResponse);
-      console.log('Number of courses found:', courseResponse.results.length);
+      const courseResponse = await courseNotion.databases.query({ 
+        database_id: COURSE_DATABASE_ID,
+        page_size: 100
+      });
       
-      courseLookup = courseResponse.results.reduce((acc, course) => {
-        console.log('Processing course:', course.id);
+      console.log(`Found ${courseResponse.results.length} courses`);
+      
+      // Simple course name extraction
+      courseResponse.results.forEach(course => {
         console.log('Course properties:', Object.keys(course.properties || {}));
         
-        // Try all possible title properties
-        const courseName = course.properties?.Name?.title?.[0]?.plain_text || 
-                          course.properties?.Title?.title?.[0]?.plain_text || 
-                          course.properties?.Course?.title?.[0]?.plain_text ||
-                          course.properties?.['Course Name']?.title?.[0]?.plain_text ||
-                          course.properties?.['Course Title']?.title?.[0]?.plain_text || '';
+        // Try different possible course name properties
+        let courseName = '';
+        const possibleNames = [
+          course.properties?.Course?.title?.[0]?.plain_text,
+          course.properties?.Name?.title?.[0]?.plain_text,
+          course.properties?.Title?.title?.[0]?.plain_text,
+          course.properties?.['Course Name']?.title?.[0]?.plain_text,
+          course.properties?.['Course Title']?.title?.[0]?.plain_text
+        ];
         
-        console.log('Extracted course name:', courseName);
-        if (courseName) {
-          acc[course.id] = courseName;
-        }
-        return acc;
-      }, {});
-      console.log('Final course lookup table:', courseLookup);
+        courseName = possibleNames.find(name => name) || 'Unknown Course';
+        courseLookup[course.id] = courseName;
+        console.log(`Course: ${course.id} -> ${courseName}`);
+      });
+      
     } catch (err) {
-      console.log('Error fetching courses:', err.message);
-      console.log('Error details:', err);
-      console.log('Will continue without course names');
+      console.log('Course lookup failed, continuing without course names:', err.message);
+      // Don't crash the server, just continue with empty course names
     }
     
     const response = await notion.databases.query({ database_id: DATABASE_ID });
@@ -140,20 +110,26 @@ app.get('/api/tasks', async (_req, res) => {
         }
       }
 
-      // Get course name from lookup table
+      // Get course name - try multiple methods
       let courseName = '';
-      const courseRelation = page.properties?.['Course']?.relation?.[0];
-      if (courseRelation) {
-        courseName = courseLookup[courseRelation.id] || '';
-        console.log('Task:', page.properties?.['Name']?.title?.[0]?.plain_text);
-        console.log('Course relation ID:', courseRelation.id);
-        console.log('Course name from lookup:', courseName);
-        console.log('Available course IDs in lookup:', Object.keys(courseLookup));
-        if (!courseName) {
-          console.log('Course ID not found in lookup table!');
+      try {
+        // Method 1: Try formula property first
+        const courseFormula = page.properties?.['Course notif form']?.formula?.string;
+        if (courseFormula) {
+          courseName = courseFormula;
+          console.log(`✓ Course from formula: ${courseName}`);
+        } else {
+          // Method 2: Try relation lookup
+          const courseRelation = page.properties?.['Course']?.relation?.[0];
+          if (courseRelation && courseLookup[courseRelation.id]) {
+            courseName = courseLookup[courseRelation.id];
+            console.log(`✓ Course from relation: ${courseName}`);
+          } else if (courseRelation) {
+            console.log(`✗ Course ID ${courseRelation.id} not found in lookup table`);
+          }
         }
-      } else {
-        console.log('No course relation found for task:', page.properties?.['Name']?.title?.[0]?.plain_text);
+      } catch (err) {
+        console.log('Error getting course name:', err.message);
       }
 
       return {
@@ -188,11 +164,7 @@ app.patch('/api/tasks/:id', async (req, res) => {
     }
     await notion.pages.update({
       page_id: id,
-      properties: {
-        'Done': {
-          checkbox: completed
-        }
-      },
+      properties: { Completed: { checkbox: completed } },
     });
     res.json({ ok: true });
   } catch (err) {
