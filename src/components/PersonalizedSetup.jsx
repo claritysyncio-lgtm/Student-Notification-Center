@@ -640,42 +640,31 @@ function LiveStep({ config, onBack }) {
           <button className="back-button" onClick={onBack}>
             ← Back to Setup
           </button>
-          <h2>🎉 Your Live Task Center</h2>
-          <p>Here's your personalized notification center!</p>
-          <div className="demo-notice">
-            <div className="demo-icon">📋</div>
-            <div className="demo-text">
-              <strong>Demo Mode:</strong> Showing sample data to demonstrate functionality. 
-              In production, this would display your real Notion tasks!
-            </div>
-          </div>
         </div>
         
-        <div className="live-notification-center">
-          <NotificationCenter config={{
-            ...config,
-            theme: config.theme || {
-              primaryColor: '#374151',
-              backgroundColor: '#ffffff',
-              borderColor: '#e1e5e9',
-              textColor: '#111827',
-              mutedColor: '#6b7280'
-            },
-            showTitle: config.showTitle !== false,
-            showRefreshButton: config.showRefreshButton !== false,
-            showFilters: config.showFilters !== false,
-            title: config.title || 'My Task Center',
-            sections: {
-              overdue: { enabled: true, title: 'Overdue', showCountdown: true },
-              dueToday: { enabled: true, title: 'Due Today', showCountdown: true },
-              dueTomorrow: { enabled: true, title: 'Due Tomorrow', showCountdown: true },
-              dueThisWeek: { enabled: true, title: 'Due This Week', showCountdown: true },
-              completed: { enabled: true, title: 'Completed', collapsible: true }
-            },
-            defaultCourseFilter: config.defaultCourseFilter || 'all',
-            defaultTypeFilter: config.defaultTypeFilter || 'all'
-          }} />
-        </div>
+        <NotificationCenter config={{
+          ...config,
+          theme: config.theme || {
+            primaryColor: '#374151',
+            backgroundColor: '#ffffff',
+            borderColor: '#e1e5e9',
+            textColor: '#111827',
+            mutedColor: '#6b7280'
+          },
+          showTitle: config.showTitle !== false,
+          showRefreshButton: config.showRefreshButton !== false,
+          showFilters: config.showFilters !== false,
+          title: config.title || 'My Task Center',
+          sections: {
+            overdue: { enabled: true, title: 'Overdue', showCountdown: true },
+            dueToday: { enabled: true, title: 'Due Today', showCountdown: true },
+            dueTomorrow: { enabled: true, title: 'Due Tomorrow', showCountdown: true },
+            dueThisWeek: { enabled: true, title: 'Due This Week', showCountdown: true },
+            completed: { enabled: true, title: 'Completed', collapsible: true }
+          },
+          defaultCourseFilter: config.defaultCourseFilter || 'all',
+          defaultTypeFilter: config.defaultTypeFilter || 'all'
+        }} />
       </div>
     </div>
   );

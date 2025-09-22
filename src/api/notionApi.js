@@ -59,22 +59,22 @@ const mockTasks = [
   },
 ];
 
-// Client-side Notion API integration
+// Backend API integration to avoid CORS issues
 async function fetchFromNotion(databaseId, token) {
-  const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+  const response = await fetch('/api/notion', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'Notion-Version': '2022-06-28'
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      page_size: 100
+      databaseId,
+      token
     })
   });
   
   if (!response.ok) {
-    throw new Error(`Notion API error: ${response.status}`);
+    const errorData = await response.json();
+    throw new Error(`API error: ${response.status} - ${errorData.error || 'Unknown error'}`);
   }
   
   return response.json();
@@ -107,22 +107,8 @@ export async function getTasks() {
       hasToken: !!notionConfig.token
     });
     
-    // Fetch from Notion API directly
-    const data = await fetchFromNotion(notionConfig.databaseId, notionConfig.token);
-    
-    // Transform Notion data to our task format
-    const tasks = data.results.map(page => {
-      const properties = page.properties;
-      return {
-        id: page.id,
-        name: properties.Name?.title?.[0]?.text?.content || 'Untitled Task',
-        due: properties.Due?.date?.start || null,
-        course: properties.Course?.select?.name || 'No Course',
-        grade: properties.Grade?.number || 0,
-        type: properties.Type?.select?.name || 'Task',
-        completed: properties.Completed?.checkbox || false
-      };
-    });
+    // Fetch from Notion via our backend API
+    const tasks = await fetchFromNotion(notionConfig.databaseId, notionConfig.token);
     
     console.log('Fetched tasks from Notion:', tasks);
     return tasks;
@@ -130,10 +116,10 @@ export async function getTasks() {
   } catch (err) {
     console.warn(`Failed to fetch from Notion: ${err.message}`);
     
-    // Check if it's a CORS error
-    if (err.message.includes('CORS') || err.message.includes('Failed to fetch')) {
-      console.log('🚫 CORS Error: Direct Notion API calls from browser are blocked for security.');
-      console.log('💡 This is normal for static sites. In production, you would need a backend proxy.');
+    // Check if it's a network or API error
+    if (err.message.includes('Failed to fetch') || err.message.includes('API error')) {
+      console.log('🚫 API Error: Unable to connect to backend API.');
+      console.log('💡 This might be a deployment issue or the API endpoint is not available.');
       console.log('📋 Showing demo data instead to demonstrate the functionality.');
     } else {
       console.log('Using mock data instead');
