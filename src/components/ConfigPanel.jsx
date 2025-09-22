@@ -86,6 +86,7 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
             {!config.notion.token ? (
               <NotionOAuth 
                 onSuccess={(data) => {
+                  console.log('NotionOAuth onSuccess called with:', data);
                   handleConfigChange('notion.token', data.token);
                   handleConfigChange('notion.databaseId', data.databaseId);
                 }}

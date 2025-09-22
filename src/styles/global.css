@@ -877,14 +877,16 @@ body{
   line-height: 1.5;
 }
 
-.connect-button {
+.notion-oauth .connect-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   width: 100%;
   padding: 16px 24px;
-  background: #000000;
+  background: linear-gradient(135deg, #7dd3fc 0%, #1dcaf2 25%, #0ea5e9 50%, #0284c7 75%, #0369a1 100%);
+  background-size: 200% 200%;
+  animation: buttonGradientShift 8s ease infinite;
   color: white;
   border: none;
   border-radius: 8px;
@@ -893,11 +895,16 @@ body{
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 30px;
+  position: relative;
+  z-index: 10;
 }
 
-.connect-button:hover:not(:disabled) {
-  background: #333333;
+.notion-oauth .connect-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+  background-size: 200% 200%;
+  animation: buttonGradientShift 3s ease infinite;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 202, 242, 0.4);
 }
 
 .connect-button:disabled {
