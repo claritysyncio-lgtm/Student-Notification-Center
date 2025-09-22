@@ -85,9 +85,9 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
             
             {!config.notion.token ? (
               <NotionOAuth 
-                onSuccess={(token, workspace) => {
-                  handleConfigChange('notion.token', token);
-                  // You can also store workspace info if needed
+                onSuccess={(data) => {
+                  handleConfigChange('notion.token', data.token);
+                  handleConfigChange('notion.databaseId', data.databaseId);
                 }}
                 onError={(error) => {
                   console.error('OAuth error:', error);
