@@ -100,28 +100,34 @@ export const saveUserConfig = (userId, config) => {
 
 // Get or create user configuration
 export const getUserConfig = (userData = {}) => {
-  let userId = userData.userId;
-  
-  if (!userId) {
-    // Try to get existing user ID
-    userId = localStorage.getItem('notificationCenter_userId');
+  try {
+    let userId = userData.userId;
     
     if (!userId) {
-      // Create new user ID
-      userId = generateUserId();
-      localStorage.setItem('notificationCenter_userId', userId);
+      // Try to get existing user ID
+      userId = localStorage.getItem('notificationCenter_userId');
+      
+      if (!userId) {
+        // Create new user ID
+        userId = generateUserId();
+        localStorage.setItem('notificationCenter_userId', userId);
+      }
     }
+    
+    // Load existing config or create new one
+    let config = loadUserConfig(userId);
+    
+    if (!config) {
+      config = createUserConfig(userId, userData);
+      saveUserConfig(userId, config);
+    }
+    
+    return config;
+  } catch (error) {
+    console.error('Error getting user config:', error);
+    // Return a default config if there's an error
+    return createUserConfig(generateUserId(), userData);
   }
-  
-  // Load existing config or create new one
-  let config = loadUserConfig(userId);
-  
-  if (!config) {
-    config = createUserConfig(userId, userData);
-    saveUserConfig(userId, config);
-  }
-  
-  return config;
 };
 
 // Update user configuration

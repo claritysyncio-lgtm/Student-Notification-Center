@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Center Widget</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: transparent;
+            overflow: hidden;
+        }
+        #root {
+            width: 100%;
+            min-height: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .embed-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+        
+        /* Notion-specific optimizations */
+        .nc-root {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        /* Responsive adjustments for Notion embeds */
+        @media (max-width: 600px) {
+            .nc-root {
+                width: 100% !important;
+            }
+            .nc-callout {
+                padding: 12px !important;
+            }
+            .nc-filters {
+                flex-direction: column;
+                gap: 8px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <iframe 
+            src="/" 
+            class="embed-container"
+            frameborder="0"
+            allowtransparency="true"
+            scrolling="no"
+            sandbox="allow-scripts allow-same-origin allow-forms">
+        </iframe>
+    </div>
+</body>
+</html>

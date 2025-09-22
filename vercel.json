@@ -11,6 +11,10 @@
   ],
   "routes": [
     {
+      "src": "/embed.html",
+      "dest": "/dist/embed.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/dist/$1"
     }

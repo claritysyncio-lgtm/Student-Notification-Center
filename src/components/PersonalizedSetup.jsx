@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getUserConfig, updateUserConfig, generateUserId } from '../config/userConfig';
+import { getUserConfig, updateUserConfig } from '../config/userConfig';
 import NotificationCenter from './NotificationCenter';
 import ConfigPanel from './ConfigPanel';
 
@@ -9,16 +9,34 @@ export default function PersonalizedSetup() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize user configuration
-    const config = getUserConfig();
-    setUserConfig(config);
-    setIsLoading(false);
+    try {
+      // Initialize user configuration
+      const config = getUserConfig();
+      setUserConfig(config);
+    } catch (error) {
+      console.error('Error initializing user config:', error);
+      // Set a default config if there's an error
+      setUserConfig({
+        userId: 'default_user',
+        personalization: {},
+        notion: {},
+        preferences: {}
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   const handleConfigUpdate = (updates) => {
-    if (userConfig) {
-      const updatedConfig = updateUserConfig(userConfig.userId, updates);
-      setUserConfig(updatedConfig);
+    try {
+      if (userConfig) {
+        const updatedConfig = updateUserConfig(userConfig.userId, updates);
+        if (updatedConfig) {
+          setUserConfig(updatedConfig);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating config:', error);
     }
   };
 
@@ -202,7 +220,7 @@ function CustomizeStep({ config, onUpdate, onNext }) {
         
         <ConfigPanel 
           onConfigChange={(updates) => onUpdate({ personalization: updates })}
-          initialConfig={config.personalization}
+          initialConfig={config.personalization || {}}
         />
         
         <button className="next-button" onClick={onNext}>
