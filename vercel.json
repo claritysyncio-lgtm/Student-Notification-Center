@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "functions": {
-    "api/notion.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "builds": [
+    {
+      "src": "api/notion.js",
+      "use": "@vercel/node"
+    },
     {
       "src": "package.json",
       "use": "@vercel/static-build",
@@ -15,6 +14,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/api/notion",
+      "dest": "/api/notion.js"
+    },
     {
       "src": "/embed.html",
       "dest": "/dist/embed.html"
