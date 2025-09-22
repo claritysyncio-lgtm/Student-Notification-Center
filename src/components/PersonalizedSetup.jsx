@@ -107,6 +107,7 @@ export default function PersonalizedSetup() {
           config={userConfig}
           onUpdate={handleConfigUpdate}
           onNext={() => handleStepComplete('customize')}
+          onBack={() => setSetupStep('notion')}
         />
       )}
       
@@ -118,10 +119,18 @@ export default function PersonalizedSetup() {
         />
       )}
       
+      {setupStep === 'live' && (
+        <LiveStep 
+          config={userConfig}
+          onBack={() => setSetupStep('complete')}
+        />
+      )}
+      
       {setupStep === 'complete' && (
         <CompleteStep 
           config={userConfig}
           onRestart={() => setSetupStep('welcome')}
+          onCustomize={() => setSetupStep('live')}
         />
       )}
     </div>
@@ -201,6 +210,10 @@ function WelcomeStep({ onNext, userName }) {
 // Notion Setup Step Component
 function NotionSetupStep({ config, onUpdate, onNext }) {
   const [isConnected, setIsConnected] = useState(!!config.notion.token);
+  
+  console.log('NotionSetupStep render - config:', config);
+  console.log('NotionSetupStep render - config.notion:', config.notion);
+  console.log('NotionSetupStep render - config.notion.databaseId:', config.notion.databaseId);
 
   const handleNotionConnect = (notionData) => {
     onUpdate({
@@ -443,13 +456,18 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
             <button 
               className="next-button" 
               onClick={() => {
-                if (!config.notion.databaseId || !config.notion.courseDatabaseId) {
-                  alert('Please fill in both Database ID and Course Database ID before continuing.');
+                console.log('Button clicked, config.notion.databaseId:', config.notion.databaseId);
+                if (!config.notion.databaseId) {
+                  alert('Please fill in the Database ID before continuing.');
                   return;
                 }
                 onNext();
               }}
-              disabled={!config.notion.databaseId || !config.notion.courseDatabaseId}
+              disabled={!config.notion.databaseId}
+              style={{ 
+                backgroundColor: config.notion.databaseId ? '#1dcaf2' : '#9ca3af',
+                opacity: config.notion.databaseId ? 1 : 0.6
+              }}
             >
               Continue to Customization →
             </button>
@@ -461,21 +479,64 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
 }
 
 // Customize Step Component
-function CustomizeStep({ config, onUpdate, onNext }) {
+function CustomizeStep({ config, onUpdate, onNext, onBack }) {
   return (
     <div className="setup-step customize-step">
       <div className="step-content">
         <h2>🎨 Customize Your Widget</h2>
         <p>Make it yours! Choose colors, layout, and preferences.</p>
         
+        <div style={{ 
+          background: '#f0f0f0', 
+          padding: '10px', 
+          margin: '10px 0', 
+          borderRadius: '5px',
+          fontSize: '12px'
+        }}>
+          <strong>Debug Info:</strong><br/>
+          databaseId: {config.notion.databaseId || 'EMPTY'}<br/>
+          courseDatabaseId: {config.notion.courseDatabaseId || 'EMPTY'}<br/>
+          Button disabled: {(!config.notion.databaseId || !config.notion.courseDatabaseId) ? 'YES' : 'NO'}
+        </div>
+        
         <ConfigPanel 
           onConfigChange={(updates) => onUpdate(updates)}
           initialConfig={config}
         />
         
-        <button className="next-button" onClick={onNext}>
-          View Notification Center →
-        </button>
+        <div className="setup-actions">
+          <button 
+            className="back-button" 
+            onClick={onBack}
+          >
+            ← Back
+          </button>
+          
+          <button 
+            className="next-button" 
+            onClick={() => {
+              console.log('Button clicked - config:', config);
+              console.log('databaseId:', config.notion.databaseId);
+              console.log('courseDatabaseId:', config.notion.courseDatabaseId);
+              if (!config.notion.databaseId) {
+                alert('Please fill in the Main Database ID before continuing.');
+                return;
+              }
+              if (!config.notion.courseDatabaseId) {
+                alert('Please fill in the Course Database ID before continuing.');
+                return;
+              }
+              onNext();
+            }}
+            disabled={!config.notion.databaseId || !config.notion.courseDatabaseId}
+            style={{
+              backgroundColor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? '#9ca3af' : '#1dcaf2',
+              cursor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? 'not-allowed' : 'pointer'
+            }}
+          >
+            View Notification Center →
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -529,7 +590,7 @@ function PreviewStep({ config, onUpdate, onNext }) {
 }
 
 // Complete Step Component
-function CompleteStep({ config, onRestart }) {
+function CompleteStep({ config, onRestart, onCustomize }) {
   const embedUrl = `${window.location.origin}/embed.html?user=${config.userId}`;
   
   return (
@@ -555,9 +616,65 @@ function CompleteStep({ config, onRestart }) {
           <button className="restart-button" onClick={onRestart}>
             Start Over
           </button>
+          <button 
+            className="customize-button" 
+            onClick={onCustomize}
+          >
+            🎨 Make It Yours!
+          </button>
           <button className="copy-button" onClick={() => navigator.clipboard.writeText(embedUrl)}>
             Copy Embed URL
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Live Step Component - Shows the actual working notification center
+function LiveStep({ config, onBack }) {
+  return (
+    <div className="setup-step live-step">
+      <div className="step-content">
+        <div className="live-header">
+          <button className="back-button" onClick={onBack}>
+            ← Back to Setup
+          </button>
+          <h2>🎉 Your Live Task Center</h2>
+          <p>Here's your personalized notification center!</p>
+          <div className="demo-notice">
+            <div className="demo-icon">📋</div>
+            <div className="demo-text">
+              <strong>Demo Mode:</strong> Showing sample data to demonstrate functionality. 
+              In production, this would display your real Notion tasks!
+            </div>
+          </div>
+        </div>
+        
+        <div className="live-notification-center">
+          <NotificationCenter config={{
+            ...config,
+            theme: config.theme || {
+              primaryColor: '#374151',
+              backgroundColor: '#ffffff',
+              borderColor: '#e1e5e9',
+              textColor: '#111827',
+              mutedColor: '#6b7280'
+            },
+            showTitle: config.showTitle !== false,
+            showRefreshButton: config.showRefreshButton !== false,
+            showFilters: config.showFilters !== false,
+            title: config.title || 'My Task Center',
+            sections: {
+              overdue: { enabled: true, title: 'Overdue', showCountdown: true },
+              dueToday: { enabled: true, title: 'Due Today', showCountdown: true },
+              dueTomorrow: { enabled: true, title: 'Due Tomorrow', showCountdown: true },
+              dueThisWeek: { enabled: true, title: 'Due This Week', showCountdown: true },
+              completed: { enabled: true, title: 'Completed', collapsible: true }
+            },
+            defaultCourseFilter: config.defaultCourseFilter || 'all',
+            defaultTypeFilter: config.defaultTypeFilter || 'all'
+          }} />
         </div>
       </div>
     </div>

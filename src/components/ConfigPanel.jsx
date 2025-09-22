@@ -35,6 +35,9 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
     
     setConfig(newConfig);
     
+    // Notify parent component
+    onConfigChange(newConfig);
+    
     // Validate and notify parent
     const validation = validateConfig(newConfig);
     setErrors(validation.errors);
@@ -131,25 +134,128 @@ export default function ConfigPanel({ onConfigChange, initialConfig = {} }) {
                 </div>
                 
                 <div className="config-field">
-                  <label>Database ID *</label>
+                  <label>Main Database URL:</label>
+                  <input
+                    type="url"
+                    placeholder="https://notion.so/your-workspace/32-character-id or https://notion.site/your-workspace/32-character-id"
+                    onChange={(e) => {
+                      const url = e.target.value;
+                      console.log('Main URL input:', url);
+                      // Extract database ID from Notion URL - handle different formats
+                      let match = url.match(/(?:notion\.so|notion\.site|www\.notion\.so)\/(?:[^\/]+\/)?([a-f0-9]{32})(?:\?|$)/);
+                      
+                      // If no match, try to extract from query parameter
+                      if (!match) {
+                        const queryMatch = url.match(/[?&]v=([a-f0-9]{32})/);
+                        if (queryMatch) {
+                          match = queryMatch;
+                        }
+                      }
+                      console.log('Main Regex match:', match);
+                      if (match) {
+                        const databaseId = match[1];
+                        console.log('Extracted main database ID:', databaseId);
+                        handleConfigChange('notion.databaseId', databaseId);
+                      } else {
+                        console.log('No main database ID found in URL');
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      marginBottom: '8px'
+                    }}
+                  />
+                </div>
+                
+                <div className="config-field">
+                  <label>Main Database ID (auto-detected):</label>
                   <input
                     type="text"
                     value={config.notion.databaseId}
-                    onChange={(e) => handleConfigChange('notion.databaseId', e.target.value)}
-                    placeholder="Enter your Notion database ID"
+                    placeholder="Will be filled automatically when you paste the URL above"
+                    readOnly
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      backgroundColor: config.notion.databaseId ? '#f0fdf4' : '#f9fafb',
+                      color: config.notion.databaseId ? '#166534' : '#6b7280'
+                    }}
                   />
-                  <small>Find this in your Notion database URL</small>
+                  {config.notion.databaseId && (
+                    <div style={{ color: '#16a34a', fontSize: '12px', marginTop: '4px' }}>
+                      ✅ Main Database ID detected successfully!
+                    </div>
+                  )}
+                  <small>Required: Find this in your Notion database URL</small>
                 </div>
 
                 <div className="config-field">
-                  <label>Course Database ID *</label>
+                  <label>Course Database URL:</label>
+                  <input
+                    type="url"
+                    placeholder="https://notion.so/your-workspace/32-character-id or https://notion.site/your-workspace/32-character-id"
+                    onChange={(e) => {
+                      const url = e.target.value;
+                      console.log('Course URL input:', url);
+                      // Extract database ID from Notion URL - handle different formats
+                      let match = url.match(/(?:notion\.so|notion\.site|www\.notion\.so)\/(?:[^\/]+\/)?([a-f0-9]{32})(?:\?|$)/);
+                      
+                      // If no match, try to extract from query parameter
+                      if (!match) {
+                        const queryMatch = url.match(/[?&]v=([a-f0-9]{32})/);
+                        if (queryMatch) {
+                          match = queryMatch;
+                        }
+                      }
+                      console.log('Course Regex match:', match);
+                      if (match) {
+                        const databaseId = match[1];
+                        console.log('Extracted course database ID:', databaseId);
+                        handleConfigChange('notion.courseDatabaseId', databaseId);
+                      } else {
+                        console.log('No course database ID found in URL');
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      marginBottom: '8px'
+                    }}
+                  />
+                </div>
+                
+                <div className="config-field">
+                  <label>Course Database ID (auto-detected):</label>
                   <input
                     type="text"
                     value={config.notion.courseDatabaseId}
-                    onChange={(e) => handleConfigChange('notion.courseDatabaseId', e.target.value)}
-                    placeholder="Enter course database ID for course names"
-                    required
+                    placeholder="Will be filled automatically when you paste the URL above"
+                    readOnly
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      backgroundColor: config.notion.courseDatabaseId ? '#f0fdf4' : '#f9fafb',
+                      color: config.notion.courseDatabaseId ? '#166534' : '#6b7280'
+                    }}
                   />
+                  {config.notion.courseDatabaseId && (
+                    <div style={{ color: '#16a34a', fontSize: '12px', marginTop: '4px' }}>
+                      ✅ Course Database ID detected successfully!
+                    </div>
+                  )}
                   <small>Required: Find this in your Notion course database URL</small>
                 </div>
 

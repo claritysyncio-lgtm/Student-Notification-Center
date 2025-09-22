@@ -112,47 +112,47 @@ export default function NotificationCenter({ config = defaultConfig }) {
       )}
 
       <main className="nc-main">
-        {config.sections.overdue.enabled && overdueTasks.length > 0 && (
+        {config.sections?.overdue?.enabled && overdueTasks.length > 0 && (
           <Section 
-            title={config.sections.overdue.title} 
+            title={config.sections?.overdue?.title || 'Overdue'} 
             tasks={overdueTasks} 
             onToggleComplete={handleToggleComplete} 
             className="overdue" 
-            showCountdown={config.sections.overdue.showCountdown} 
+            showCountdown={config.sections?.overdue?.showCountdown} 
           />
         )}
-        {config.sections.dueToday.enabled && (
+        {config.sections?.dueToday?.enabled && (
           <Section 
-            title={config.sections.dueToday.title} 
+            title={config.sections?.dueToday?.title || 'Due Today'} 
             tasks={dueToday} 
             onToggleComplete={handleToggleComplete} 
-            showCountdown={config.sections.dueToday.showCountdown}
+            showCountdown={config.sections?.dueToday?.showCountdown}
           />
         )}
-        {config.sections.dueTomorrow.enabled && (
+        {config.sections?.dueTomorrow?.enabled && (
           <Section 
-            title={config.sections.dueTomorrow.title} 
+            title={config.sections?.dueTomorrow?.title || 'Due Tomorrow'} 
             tasks={dueTomorrow} 
             onToggleComplete={handleToggleComplete} 
-            showCountdown={config.sections.dueTomorrow.showCountdown}
+            showCountdown={config.sections?.dueTomorrow?.showCountdown}
           />
         )}
-        {config.sections.dueThisWeek.enabled && (
+        {config.sections?.dueThisWeek?.enabled && (
           <Section 
-            title={config.sections.dueThisWeek.title} 
+            title={config.sections?.dueThisWeek?.title || 'Due This Week'} 
             tasks={dueWeek} 
             onToggleComplete={handleToggleComplete} 
-            showCountdown={config.sections.dueThisWeek.showCountdown} 
+            showCountdown={config.sections?.dueThisWeek?.showCountdown} 
           />
         )}
-        {config.sections.completed.enabled && (
+        {config.sections?.completed?.enabled && (
           <CompletedSection
-            title={config.sections.completed.title}
+            title={config.sections?.completed?.title || 'Completed'}
             tasks={completed}
             open={completedOpen}
             onToggle={() => setCompletedOpen(v => !v)}
             onToggleComplete={handleToggleComplete}
-            collapsible={config.sections.completed.collapsible}
+            collapsible={config.sections?.completed?.collapsible}
           />
         )}
       </main>

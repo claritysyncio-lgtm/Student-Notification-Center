@@ -1,8 +1,6 @@
 import React from 'react';
 
 export default function EmbeddablePreview() {
-  console.log('EmbeddablePreview component rendering');
-  
   const handleConnect = () => {
     // Open the main app in a new tab/window
     window.open('/', '_blank');
@@ -10,9 +8,6 @@ export default function EmbeddablePreview() {
 
   return (
     <div className="embeddable-preview">
-      <div style={{ background: 'red', color: 'white', padding: '20px', margin: '20px' }}>
-        DEBUG: EmbeddablePreview is rendering!
-      </div>
       <div className="preview-container">
         <div className="preview-header">
           <h3>📋 Your Personal Task Center</h3>
@@ -47,15 +42,20 @@ export default function EmbeddablePreview() {
             <div className="blur-overlay"></div>
             <div className="connect-overlay">
               <div className="connect-content">
-                <div className="connect-icon">🔗</div>
-                <h4>Connect to Notion</h4>
-                <p>Unlock your personalized task center</p>
+                <div className="connect-icon">🚀</div>
+                <h4>Ready to Get Started?</h4>
+                <p>Click below to set up your personalized task center in just 2 minutes!</p>
                 <button 
                   className="connect-button"
                   onClick={handleConnect}
                 >
-                  Get Started →
+                  Set Up My Task Center →
                 </button>
+                <div className="setup-features">
+                  <div className="feature">✅ Auto-detects your Notion databases</div>
+                  <div className="feature">✅ Customizable colors and themes</div>
+                  <div className="feature">✅ Real-time task synchronization</div>
+                </div>
               </div>
             </div>
           </div>
