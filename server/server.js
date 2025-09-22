@@ -43,6 +43,26 @@ app.get('/api/tasks', async (_req, res) => {
     if (!NOTION_TOKEN || !DATABASE_ID) {
       return res.status(500).json({ error: 'Server missing Notion credentials.' });
     }
+    
+    // First, get all courses to create a lookup table
+    const COURSE_DATABASE_ID = '273a5ebae7ac803cb153d163c9858720';
+    let courseLookup = {};
+    try {
+      const courseResponse = await notion.databases.query({ database_id: COURSE_DATABASE_ID });
+      courseLookup = courseResponse.results.reduce((acc, course) => {
+        const courseName = course.properties?.Name?.title?.[0]?.plain_text || 
+                          course.properties?.Title?.title?.[0]?.plain_text || 
+                          course.properties?.Course?.title?.[0]?.plain_text || '';
+        if (courseName) {
+          acc[course.id] = courseName;
+        }
+        return acc;
+      }, {});
+      console.log('Course lookup table:', courseLookup);
+    } catch (err) {
+      console.log('Error fetching courses:', err.message);
+    }
+    
     const response = await notion.databases.query({ database_id: DATABASE_ID });
     const tasks = await Promise.all(response.results.map(async (page) => {
       const dueDate = page.properties?.['Due']?.date?.start || null;
@@ -65,40 +85,13 @@ app.get('/api/tasks', async (_req, res) => {
         }
       }
 
-      // Get course name from relation to Course database
+      // Get course name from lookup table
       let courseName = '';
       const courseRelation = page.properties?.['Course']?.relation?.[0];
       if (courseRelation) {
-        try {
-          console.log('Fetching course page with ID:', courseRelation.id);
-          const coursePage = await notion.pages.retrieve({ page_id: courseRelation.id });
-          console.log('Course page object:', JSON.stringify(coursePage, null, 2));
-          console.log('Course page properties:', Object.keys(coursePage.properties || {}));
-          
-          // Most common: Course name is in the 'Name' title property
-          courseName = coursePage.properties?.Name?.title?.[0]?.plain_text || 
-                      coursePage.properties?.Title?.title?.[0]?.plain_text || 
-                      coursePage.properties?.Course?.title?.[0]?.plain_text || '';
-          
-          console.log('Course name from common properties:', courseName);
-          
-          // If still no name, try to find any title property
-          if (!courseName) {
-            for (const [key, value] of Object.entries(coursePage.properties || {})) {
-              console.log(`Checking property ${key}:`, value.type, value);
-              if (value.type === 'title' && value.title?.[0]?.plain_text) {
-                courseName = value.title[0].plain_text;
-                console.log('Found course name in property:', key, '=', courseName);
-                break;
-              }
-            }
-          }
-          
-          console.log('Final course name:', courseName);
-        } catch (err) {
-          console.log('Error fetching course:', err.message);
-          courseName = '';
-        }
+        courseName = courseLookup[courseRelation.id] || '';
+        console.log('Course relation ID:', courseRelation.id);
+        console.log('Course name from lookup:', courseName);
       } else {
         console.log('No course relation found for task:', page.properties?.['Name']?.title?.[0]?.plain_text);
       }
