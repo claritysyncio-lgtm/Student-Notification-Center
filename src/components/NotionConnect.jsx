@@ -47,6 +47,44 @@ export default function NotionConnect() {
             </p>
           </div>
 
+          <div className="notion-legal-links">
+            <h4>Legal Documents:</h4>
+            <div className="legal-buttons">
+              <a 
+                href="/legal.html#privacy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="legal-button"
+              >
+                🔒 Privacy Policy
+              </a>
+              <a 
+                href="/legal.html#terms" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="legal-button"
+              >
+                📋 Terms of Service
+              </a>
+              <a 
+                href="/legal.html#permissions" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="legal-button"
+              >
+                🔐 Integration Permissions
+              </a>
+              <a 
+                href="/legal.html" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="legal-button"
+              >
+                📄 All Legal Documents
+              </a>
+            </div>
+          </div>
+
           <button 
             className="notion-button" 
             onClick={handleConnectToNotion}
