@@ -73,8 +73,8 @@
                         localStorage.setItem('notionWorkspaceId', data.workspace_id);
                         localStorage.setItem('notionWorkspaceName', data.workspace_name);
                         
-                        // Redirect back to the main app
-                        window.location.href = '/?connected=true';
+                        // Redirect back to the main notification center
+                        window.location.href = '/';
                     } else {
                         throw new Error(data.error || 'Failed to complete authentication');
                     }
