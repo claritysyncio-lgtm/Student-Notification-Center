@@ -153,34 +153,48 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
               >
                 Test OAuth Start
               </a>
-              <a 
-                href="/api/oauth-callback" 
-                target="_blank"
+              <button 
+                onClick={() => {
+                  fetch('/api/oauth-callback')
+                    .then(res => res.text())
+                    .then(text => alert('OAuth Callback Response:\n' + text))
+                    .catch(err => alert('OAuth Callback Error:\n' + err.message));
+                }}
                 style={{
                   backgroundColor: '#10b981',
                   color: 'white',
                   padding: '8px 16px',
                   borderRadius: '6px',
-                  textDecoration: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
                   fontWeight: '500'
                 }}
               >
                 Test OAuth Callback
-              </a>
-              <a 
-                href="/api/notion" 
-                target="_blank"
+              </button>
+              <button 
+                onClick={() => {
+                  fetch('/api/notion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ databaseId: 'test', token: 'test' })
+                  })
+                    .then(res => res.text())
+                    .then(text => alert('Notion API Response:\n' + text))
+                    .catch(err => alert('Notion API Error:\n' + err.message));
+                }}
                 style={{
                   backgroundColor: '#8b5cf6',
                   color: 'white',
                   padding: '8px 16px',
                   borderRadius: '6px',
-                  textDecoration: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
                   fontWeight: '500'
                 }}
               >
                 Test Notion API
-              </a>
+              </button>
             </div>
             <p style={{ margin: '10px 0 0 0', fontSize: '12px', color: '#92400e' }}>
               Click these to test if your OAuth endpoints are working
