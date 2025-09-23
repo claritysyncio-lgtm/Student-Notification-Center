@@ -27,71 +27,9 @@ export default function NotificationCenter({ config = defaultConfig }) {
   const [completedOpen, setCompletedOpen] = useState(false);
   const [dueThisWeekOpen, setDueThisWeekOpen] = useState(false);
 
-  // Mock data for testing - exactly 1 task per section
-  const mockTasks = [
-    // Overdue tasks (1)
-    {
-      id: 'overdue-1',
-      name: 'Math Assignment - Calculus Problems',
-      title: 'Complete Chapter 5 Problems',
-      due: '2024-01-10',
-      course: 'Mathematics',
-      type: 'Assignment',
-      grade: 15,
-      completed: false
-    },
-    // Due today tasks (1)
-    {
-      id: 'today-1',
-      name: 'Physics Lab Report',
-      title: 'Experiment 3: Newton\'s Laws',
-      due: new Date().toISOString().slice(0, 10),
-      course: 'Physics',
-      type: 'Lab Report',
-      grade: 25,
-      completed: false
-    },
-    // Due tomorrow tasks (1)
-    {
-      id: 'tomorrow-1',
-      name: 'Chemistry Quiz - Organic Compounds',
-      title: 'Quiz on Alkanes and Alkenes',
-      due: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-      course: 'Chemistry',
-      type: 'Quiz',
-      grade: 15,
-      completed: false
-    },
-    // Due this week tasks (1)
-    {
-      id: 'week-1',
-      name: 'Biology Research Paper',
-      title: 'Cell Division and Mitosis',
-      due: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-      course: 'Biology',
-      type: 'Research Paper',
-      grade: 35,
-      completed: false
-    },
-    // Completed tasks (1)
-    {
-      id: 'completed-1',
-      name: 'Literature Analysis - Shakespeare',
-      title: 'Hamlet Character Analysis',
-      due: '2024-01-05',
-      course: 'Literature',
-      type: 'Analysis',
-      grade: 25,
-      completed: true
-    }
-  ];
-
   // Load tasks on component mount
   useEffect(() => {
-    // Use mock data instead of API call for testing
-    setTasks(mockTasks);
-    setLoading(false);
-    // loadTasks(); // Commented out for mock data testing
+    loadTasks();
   }, []);
 
   /**
