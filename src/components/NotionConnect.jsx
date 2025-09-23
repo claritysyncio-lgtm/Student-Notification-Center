@@ -3,8 +3,8 @@ import './NotionConnect.css';
 
 export default function NotionConnect() {
   const handleConnectToNotion = () => {
-    // Direct users to the actual Notion integration page
-    window.open('https://www.notion.so/integrations', '_blank');
+    // Direct users to your specific Notion OAuth integration
+    window.location.href = 'https://api.notion.com/v1/oauth/authorize?client_id=276d872b-594c-80c4-8a38-003774c17f93&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fnotification-center-for-customers.vercel.app%2Fcallback';
   };
 
   return (
@@ -57,7 +57,7 @@ export default function NotionConnect() {
 
         <div className="notion-footer">
           <p className="notion-footer-text">
-            This will open Notion's integration page where you can authorize our app.
+            Clicking "Connect to Notion" will redirect you to Notion's authorization page where you can grant access to your workspace.
           </p>
         </div>
       </div>

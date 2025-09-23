@@ -6,6 +6,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/callback.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -17,6 +21,10 @@
     {
       "src": "/api/notion",
       "dest": "/api/notion.js"
+    },
+    {
+      "src": "/callback",
+      "dest": "/api/callback.js"
     },
     {
       "src": "/embed.html",

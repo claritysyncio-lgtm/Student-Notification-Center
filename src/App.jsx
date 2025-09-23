@@ -9,11 +9,34 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user has connected a Notion database
-    const databaseId = localStorage.getItem('notionDatabaseId');
-    if (databaseId) {
+    // Check for OAuth callback parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const workspace = urlParams.get('workspace');
+    const error = urlParams.get('error');
+
+    if (error) {
+      console.error('OAuth error:', error);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (token) {
+      // Store the access token and mark as connected
+      localStorage.setItem('notionAccessToken', token);
+      if (workspace) {
+        localStorage.setItem('notionWorkspace', workspace);
+      }
       setIsConnected(true);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      // Check if user has connected a Notion database (legacy)
+      const databaseId = localStorage.getItem('notionDatabaseId');
+      const accessToken = localStorage.getItem('notionAccessToken');
+      if (databaseId || accessToken) {
+        setIsConnected(true);
+      }
     }
+    
     setIsLoading(false);
   }, []);
 
