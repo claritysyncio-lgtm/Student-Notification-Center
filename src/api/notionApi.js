@@ -71,11 +71,8 @@ export async function getTasks() {
       databaseId: notionConfig.databaseId
     });
     
-    // Use a shared integration token (you'll need to set this)
-    const sharedToken = 'secret_your_shared_integration_token_here';
-    
-    // Fetch from Notion via our backend API
-    const data = await fetchFromNotion(notionConfig.databaseId, sharedToken);
+    // No token needed - backend handles authentication automatically
+    const data = await fetchFromNotion(notionConfig.databaseId, '');
     
     // Transform Notion data to our task format
     const tasks = data.results.map(page => {

@@ -139,7 +139,7 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
           <ol style={{ margin: '0', paddingLeft: '20px' }}>
             <li><strong>Notion account</strong> - Make sure you're logged into Notion</li>
             <li><strong>Task database</strong> - A Notion database with your tasks/projects</li>
-            <li><strong>Database URL</strong> - We'll help you find it below</li>
+            <li><strong>Share your database</strong> - Add our integration to your database (one-time setup)</li>
           </ol>
           
           <div style={{ 
@@ -202,24 +202,37 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
                 margin: '15px 0',
                 fontSize: '13px'
               }}>
-                <strong>📝 Easy way - just paste your Notion URL:</strong>
+                <strong>📝 Step 1: Share your database with our integration</strong>
+                <p style={{ margin: '8px 0 0 0' }}>
+                  In Notion, go to your database → click "..." → "Add connections" → search for "ClaritySync Notification Center" → Add it.
+                </p>
+              </div>
+              
+              <div style={{ 
+                backgroundColor: '#fef3c7', 
+                border: '1px solid #fcd34d', 
+                borderRadius: '6px', 
+                padding: '12px', 
+                margin: '15px 0',
+                fontSize: '13px'
+              }}>
+                <strong>📝 Step 2: Paste your database URL below</strong>
                 <p style={{ margin: '8px 0 0 0' }}>
                   Copy the URL from your Notion database and paste it below. We'll automatically extract the Database ID for you!
                 </p>
               </div>
               
               <div style={{ 
-                backgroundColor: '#f0f9ff', 
-                border: '1px solid #0ea5e9', 
+                backgroundColor: '#f0fdf4', 
+                border: '1px solid #22c55e', 
                 borderRadius: '6px', 
                 padding: '12px', 
                 margin: '15px 0',
                 fontSize: '14px'
               }}>
-                <div style={{ fontWeight: '600', color: '#0c4a6e', marginBottom: '8px' }}>✅ No Token Required!</div>
-                <p style={{ margin: '0', color: '#0369a1' }}>
-                  This app uses a shared integration, so you don't need to create your own Notion integration. 
-                  Just provide your database URL below and we'll handle the rest!
+                <div style={{ fontWeight: '600', color: '#166534', marginBottom: '8px' }}>🚀 Fully Automated!</div>
+                <p style={{ margin: '0', color: '#15803d' }}>
+                  We handle all the technical setup automatically. Just paste your database URL and you're ready to go!
                 </p>
               </div>
               
