@@ -31,6 +31,10 @@
       "dest": "/dist/embed.html"
     },
     {
+      "src": "/legal.html",
+      "dest": "/public/legal.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/dist/$1"
     }
