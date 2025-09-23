@@ -175,7 +175,7 @@
 
 .notion-button {
   width: 100%;
-  background-color: #007bff;
+  background-color: #2383e2;
   color: #ffffff;
   padding: 16px 25px;
   border: none;
@@ -191,7 +191,7 @@
 }
 
 .notion-button:hover {
-  background-color: #0056b3;
+  background-color: #1a73d1;
 }
 
 .notion-button:active {
