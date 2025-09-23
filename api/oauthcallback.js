@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     }
 
     // Use the production redirect URI exactly as registered in Notion
-    const redirect_uri = 'https://student-notification-center.vercel.app/api/auth/callback/notion';
+    const redirect_uri = 'https://student-notification-center.vercel.app/api/oauthcallback';
 
     // Exchange authorization code for an access token
     const tokenResp = await fetch('https://api.notion.com/v1/oauth/token', {
