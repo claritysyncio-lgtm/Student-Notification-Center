@@ -199,6 +199,12 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
             <p style={{ margin: '10px 0 0 0', fontSize: '12px', color: '#92400e' }}>
               Click these to test if your OAuth endpoints are working
             </p>
+            <div style={{ marginTop: '10px', fontSize: '11px', color: '#92400e' }}>
+              <strong>Debug Info:</strong><br/>
+              OAuth Start: <a href="/api/oauth-start" target="_blank" style={{color: '#3b82f6'}}>/api/oauth-start</a><br/>
+              OAuth Callback: <a href="/api/oauth-callback" target="_blank" style={{color: '#3b82f6'}}>/api/oauth-callback</a><br/>
+              Notion API: <a href="/api/notion" target="_blank" style={{color: '#3b82f6'}}>/api/notion</a>
+            </div>
           </div>
         </div>
         
