@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NotificationCenter from "./components/NotificationCenter";
 import NotionConnect from "./components/NotionConnect";
+import DatabaseSelector from "./components/DatabaseSelector";
 import { defaultConfig } from "./config/widgetConfig";
 
 // Constants for localStorage keys - centralized for easier maintenance
@@ -33,7 +34,8 @@ export default function App() {
   const [connectionState, setConnectionState] = useState({
     isConnected: false,
     isLoading: true,
-    error: null
+    error: null,
+    needsDatabaseSelection: false
   });
 
   /**
@@ -118,19 +120,38 @@ export default function App() {
       const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
       const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
       
-      const isConnected = !!(databaseId || accessToken);
-      
-      setConnectionState({
-        isConnected,
-        isLoading: false,
-        error: null
-      });
+      if (accessToken && !databaseId) {
+        // User has access token but no database selected
+        setConnectionState({
+          isConnected: false,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: true
+        });
+      } else if (databaseId && accessToken) {
+        // User is fully connected
+        setConnectionState({
+          isConnected: true,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: false
+        });
+      } else {
+        // User needs to connect to Notion
+        setConnectionState({
+          isConnected: false,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: false
+        });
+      }
     } catch (error) {
       console.error('Error checking existing connection:', error);
       setConnectionState({
         isConnected: false,
         isLoading: false,
-        error: 'Failed to check existing connection'
+        error: 'Failed to check existing connection',
+        needsDatabaseSelection: false
       });
     }
   }, []);
@@ -147,6 +168,34 @@ export default function App() {
     } catch (error) {
       console.warn('Failed to clear URL parameters:', error);
     }
+  }, []);
+
+  /**
+   * Handle database selection completion
+   */
+  const handleDatabaseSelected = useCallback((databaseId) => {
+    console.log('Database selected:', databaseId);
+    setConnectionState({
+      isConnected: true,
+      isLoading: false,
+      error: null,
+      needsDatabaseSelection: false
+    });
+  }, []);
+
+  /**
+   * Handle database selection cancellation
+   */
+  const handleDatabaseSelectionCancel = useCallback(() => {
+    // Clear the access token and go back to connection screen
+    localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
+    setConnectionState({
+      isConnected: false,
+      isLoading: false,
+      error: null,
+      needsDatabaseSelection: false
+    });
   }, []);
 
   // Initialize connection on component mount
@@ -185,8 +234,14 @@ export default function App() {
   // Main application render
   return (
     <div className="app">
-      <NotificationCenter config={defaultConfig} />
-      {!connectionState.isConnected && <NotionConnect />}
+      {connectionState.isConnected && <NotificationCenter config={defaultConfig} />}
+      {connectionState.needsDatabaseSelection && (
+        <DatabaseSelector 
+          onDatabaseSelected={handleDatabaseSelected}
+          onCancel={handleDatabaseSelectionCancel}
+        />
+      )}
+      {!connectionState.isConnected && !connectionState.needsDatabaseSelection && <NotionConnect />}
     </div>
   );
 }

@@ -213,6 +213,169 @@ body{
   color: #d94841;
 }
 
+/* Database Selector Styling */
+.database-selector {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.selector-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.selector-header h3 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.selector-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.error-message {
+  color: #dc2626 !important;
+  background: #fef2f2;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+}
+
+.database-list {
+  margin: 20px 0;
+}
+
+.database-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  margin: 8px 0;
+  background: var(--background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.database-item:hover {
+  border-color: var(--primary-color);
+  background: var(--hover-bg);
+}
+
+.database-item.selected {
+  border-color: var(--primary-color);
+  background: var(--primary-bg);
+}
+
+.database-info h4 {
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.database-id {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.database-radio input {
+  margin: 0;
+}
+
+.selector-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.select-btn, .refresh-btn, .cancel-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.select-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.select-btn:disabled {
+  background: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.refresh-btn {
+  background: var(--secondary-color);
+  color: var(--text-primary);
+}
+
+.refresh-btn:hover {
+  background: var(--secondary-hover);
+}
+
+.cancel-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.cancel-btn:hover {
+  background: var(--hover-bg);
+}
+
+.selector-help {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--callout-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.selector-help p {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.selector-help ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.selector-help li {
+  margin: 4px 0;
+}
+
+.loading-spinner {
+  text-align: center;
+  font-size: 24px;
+  margin: 20px 0;
+}
+
 /* Overdue task styling */
 .nc-section.overdue .task-item {
   border-color: #fecaca;
