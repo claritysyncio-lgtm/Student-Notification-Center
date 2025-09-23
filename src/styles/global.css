@@ -361,14 +361,14 @@ body{
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #ffffff;
-  color: #37352f;
+  background: #2383e2;
+  color: #ffffff;
   font-family: inherit;
 }
 
 .notion-button:hover {
-  background: #f7f6f3;
-  border-color: #d9d9d7;
+  background: #1a73d1;
+  border-color: #1a73d1;
 }
 
 .notion-button.primary {
