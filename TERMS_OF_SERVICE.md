@@ -1,125 +1,241 @@
 # Terms of Service for ClaritySync Notification Center
 
-**Last Updated: December 2024**
+**Effective Date:** December 2024  
+**Last Updated:** December 2024
 
-## Acceptance of Terms
+## 1. Acceptance of Terms
 
-By using the ClaritySync Notification Center integration ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Service.
+By accessing or using the ClaritySync Notification Center integration ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Service.
 
-## Description of Service
+## 2. Description of Service
 
-ClaritySync Notification Center is a Notion integration that provides a customizable widget for displaying and managing your Notion tasks. The Service allows you to:
-- View your Notion tasks in an organized interface
-- Filter tasks by various criteria
-- Customize the appearance and behavior of the widget
-- Access your task data in real-time
+ClaritySync Notification Center is a secure Notion integration that provides a customizable widget for displaying and managing your Notion tasks. The Service allows you to:
+- View your Notion tasks in an organized, real-time interface
+- Filter and sort tasks by various criteria (due date, course, priority, etc.)
+- Customize the appearance, behavior, and functionality of the widget
+- Access your task data with live synchronization
+- Manage task completion status directly from the notification center
 
-## User Responsibilities
+## 3. User Responsibilities and Acceptable Use
 
-### Appropriate Use
-- Use the Service only for lawful purposes
-- Respect Notion's Terms of Service
-- Do not attempt to reverse engineer or compromise the Service
-- Do not use the Service to access data you don't have permission to view
+### 3.1 Appropriate Use
+- Use the Service only for lawful purposes and in accordance with these Terms
+- Respect Notion's Terms of Service and Community Guidelines
+- Do not attempt to reverse engineer, decompile, or compromise the Service
+- Do not use the Service to access data you don't have explicit permission to view
+- Do not use the Service for any illegal, harmful, or unauthorized purposes
 
-### Data Accuracy
-- Ensure your Notion databases contain accurate information
-- Maintain appropriate permissions for databases you connect
-- Notify us of any data inconsistencies or errors
+### 3.2 Data Accuracy and Permissions
+- Ensure your Notion databases contain accurate and up-to-date information
+- Maintain appropriate permissions for databases you connect to the Service
+- Notify us immediately of any data inconsistencies, errors, or security concerns
+- Ensure you have the right to access and share any data you connect to the Service
 
-## Service Availability
+### 3.3 Prohibited Activities
+- Attempting to gain unauthorized access to our systems or other users' data
+- Interfering with or disrupting the Service or its underlying infrastructure
+- Using automated systems to access the Service without permission
+- Sharing your access credentials with unauthorized parties
+- Violating any applicable laws or regulations
 
-### Uptime
-- We strive to maintain 99% uptime but cannot guarantee uninterrupted service
-- Maintenance windows will be announced when possible
-- We reserve the right to modify or discontinue the Service with reasonable notice
+## 4. Service Availability and Performance
 
-### Performance
-- Service performance may vary based on Notion API availability
-- We are not responsible for delays caused by third-party services
-- We continuously work to optimize performance
+### 4.1 Uptime and Reliability
+- We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service
+- Planned maintenance windows will be announced at least 24 hours in advance
+- Emergency maintenance may be performed with minimal notice
+- We reserve the right to modify, suspend, or discontinue the Service with reasonable notice
 
-## Privacy and Data Protection
+### 4.2 Performance and Dependencies
+- Service performance may vary based on Notion API availability and response times
+- We are not responsible for delays, outages, or changes caused by third-party services
+- We continuously work to optimize performance and minimize downtime
+- Performance metrics are monitored and reported transparently
 
-### Data Handling
-- We only access data you explicitly share with our integration
-- We do not store your Notion data permanently
-- We implement appropriate security measures to protect your data
-- See our Privacy Policy for detailed information
+### 4.3 Service Modifications
+- We may update, modify, or enhance the Service at any time
+- New features may be added or existing features may be modified
+- We will provide reasonable notice of significant changes that affect functionality
+- Continued use of the Service constitutes acceptance of modifications
 
-### User Control
-- You can revoke access to your data at any time
-- You control which databases are connected to the Service
-- You can clear all local configuration data
+## 5. Privacy and Data Protection
 
-## Intellectual Property
+### 5.1 Data Handling Practices
+- We only access data you explicitly authorize through our Notion integration
+- We do not store your Notion data permanently on our servers
+- We implement industry-standard security measures to protect your data
+- See our Privacy Policy for detailed information about data collection and use
 
-### Our Rights
-- The Service and its original content are owned by ClaritySync
-- Our code, design, and functionality are protected by intellectual property laws
-- You may not copy, modify, or distribute our Service without permission
+### 5.2 User Control and Rights
+- You can revoke access to your data at any time through Notion settings
+- You control which specific databases are connected to the Service
+- You can clear all local configuration data stored in your browser
+- You have the right to request deletion of any data we may have collected
 
-### Your Rights
-- You retain all rights to your Notion data
-- You can use the Service to display your own data
-- You can customize the Service within the provided options
+### 5.3 Data Security
+- All data transmission is encrypted using industry-standard protocols
+- Access to your data is strictly limited to authorized personnel
+- We conduct regular security audits and assessments
+- We maintain comprehensive incident response procedures
 
-## Limitation of Liability
+## 6. Intellectual Property Rights
 
-### Service Limitations
-- The Service is provided "as is" without warranties
-- We are not liable for any data loss or corruption
-- We are not responsible for Notion API outages or changes
-- We do not guarantee the accuracy of displayed data
+### 6.1 Our Intellectual Property
+- The Service and its original content, features, and functionality are owned by ClaritySync
+- Our code, design, user interface, and documentation are protected by intellectual property laws
+- You may not copy, modify, distribute, or create derivative works without written permission
+- All trademarks, service marks, and logos are our property
 
-### User Indemnification
-- You agree to indemnify us against claims arising from your use of the Service
-- You are responsible for ensuring you have rights to access connected data
-- You agree not to hold us liable for any damages arising from Service use
+### 6.2 Your Intellectual Property
+- You retain all rights to your Notion data and content
+- You grant us limited rights to access and display your data as necessary to provide the Service
+- You are responsible for ensuring you have the right to share any data you connect
+- We do not claim ownership of your content or data
 
-## Termination
+### 6.3 Third-Party Content
+- The Service may include content or features from third parties
+- Such content is subject to the respective third parties' terms and conditions
+- We are not responsible for third-party content or its accuracy
+- You use third-party content at your own risk
 
-### By You
-- You can stop using the Service at any time
-- Revoke integration access in your Notion settings
+## 7. Limitation of Liability and Disclaimers
+
+### 7.1 Service Disclaimers
+- The Service is provided "as is" and "as available" without warranties of any kind
+- We disclaim all warranties, express or implied, including merchantability and fitness for a particular purpose
+- We do not guarantee the accuracy, completeness, or reliability of displayed data
+- We are not responsible for any data loss, corruption, or unauthorized access
+
+### 7.2 Third-Party Dependencies
+- We are not liable for Notion API outages, changes, or discontinuation
+- We are not responsible for third-party service failures or limitations
+- We do not guarantee compatibility with all Notion features or updates
+- Service availability depends on third-party infrastructure and services
+
+### 7.3 Limitation of Damages
+- Our total liability for any claims arising from the Service is limited to the amount you paid for the Service (if any)
+- We are not liable for indirect, incidental, special, or consequential damages
+- We are not liable for loss of profits, data, or business opportunities
+- These limitations apply to the fullest extent permitted by law
+
+### 7.4 User Indemnification
+- You agree to indemnify and hold us harmless from any claims arising from your use of the Service
+- You are responsible for ensuring you have rights to access and share connected data
+- You agree not to hold us liable for any damages arising from your use of the Service
+- You are responsible for any violations of these Terms or applicable laws
+
+## 8. Termination and Suspension
+
+### 8.1 Termination by You
+- You can stop using the Service at any time without notice
+- Revoke integration access through your Notion settings
 - Clear local configuration data if desired
+- No fees or penalties for termination
 
-### By Us
-- We may terminate access for violations of these Terms
-- We may discontinue the Service with reasonable notice
-- We reserve the right to modify or suspend the Service
+### 8.2 Termination by Us
+- We may terminate or suspend your access for violations of these Terms
+- We may discontinue the Service with 30 days' notice
+- We reserve the right to modify or suspend the Service for maintenance or updates
+- We may terminate access immediately for serious violations or security threats
 
-## Changes to Terms
+### 8.3 Effect of Termination
+- Your right to use the Service ceases immediately upon termination
+- We may delete your data and configuration settings
+- Provisions that by their nature should survive termination will remain in effect
+- You remain liable for any obligations incurred before termination
 
-### Updates
-- We may update these Terms from time to time
-- Changes will be posted on our website
-- Continued use constitutes acceptance of updated Terms
-- Significant changes will be communicated through the Service
+## 9. Changes to Terms and Service
 
-### Notification
-- Check our website regularly for updates
-- We will notify users of material changes when possible
-- Your continued use indicates acceptance of changes
+### 9.1 Terms Updates
+- We may update these Terms from time to time to reflect changes in our Service or legal requirements
+- Material changes will be communicated through our website and Service
+- Continued use of the Service after changes constitutes acceptance of updated Terms
+- We will provide at least 30 days' notice for material changes
 
-## Governing Law
+### 9.2 Service Changes
+- We may modify, update, or discontinue features of the Service
+- We will provide reasonable notice of significant changes
+- We may add new features or remove existing features
+- Changes will be documented in our release notes
 
-These Terms are governed by the laws of [Your Jurisdiction] without regard to conflict of law principles. Any disputes will be resolved in the courts of [Your Jurisdiction].
+### 9.3 Notification Methods
+- Website announcements and updates
+- In-Service notifications for significant changes
+- Email notifications (if you have provided an email address)
+- Social media announcements for major updates
 
-## Contact Information
+## 10. Governing Law and Dispute Resolution
 
-For questions about these Terms, please contact us:
-- Website: https://notification-center-for-customers.vercel.app/
-- Email: [Your Contact Email]
+### 10.1 Governing Law
+- These Terms are governed by the laws of the State of California, United States
+- Any disputes will be resolved in accordance with California law
+- We do not waive any rights or remedies available under applicable law
 
-## Severability
+### 10.2 Dispute Resolution
+- We encourage resolving disputes through direct communication
+- For formal disputes, we prefer binding arbitration over litigation
+- Arbitration will be conducted by a neutral third party
+- You may opt out of arbitration within 30 days of accepting these Terms
 
-If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect.
+### 10.3 Class Action Waiver
+- You agree to resolve disputes on an individual basis
+- You waive the right to participate in class action lawsuits
+- This waiver applies to the fullest extent permitted by law
 
-## Entire Agreement
+## 11. Contact Information and Support
 
-These Terms, together with our Privacy Policy, constitute the entire agreement between you and ClaritySync regarding the Service.
+### 11.1 General Inquiries
+For questions about these Terms or our Service:
+- **Website**: https://claritysync.io
+- **Email**: support@claritysync.io
+- **Service URL**: https://notification-center-for-customers.vercel.app
+
+### 11.2 Legal Notices
+For legal matters or formal communications:
+- **Email**: legal@claritysync.io
+- **Address**: ClaritySync Legal Department
+
+### 11.3 Response Times
+- **General Support**: Within 24 hours
+- **Technical Issues**: Within 48 hours
+- **Legal Inquiries**: Within 5 business days
+- **Security Issues**: Immediate response
+
+## 12. Severability and Entire Agreement
+
+### 12.1 Severability
+- If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect
+- We will replace unenforceable provisions with enforceable ones that achieve the same purpose
+- The invalidity of one provision does not affect the validity of the entire agreement
+
+### 12.2 Entire Agreement
+- These Terms, together with our Privacy Policy, constitute the entire agreement between you and ClaritySync
+- They supersede all prior agreements and understandings
+- No other terms or conditions apply unless explicitly agreed to in writing
+
+### 12.3 Waiver
+- Our failure to enforce any provision of these Terms does not constitute a waiver
+- We may enforce our rights at any time
+- Waivers must be in writing and signed by an authorized representative
+
+## 13. Force Majeure
+
+We are not liable for any failure to perform our obligations due to circumstances beyond our reasonable control, including but not limited to:
+- Natural disasters, pandemics, or other acts of God
+- Government actions, regulations, or restrictions
+- Internet outages or third-party service failures
+- War, terrorism, or civil unrest
+- Labor disputes or strikes
+
+## 14. Survival
+
+The following provisions will survive termination of these Terms:
+- Intellectual property rights and restrictions
+- Limitation of liability and disclaimers
+- Indemnification obligations
+- Dispute resolution procedures
+- Any other provisions that by their nature should survive
 
 ---
 
-*By using the ClaritySync Notification Center, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.*
+*By using the ClaritySync Notification Center, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree to these Terms, please discontinue use of the Service immediately.*
