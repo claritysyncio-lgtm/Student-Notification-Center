@@ -23,7 +23,7 @@
       "dest": "/api/notion.js"
     },
     {
-      "src": "/oauthcallback",
+      "src": "/api/auth/callback/notion",
       "dest": "/api/oauthcallback.js"
     },
     {
