@@ -1,0 +1,77 @@
+{
+  "name": "ClaritySync Notification Center",
+  "description": "A beautiful, customizable notification center widget for displaying and managing your Notion tasks. Perfect for students, professionals, and anyone who wants to keep track of their tasks and deadlines.",
+  "website": "https://notification-center-for-customers.vercel.app/",
+  "privacy_policy": "https://notification-center-for-customers.vercel.app/privacy-policy",
+  "terms_of_service": "https://notification-center-for-customers.vercel.app/terms-of-service",
+  "support_url": "https://notification-center-for-customers.vercel.app/",
+  "capabilities": {
+    "read_database": {
+      "description": "Read task data from your Notion databases to display in the notification center widget",
+      "required": true,
+      "data_types": [
+        "task_name",
+        "due_date", 
+        "course_subject",
+        "task_type",
+        "completion_status",
+        "priority_level",
+        "grade_score"
+      ]
+    },
+    "read_database_structure": {
+      "description": "Understand database schema to properly display and filter your tasks",
+      "required": true,
+      "data_types": [
+        "property_names",
+        "property_types",
+        "select_options"
+      ]
+    }
+  },
+  "permissions": {
+    "read_only": true,
+    "no_write_access": true,
+    "no_delete_access": true,
+    "no_create_access": true
+  },
+  "data_retention": {
+    "notion_data": "Not stored permanently - processed in real-time only",
+    "configuration_data": "Stored locally in user's browser only",
+    "error_logs": "Retained for 30 days maximum for debugging purposes"
+  },
+  "security": {
+    "encryption": "HTTPS for all data transmission",
+    "access_control": "User must explicitly share databases with integration",
+    "data_sharing": "No data shared with third parties",
+    "storage": "No permanent storage of user data"
+  },
+  "use_cases": [
+    "Student task management and assignment tracking",
+    "Professional project and deadline management", 
+    "Personal productivity and goal tracking",
+    "Team task visibility and coordination"
+  ],
+  "features": [
+    "Real-time task display from Notion databases",
+    "Filtering by course, type, due date, and completion status",
+    "Customizable appearance and layout",
+    "Mobile-responsive design",
+    "Due date organization (overdue, today, upcoming)",
+    "Completion status tracking",
+    "No account registration required"
+  ],
+  "technical_details": {
+    "integration_type": "Public OAuth 2.0 integration",
+    "api_version": "Notion API 2022-06-28",
+    "hosting": "Vercel serverless platform",
+    "data_processing": "Real-time processing only",
+    "caching": "Browser-based caching for performance"
+  },
+  "compliance": {
+    "gdpr_compliant": true,
+    "ccpa_compliant": true,
+    "notion_guidelines": "Fully compliant with Notion integration guidelines",
+    "privacy_by_design": true
+  }
+}
