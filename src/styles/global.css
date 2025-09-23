@@ -290,6 +290,12 @@ body{
   font-family: monospace;
 }
 
+.database-description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
 .database-radio input {
   margin: 0;
 }
