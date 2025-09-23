@@ -252,6 +252,24 @@ export default function App() {
         />
       )}
       {!connectionState.isConnected && !connectionState.needsDatabaseSelection && <NotionConnect />}
+      
+      {/* Debug info - remove this later */}
+      <div style={{position: 'fixed', top: '10px', right: '10px', background: 'white', padding: '10px', border: '1px solid #ccc', fontSize: '12px', zIndex: 9999}}>
+        <div>Connected: {connectionState.isConnected ? 'Yes' : 'No'}</div>
+        <div>Needs DB Selection: {connectionState.needsDatabaseSelection ? 'Yes' : 'No'}</div>
+        <div>Loading: {connectionState.isLoading ? 'Yes' : 'No'}</div>
+        <div>Error: {connectionState.error || 'None'}</div>
+        <button 
+          onClick={() => {
+            localStorage.setItem('notionAccessToken', 'test-token');
+            localStorage.removeItem('notionDatabaseId');
+            window.location.reload();
+          }}
+          style={{marginTop: '5px', padding: '5px', fontSize: '10px'}}
+        >
+          Test DB Selector
+        </button>
+      </div>
     </div>
   );
 }
