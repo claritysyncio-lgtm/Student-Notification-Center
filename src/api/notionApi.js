@@ -42,37 +42,18 @@ async function fetchFromNotion(databaseId, token) {
 
 export async function getTasks() {
   try {
-    // Get user ID first
-    const userId = localStorage.getItem('notificationCenter_userId');
-    if (!userId) {
-      console.warn('No user ID found, using fallback data');
+    // Get database ID from localStorage
+    const databaseId = localStorage.getItem('notionDatabaseId');
+    if (!databaseId) {
+      console.warn('No Notion database ID found, using fallback data');
       return fallbackTasks;
     }
     
-    // Get user config from localStorage using the correct key
-    const userConfig = JSON.parse(localStorage.getItem(`notificationCenter_${userId}`) || '{}');
-    const notionConfig = userConfig.notion || {};
-    
-    console.log('🔍 User config from localStorage:', userConfig);
-    console.log('🔍 Notion config:', notionConfig);
-    
-    // Check if we have the required database ID (token is now optional)
-    if (!notionConfig.databaseId) {
-      console.warn('No Notion database ID found, using fallback data', {
-        databaseId: notionConfig.databaseId
-      });
-      return fallbackTasks;
-    }
-    
-    console.log('📊 Database ID:', notionConfig.databaseId);
+    console.log('📊 Database ID:', databaseId);
     console.log('🚀 About to fetch from Notion API...');
     
-    console.log('Fetching real data from Notion...', {
-      databaseId: notionConfig.databaseId
-    });
-    
-    // No token needed - backend handles authentication automatically
-    const data = await fetchFromNotion(notionConfig.databaseId, '');
+    // Fetch data from Notion using our API
+    const data = await fetchFromNotion(databaseId, '');
     
     // Transform Notion data to our task format
     const tasks = data.results.map(page => {

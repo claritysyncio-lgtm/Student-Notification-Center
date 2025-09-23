@@ -6,22 +6,6 @@
       "use": "@vercel/node"
     },
     {
-      "src": "api/notion/callback.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "pages/api/callback.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/oauth-start.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/oauth-callback.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -33,22 +17,6 @@
     {
       "src": "/api/notion",
       "dest": "/api/notion.js"
-    },
-    {
-      "src": "/api/notion/callback",
-      "dest": "/api/notion/callback.js"
-    },
-    {
-      "src": "/api/callback",
-      "dest": "/pages/api/callback.js"
-    },
-    {
-      "src": "/api/oauth-start",
-      "dest": "/api/oauth-start.js"
-    },
-    {
-      "src": "/api/oauth-callback",
-      "dest": "/api/oauth-callback.js"
     },
     {
       "src": "/embed.html",
