@@ -753,6 +753,41 @@ body{
   transform: scale(1.2);
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e9e9e7;
+}
+
+.divider span {
+  padding: 0 16px;
+  color: #787774;
+  font-size: 14px;
+  font-weight: 500;
+  background: #ffffff;
+}
+
+.connect-button.secondary {
+  background: #ffffff;
+  color: #2383e2;
+  border: 2px solid #2383e2;
+}
+
+.connect-button.secondary:hover:not(:disabled) {
+  background: #f0f8ff;
+  border-color: #1a73d1;
+  color: #1a73d1;
+}
+
 /* URL Input Section */
 .url-input-section {
   margin: 20px 0;

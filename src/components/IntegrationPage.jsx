@@ -70,14 +70,48 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
     <div className="integration-page">
       <div className="integration-container">
         <div className="integration-header">
-          <h1>🔗 Connect Your Database</h1>
-          <p>Paste your Notion database URL to get started with your notification center</p>
+          <h1>📊 Connect to Assessments</h1>
+          <p>Connect to your Assessments database to start using the notification center</p>
         </div>
 
         <div className="integration-form">
+          <div className="database-selection">
+            <div className="database-item">
+              <div className="database-info">
+                <h3>📊 Assessments</h3>
+                <p>Your main assessments and tasks database</p>
+              </div>
+              <div className="database-radio">
+                <input 
+                  type="radio" 
+                  name="database" 
+                  value="assessments"
+                  checked={true}
+                  readOnly
+                />
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => {
+                const assessmentsDatabaseId = '270a5eba-e7ac-8150-843a-cf6e74c5f8fc';
+                localStorage.setItem('notionDatabaseId', assessmentsDatabaseId);
+                onDatabaseSelected(assessmentsDatabaseId);
+              }}
+              disabled={isLoading}
+              className="connect-button"
+            >
+              {isLoading ? '🔄 Connecting...' : '✅ Connect to Assessments'}
+            </button>
+          </div>
+
+          <div className="divider">
+            <span>OR</span>
+          </div>
+
           <div className="url-input-section">
             <div className="input-header">
-              <label htmlFor="database-url">Database URL</label>
+              <label htmlFor="database-url">Paste your own database URL</label>
               <button 
                 type="button"
                 className="help-icon"
@@ -102,21 +136,21 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
             <button 
               onClick={handleUrlSubmit}
               disabled={!databaseUrl.trim() || isLoading}
-              className="connect-button"
+              className="connect-button secondary"
             >
-              {isLoading ? '🔄 Connecting...' : '✅ Connect Database'}
+              {isLoading ? '🔄 Connecting...' : '✅ Connect Your Database'}
             </button>
           </div>
         </div>
 
         <div className="integration-help">
-          <h3>📋 How to get your database URL:</h3>
-          <ol>
-            <li>Go to your Notion database</li>
-            <li>Click the <strong>3 dots (...)</strong> next to the database title</li>
-            <li>Select <strong>"Copy link to database"</strong></li>
-            <li>Paste the link above</li>
-          </ol>
+          <h3>📋 What you'll get:</h3>
+          <ul>
+            <li>📊 Real-time task notifications</li>
+            <li>🎯 Personalized dashboard</li>
+            <li>💻 Desktop and mobile friendly interface</li>
+            <li>🔒 Secure integration</li>
+          </ul>
           
           <div className="help-note">
             <strong>💡 Required database properties:</strong>
