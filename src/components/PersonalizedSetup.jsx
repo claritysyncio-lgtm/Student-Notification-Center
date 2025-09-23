@@ -186,7 +186,7 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
                   className="oauth-button"
                   onClick={() => {
                     console.log('OAuth button clicked!');
-                    window.location.href = '/api/auth/start';
+                    window.location.href = '/api/oauth-start';
                   }}
                   style={{
                     backgroundColor: '#3b82f6',

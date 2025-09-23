@@ -6,11 +6,11 @@
       "use": "@vercel/node"
     },
     {
-      "src": "api/auth/start.js",
+      "src": "api/oauth-start.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/auth/callback.js",
+      "src": "api/oauth-callback.js",
       "use": "@vercel/node"
     },
     {
@@ -27,12 +27,12 @@
       "dest": "/api/notion.js"
     },
     {
-      "src": "/api/auth/start",
-      "dest": "/api/auth/start.js"
+      "src": "/api/oauth-start",
+      "dest": "/api/oauth-start.js"
     },
     {
-      "src": "/api/auth/callback",
-      "dest": "/api/auth/callback.js"
+      "src": "/api/oauth-callback",
+      "dest": "/api/oauth-callback.js"
     },
     {
       "src": "/embed.html",
