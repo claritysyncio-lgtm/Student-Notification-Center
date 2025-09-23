@@ -7,10 +7,10 @@
     "dev": "vite",
     "dev:server": "node server.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:server\"",
-    "build": "vite build && copy legal.html dist\\",
+    "build": "vite build && cp legal.html dist/",
     "preview": "vite preview",
     "start": "vite preview --port 3000",
-    "vercel-build": "vite build && copy legal.html dist\\"
+    "vercel-build": "vite build && cp legal.html dist/"
   },
   "dependencies": {
     "react": "^18.2.0",
