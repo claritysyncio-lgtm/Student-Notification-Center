@@ -9,6 +9,6 @@ export const OAUTH_CONFIG = {
   },
   
   get OAUTH_AUTHORIZE_URL() {
-    return `https://api.notion.com/v1/oauth/authorize?client_id=276d872b-594c-80c4-8a38-003774c17f93&response_type=code&owner=user&redirect_uri=${encodeURIComponent(this.OAUTH_REDIRECT_URI)}`;
+    return `https://api.notion.com/v1/oauth/authorize?client_id=277d872b-594c-8009-a497-003712a5baf8&response_type=code&owner=user&redirect_uri=${encodeURIComponent(this.OAUTH_REDIRECT_URI)}`;
   }
 };
