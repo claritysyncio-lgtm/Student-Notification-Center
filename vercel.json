@@ -2,14 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/notion.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/oauthcallback.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -18,14 +10,6 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/notion",
-      "dest": "/api/notion.js"
-    },
-    {
-      "src": "/api/auth/callback/notion",
-      "dest": "/api/oauthcallback.js"
-    },
     {
       "src": "/embed.html",
       "dest": "/dist/embed.html"

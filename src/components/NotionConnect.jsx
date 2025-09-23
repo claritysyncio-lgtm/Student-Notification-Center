@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './NotionConnect.css';
 import { OAUTH_CONFIG } from '../config/oauthConfig';
 
+/**
+ * NotionConnect Component
+ * 
+ * Displays the connection interface for users to authenticate with Notion.
+ * Provides information about the integration and handles the OAuth flow initiation.
+ */
 export default function NotionConnect() {
-  const handleConnectToNotion = () => {
-    // Direct users to your specific Notion OAuth integration
-    window.location.href = OAUTH_CONFIG.OAUTH_AUTHORIZE_URL;
-  };
+  /**
+   * Handle Notion OAuth connection initiation
+   */
+  const handleConnectToNotion = useCallback(() => {
+    try {
+      // Validate OAuth configuration before redirecting
+      if (!OAUTH_CONFIG.OAUTH_AUTHORIZE_URL) {
+        console.error('OAuth configuration is missing');
+        alert('OAuth configuration error. Please contact support.');
+        return;
+      }
+      
+      console.log('Initiating Notion OAuth flow...');
+      window.location.href = OAUTH_CONFIG.OAUTH_AUTHORIZE_URL;
+    } catch (error) {
+      console.error('Error initiating OAuth flow:', error);
+      alert('Failed to connect to Notion. Please try again.');
+    }
+  }, []);
 
   return (
     <div className="notion-connect-page">
