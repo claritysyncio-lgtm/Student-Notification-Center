@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     // Build the OAuth authorization URL
     const authUrl = new URL('https://api.notion.com/v1/oauth/authorize');
     authUrl.searchParams.set('client_id', clientId);
-    authUrl.searchParams.set('redirect_uri', 'https://notification-center-for-customers.vercel.app/auth/callback');
+    authUrl.searchParams.set('redirect_uri', 'https://notification-center-for-customers.vercel.app/callback');
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('owner', 'user');
     authUrl.searchParams.set('state', state);
