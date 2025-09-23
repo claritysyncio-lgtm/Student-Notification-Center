@@ -162,19 +162,41 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
               <div className="connect-icon">🔗</div>
               <h3>Connect to Notion</h3>
               <p>Enter your Notion database URL to get started.</p>
-              <button 
-                className="connect-button"
-                onClick={() => {
-                  console.log('NotionSetupStep Connect button clicked!');
-                  handleNotionConnect({
-                    token: '',
-                    databaseId: '',
-                    workspaceName: 'Your Workspace'
-                  });
-                }}
-              >
-                I'll Enter My Database URL Below
-              </button>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button 
+                  className="connect-button"
+                  onClick={() => {
+                    console.log('NotionSetupStep Connect button clicked!');
+                    handleNotionConnect({
+                      token: '',
+                      databaseId: '',
+                      workspaceName: 'Your Workspace'
+                    });
+                  }}
+                  style={{
+                    backgroundColor: '#f3f4f6',
+                    color: '#374151',
+                    border: '1px solid #d1d5db'
+                  }}
+                >
+                  📝 Enter Database URL
+                </button>
+                
+                <button 
+                  className="oauth-button"
+                  onClick={() => {
+                    console.log('OAuth button clicked!');
+                    window.location.href = '/api/auth/start';
+                  }}
+                  style={{
+                    backgroundColor: '#3b82f6',
+                    color: 'white',
+                    border: '1px solid #3b82f6'
+                  }}
+                >
+                  🔐 Connect with Notion OAuth
+                </button>
+              </div>
             </div>
           </div>
         ) : (
