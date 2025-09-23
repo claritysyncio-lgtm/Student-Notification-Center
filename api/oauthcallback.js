@@ -38,10 +38,9 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const { access_token, bot_id, workspace_id, workspace_name } = tokenData;
 
-    // Store the access token and workspace info
-    // In a real app, you'd store this in a database
-    // For now, we'll redirect with the token in the URL (not secure for production)
-    const redirectUrl = `/?token=${encodeURIComponent(access_token)}&workspace=${encodeURIComponent(workspace_name)}&bot_id=${encodeURIComponent(bot_id)}`;
+    // Store the access token and workspace info in localStorage via redirect
+    // Redirect to dashboard with token parameters
+    const redirectUrl = `/dashboard?token=${encodeURIComponent(access_token)}&workspace=${encodeURIComponent(workspace_name)}&bot_id=${encodeURIComponent(bot_id)}`;
     
     return res.redirect(redirectUrl);
 
