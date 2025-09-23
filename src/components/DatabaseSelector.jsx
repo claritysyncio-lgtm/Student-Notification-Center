@@ -11,6 +11,9 @@ export default function DatabaseSelector({ onDatabaseSelected, onCancel }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDatabase, setSelectedDatabase] = useState('');
+  const [databaseUrl, setDatabaseUrl] = useState('');
+  const [urlError, setUrlError] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
 
   useEffect(() => {
     loadDatabases();
@@ -46,11 +49,63 @@ export default function DatabaseSelector({ onDatabaseSelected, onCancel }) {
     }
   };
 
+  /**
+   * Extract database ID from Notion URL
+   */
+  const extractDatabaseId = (url) => {
+    try {
+      // Handle different Notion URL formats
+      const patterns = [
+        /notion\.so\/[^\/]+\/([a-f0-9]{32})/i,
+        /notion\.site\/([a-f0-9]{32})/i,
+        /notion\.so\/([a-f0-9]{32})/i
+      ];
+      
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) {
+          return match[1];
+        }
+      }
+      
+      // If no pattern matches, try to extract 32-character hex string
+      const hexMatch = url.match(/([a-f0-9]{32})/i);
+      if (hexMatch) {
+        return hexMatch[1];
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error extracting database ID:', error);
+      return null;
+    }
+  };
+
   const handleSelectDatabase = () => {
     if (selectedDatabase) {
       localStorage.setItem('notionDatabaseId', selectedDatabase);
       onDatabaseSelected(selectedDatabase);
     }
+  };
+
+  const handleUrlSubmit = () => {
+    setUrlError('');
+    
+    if (!databaseUrl.trim()) {
+      setUrlError('Please enter a database URL');
+      return;
+    }
+    
+    const databaseId = extractDatabaseId(databaseUrl);
+    
+    if (!databaseId) {
+      setUrlError('Invalid Notion database URL. Please check the format.');
+      return;
+    }
+    
+    // Use the extracted database ID
+    localStorage.setItem('notionDatabaseId', databaseId);
+    onDatabaseSelected(databaseId);
   };
 
   const handleRefresh = () => {
@@ -94,8 +149,52 @@ export default function DatabaseSelector({ onDatabaseSelected, onCancel }) {
         <h3>Select Your Task Database</h3>
         <p>Choose which Notion database contains your tasks:</p>
       </div>
-      
+
+      {/* URL Input Option */}
+      <div className="url-input-section">
+        <div className="url-input-header">
+          <h4>📋 Or paste your database URL</h4>
+          <button 
+            type="button"
+            className="info-icon"
+            title="Click the 3 dots (...) next to your database title in Notion, then select 'Copy link to database'"
+          >
+            ℹ️
+          </button>
+        </div>
+        
+        {!showUrlInput ? (
+          <button 
+            onClick={() => setShowUrlInput(true)}
+            className="show-url-btn"
+          >
+            📋 Paste Database URL Instead
+          </button>
+        ) : (
+          <div className="url-input-container">
+            <input
+              type="url"
+              value={databaseUrl}
+              onChange={(e) => setDatabaseUrl(e.target.value)}
+              placeholder="https://notion.so/your-workspace/database-id..."
+              className="url-input"
+            />
+            {urlError && <p className="url-error">{urlError}</p>}
+            <div className="url-actions">
+              <button onClick={handleUrlSubmit} className="url-submit-btn">
+                ✅ Use This URL
+              </button>
+              <button onClick={() => setShowUrlInput(false)} className="url-cancel-btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Database List */}
       <div className="database-list">
+        <h4>📁 Or select from your databases:</h4>
         {databases.map((db) => (
           <div 
             key={db.id} 

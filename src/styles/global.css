@@ -376,6 +376,132 @@ body{
   margin: 20px 0;
 }
 
+/* URL Input Section */
+.url-input-section {
+  margin: 20px 0;
+  padding: 16px;
+  background: var(--callout-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.url-input-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.url-input-header h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.info-icon {
+  background: none;
+  border: none;
+  cursor: help;
+  font-size: 16px;
+  padding: 2px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.info-icon:hover {
+  background: var(--hover-bg);
+}
+
+.show-url-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--secondary-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.show-url-btn:hover {
+  background: var(--secondary-hover);
+  border-color: var(--primary-color);
+}
+
+.url-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.url-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--background);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.url-input::placeholder {
+  color: var(--text-disabled);
+}
+
+.url-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 13px;
+  background: #fef2f2;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #fecaca;
+}
+
+.url-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.url-submit-btn, .url-cancel-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.url-submit-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.url-submit-btn:hover {
+  background: var(--primary-hover);
+}
+
+.url-cancel-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.url-cancel-btn:hover {
+  background: var(--hover-bg);
+}
+
 /* Overdue task styling */
 .nc-section.overdue .task-item {
   border-color: #fecaca;
