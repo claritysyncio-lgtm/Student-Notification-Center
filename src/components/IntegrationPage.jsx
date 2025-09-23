@@ -8,6 +8,7 @@ import React, { useState } from 'react';
  */
 export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
   const [databaseUrl, setDatabaseUrl] = useState('');
+  const [extractedId, setExtractedId] = useState('');
   const [urlError, setUrlError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,6 +44,20 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
     }
   };
 
+  const handleUrlChange = (e) => {
+    const url = e.target.value;
+    setDatabaseUrl(url);
+    setUrlError('');
+    
+    // Auto-extract ID as user types
+    const databaseId = extractDatabaseId(url);
+    if (databaseId) {
+      setExtractedId(databaseId);
+    } else {
+      setExtractedId('');
+    }
+  };
+
   const handleUrlSubmit = async () => {
     setUrlError('');
     setIsLoading(true);
@@ -53,17 +68,15 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
       return;
     }
     
-    const databaseId = extractDatabaseId(databaseUrl);
-    
-    if (!databaseId) {
+    if (!extractedId) {
       setUrlError('Invalid Notion database URL. Please check the format.');
       setIsLoading(false);
       return;
     }
     
     // Use the extracted database ID
-    localStorage.setItem('notionDatabaseId', databaseId);
-    onDatabaseSelected(databaseId);
+    localStorage.setItem('notionDatabaseId', extractedId);
+    onDatabaseSelected(extractedId);
   };
 
   return (
@@ -123,13 +136,25 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
             
             <input
               id="database-url"
-              type="url"
+              type="text"
               value={databaseUrl}
-              onChange={(e) => setDatabaseUrl(e.target.value)}
+              onChange={handleUrlChange}
               placeholder="https://notion.so/your-workspace/database-id..."
               className="url-input"
               disabled={isLoading}
             />
+            
+            {extractedId && (
+              <div className="extracted-id-display">
+                <label>Auto-generated Database ID:</label>
+                <input
+                  type="text"
+                  value={extractedId}
+                  readOnly
+                  className="id-input"
+                />
+              </div>
+            )}
             
             {urlError && <div className="error-message">{urlError}</div>}
             
