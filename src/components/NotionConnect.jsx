@@ -1,10 +1,11 @@
 import React from 'react';
 import './NotionConnect.css';
+import { OAUTH_CONFIG } from '../config/oauthConfig';
 
 export default function NotionConnect() {
   const handleConnectToNotion = () => {
     // Direct users to your specific Notion OAuth integration
-    window.location.href = 'https://api.notion.com/v1/oauth/authorize?client_id=276d872b-594c-80c4-8a38-003774c17f93&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Fapi%2Fauth%2Fcallback%2Fnotion';
+    window.location.href = OAUTH_CONFIG.OAUTH_AUTHORIZE_URL;
   };
 
   return (
