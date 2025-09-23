@@ -5,7 +5,7 @@ export const OAUTH_CONFIG = {
   
   // These will be automatically generated from BASE_URL
   get OAUTH_REDIRECT_URI() {
-    return `${this.BASE_URL}/api/auth/callback/notion`;
+    return `${this.BASE_URL}/api/oauthcallback`;
   },
   
   get OAUTH_AUTHORIZE_URL() {
