@@ -32,7 +32,7 @@
     },
     {
       "src": "/legal.html",
-      "dest": "/public/legal.html"
+      "dest": "/dist/legal.html"
     },
     {
       "src": "/(.*)",
