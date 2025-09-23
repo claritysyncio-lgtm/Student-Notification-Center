@@ -120,8 +120,16 @@ export default function App() {
       const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
       const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
       
+      console.log('Checking connection state:', {
+        hasAccessToken: !!accessToken,
+        hasDatabaseId: !!databaseId,
+        accessToken: accessToken ? 'present' : 'missing',
+        databaseId: databaseId || 'missing'
+      });
+      
       if (accessToken && !databaseId) {
         // User has access token but no database selected
+        console.log('User needs database selection');
         setConnectionState({
           isConnected: false,
           isLoading: false,
@@ -130,6 +138,7 @@ export default function App() {
         });
       } else if (databaseId && accessToken) {
         // User is fully connected
+        console.log('User is fully connected');
         setConnectionState({
           isConnected: true,
           isLoading: false,
@@ -138,6 +147,7 @@ export default function App() {
         });
       } else {
         // User needs to connect to Notion
+        console.log('User needs to connect to Notion');
         setConnectionState({
           isConnected: false,
           isLoading: false,
