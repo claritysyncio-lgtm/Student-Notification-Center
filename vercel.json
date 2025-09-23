@@ -19,6 +19,14 @@
       "dest": "/api/notion.js"
     },
     {
+      "src": "/api/auth/start",
+      "dest": "/api/auth/start.js"
+    },
+    {
+      "src": "/api/auth/callback",
+      "dest": "/api/auth/callback.js"
+    },
+    {
       "src": "/embed.html",
       "dest": "/dist/embed.html"
     },

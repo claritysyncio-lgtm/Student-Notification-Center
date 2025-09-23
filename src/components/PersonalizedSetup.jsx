@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getUserConfig, updateUserConfig } from '../config/userConfig';
 import NotificationCenter from './NotificationCenter';
 import ConfigPanel from './ConfigPanel';
+import Footer from './Footer';
 
 export default function PersonalizedSetup() {
   const [userConfig, setUserConfig] = useState(null);
@@ -90,6 +91,8 @@ export default function PersonalizedSetup() {
           onBack={() => setSetupStep('complete')}
         />
       )}
+      
+      <Footer />
     </div>
   );
 }
