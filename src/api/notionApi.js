@@ -175,15 +175,22 @@ function transformNotionPageToTask(page) {
 export async function getTasks() {
   try {
     const databaseId = localStorage.getItem('notionDatabaseId');
+    const accessToken = localStorage.getItem('notionAccessToken');
     
     if (!databaseId) {
-      console.warn('No Notion database ID found, using fallback data');
+      console.warn('No Notion database ID found. Please set it in localStorage:');
+      console.warn('localStorage.setItem("notionDatabaseId", "your-database-id-here")');
+      return FALLBACK_TASKS;
+    }
+    
+    if (!accessToken) {
+      console.warn('No Notion access token found. Please reconnect to Notion.');
       return FALLBACK_TASKS;
     }
     
     console.log('Fetching tasks from Notion database:', databaseId);
     
-    const data = await fetchFromNotion(databaseId, '');
+    const data = await fetchFromNotion(databaseId, accessToken);
     
     if (!data.results || !Array.isArray(data.results)) {
       throw new Error(`${ERROR_TYPES.VALIDATION_ERROR}: Invalid response format from Notion API`);

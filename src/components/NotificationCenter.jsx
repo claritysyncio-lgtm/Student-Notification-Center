@@ -139,8 +139,10 @@ export default function NotificationCenter({ config = defaultConfig }) {
   /**
    * Handle refresh button click
    */
-  const handleRefresh = useCallback(() => {
-    loadTasks();
+  const handleRefresh = useCallback(async () => {
+    console.log('Refreshing tasks...');
+    await loadTasks();
+    console.log('Tasks refreshed successfully');
   }, []);
 
   return (

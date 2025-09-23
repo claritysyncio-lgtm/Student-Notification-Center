@@ -73,6 +73,11 @@
                         localStorage.setItem('notionWorkspaceId', data.workspace_id);
                         localStorage.setItem('notionWorkspaceName', data.workspace_name);
                         
+                        // For now, we'll need to manually set the database ID
+                        // TODO: Automatically detect databases
+                        console.log('OAuth successful! Please set your database ID in localStorage:');
+                        console.log('localStorage.setItem("notionDatabaseId", "your-database-id-here")');
+                        
                         // Redirect back to the main notification center
                         window.location.href = '/';
                     } else {
