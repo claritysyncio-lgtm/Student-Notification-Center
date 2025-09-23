@@ -74,11 +74,6 @@
                         localStorage.setItem('notionWorkspaceName', data.workspace_name);
                         
                         console.log('OAuth successful! Access token stored.');
-                        console.log('Current localStorage state:', {
-                            hasAccessToken: !!localStorage.getItem('notionAccessToken'),
-                            hasDatabaseId: !!localStorage.getItem('notionDatabaseId'),
-                            workspaceId: localStorage.getItem('notionWorkspaceId')
-                        });
                         
                         // Redirect back to the main notification center
                         // This should trigger the database selection screen since no database ID is set
