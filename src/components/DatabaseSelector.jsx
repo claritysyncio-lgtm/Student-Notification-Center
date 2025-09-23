@@ -11,9 +11,8 @@ export default function DatabaseSelector({ onDatabaseSelected, onCancel }) {
   const [error, setError] = useState(null);
 
   const handleSelectAssessments = () => {
-    // For now, we'll use a placeholder database ID
-    // In a real implementation, this would be the actual Assessments database ID
-    const assessmentsDatabaseId = 'assessments-database-id';
+    // Use the actual Assessments database ID from your Notion workspace
+    const assessmentsDatabaseId = '270a5eba-e7ac-8150-843a-cf6e74c5f8fc';
     localStorage.setItem('notionDatabaseId', assessmentsDatabaseId);
     onDatabaseSelected(assessmentsDatabaseId);
   };
@@ -24,6 +23,7 @@ export default function DatabaseSelector({ onDatabaseSelected, onCancel }) {
       <div className="selector-header">
         <h3>Select Your Task Database</h3>
         <p>Connect to your Assessments database:</p>
+        <p style={{fontSize: '12px', color: '#666'}}>Version 2.0 - Simplified</p>
       </div>
 
       {/* Single Assessments Option */}
