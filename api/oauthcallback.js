@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://notification-center-for-customers.vercel.app/api/auth/callback/notion'
+        redirect_uri: 'https://student-notification-center-pe1sgxlut.vercel.app/api/auth/callback/notion'
       })
     });
 
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
     // Store the access token and workspace info in localStorage via redirect
     // Redirect to dashboard with token parameters
-    const redirectUrl = `https://notification-center-for-customers.vercel.app/dashboard?token=${encodeURIComponent(access_token)}&workspace=${encodeURIComponent(workspace_name)}&bot_id=${encodeURIComponent(bot_id)}`;
+    const redirectUrl = `https://student-notification-center-pe1sgxlut.vercel.app/dashboard?token=${encodeURIComponent(access_token)}&workspace=${encodeURIComponent(workspace_name)}&bot_id=${encodeURIComponent(bot_id)}`;
     
     return res.redirect(redirectUrl);
 
