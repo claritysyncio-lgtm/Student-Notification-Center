@@ -25,7 +25,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
   const [courseFilter, setCourseFilter] = useState(config.defaultCourseFilter || "All Courses");
   const [typeFilter, setTypeFilter] = useState(config.defaultTypeFilter || "All Types");
   const [completedOpen, setCompletedOpen] = useState(false);
-  const [dueThisWeekOpen, setDueThisWeekOpen] = useState(false);
+  const [dueThisWeekOpen, setDueThisWeekOpen] = useState(true);
 
   // Load tasks on component mount
   useEffect(() => {
