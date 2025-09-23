@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NotificationCenter from "./components/NotificationCenter";
 import NotionConnect from "./components/NotionConnect";
-import DatabaseSelector from "./components/DatabaseSelector";
+import IntegrationPage from "./components/IntegrationPage";
 import { defaultConfig } from "./config/widgetConfig";
 
 // Constants for localStorage keys - centralized for easier maintenance
@@ -246,7 +246,7 @@ export default function App() {
     <div className="app">
       {connectionState.isConnected && <NotificationCenter config={defaultConfig} />}
       {connectionState.needsDatabaseSelection && (
-        <DatabaseSelector 
+        <IntegrationPage 
           onDatabaseSelected={handleDatabaseSelected}
           onCancel={handleDatabaseSelectionCancel}
         />
