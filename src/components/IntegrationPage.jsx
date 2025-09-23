@@ -7,116 +7,61 @@ import React, { useState } from 'react';
  * by simply pasting their database URL.
  */
 export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
-  const [databaseUrl, setDatabaseUrl] = useState('');
-  const [urlError, setUrlError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  /**
-   * Extract database ID from Notion URL
-   */
-  const extractDatabaseId = (url) => {
-    try {
-      // Handle different Notion URL formats
-      const patterns = [
-        /notion\.so\/[^\/]+\/([a-f0-9]{32})/i,
-        /notion\.site\/([a-f0-9]{32})/i,
-        /notion\.so\/([a-f0-9]{32})/i
-      ];
-      
-      for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match) {
-          return match[1];
-        }
-      }
-      
-      // If no pattern matches, try to extract 32-character hex string
-      const hexMatch = url.match(/([a-f0-9]{32})/i);
-      if (hexMatch) {
-        return hexMatch[1];
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Error extracting database ID:', error);
-      return null;
-    }
-  };
-
-  const handleUrlSubmit = async () => {
-    setUrlError('');
+  const handleConnectAssessments = async () => {
     setIsLoading(true);
     
-    if (!databaseUrl.trim()) {
-      setUrlError('Please enter a database URL');
-      setIsLoading(false);
-      return;
-    }
-    
-    const databaseId = extractDatabaseId(databaseUrl);
-    
-    if (!databaseId) {
-      setUrlError('Invalid Notion database URL. Please check the format.');
-      setIsLoading(false);
-      return;
-    }
-    
-    // Use the extracted database ID
-    localStorage.setItem('notionDatabaseId', databaseId);
-    onDatabaseSelected(databaseId);
+    // Use the Assessments database ID
+    const assessmentsDatabaseId = '270a5eba-e7ac-8150-843a-cf6e74c5f8fc';
+    localStorage.setItem('notionDatabaseId', assessmentsDatabaseId);
+    onDatabaseSelected(assessmentsDatabaseId);
   };
 
   return (
     <div className="integration-page">
       <div className="integration-container">
         <div className="integration-header">
-          <h1>🔗 Connect Your Database</h1>
-          <p>Paste your Notion database URL to get started with your notification center</p>
+          <h1>📊 Connect to Assessments</h1>
+          <p>Connect to your Assessments database to start using the notification center</p>
         </div>
 
         <div className="integration-form">
-          <div className="url-input-section">
-            <div className="input-header">
-              <label htmlFor="database-url">Database URL</label>
-              <button 
-                type="button"
-                className="help-icon"
-                title="In Notion: Click the 3 dots (...) next to your database title, then select 'Copy link to database'"
-              >
-                ℹ️ How to get this link
-              </button>
+          <div className="database-selection">
+            <div className="database-item">
+              <div className="database-info">
+                <h3>📊 Assessments</h3>
+                <p>Your main assessments and tasks database</p>
+              </div>
+              <div className="database-radio">
+                <input 
+                  type="radio" 
+                  name="database" 
+                  value="assessments"
+                  checked={true}
+                  readOnly
+                />
+              </div>
             </div>
             
-            <input
-              id="database-url"
-              type="url"
-              value={databaseUrl}
-              onChange={(e) => setDatabaseUrl(e.target.value)}
-              placeholder="https://notion.so/your-workspace/database-id..."
-              className="url-input"
-              disabled={isLoading}
-            />
-            
-            {urlError && <div className="error-message">{urlError}</div>}
-            
             <button 
-              onClick={handleUrlSubmit}
-              disabled={!databaseUrl.trim() || isLoading}
+              onClick={handleConnectAssessments}
+              disabled={isLoading}
               className="connect-button"
             >
-              {isLoading ? '🔄 Connecting...' : '✅ Connect Database'}
+              {isLoading ? '🔄 Connecting...' : '✅ Connect to Assessments'}
             </button>
           </div>
         </div>
 
         <div className="integration-help">
-          <h3>📋 How to get your database URL:</h3>
-          <ol>
-            <li>Go to your Notion database</li>
-            <li>Click the <strong>3 dots (...)</strong> next to the database title</li>
-            <li>Select <strong>"Copy link to database"</strong></li>
-            <li>Paste the link above</li>
-          </ol>
+          <h3>📋 What you'll get:</h3>
+          <ul>
+            <li>📊 Real-time task notifications</li>
+            <li>🎯 Personalized dashboard</li>
+            <li>💻 Desktop and mobile friendly interface</li>
+            <li>🔒 Secure integration</li>
+          </ul>
           
           <div className="help-note">
             <strong>💡 Required database properties:</strong>
