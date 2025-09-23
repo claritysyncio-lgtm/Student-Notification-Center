@@ -128,6 +128,51 @@
   text-decoration: underline;
 }
 
+/* Visit Website Button */
+.notion-website-section {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.visit-website-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.visit-website-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  color: white;
+  text-decoration: none;
+}
+
+.visit-website-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.visit-website-button svg {
+  transition: transform 0.3s ease;
+}
+
+.visit-website-button:hover svg {
+  transform: scale(1.1);
+}
+
 .notion-button {
   width: 100%;
   background-color: #007bff;
