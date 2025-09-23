@@ -5,7 +5,7 @@ import ConfigPanel from './ConfigPanel';
 
 export default function PersonalizedSetup() {
   const [userConfig, setUserConfig] = useState(null);
-  const [setupStep, setSetupStep] = useState('welcome');
+  const [setupStep, setSetupStep] = useState('setup');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -42,22 +42,6 @@ export default function PersonalizedSetup() {
     }
   };
 
-  const handleStepComplete = (step) => {
-    switch (step) {
-      case 'welcome':
-        setSetupStep('notion');
-        break;
-      case 'notion':
-        setSetupStep('customize');
-        break;
-      case 'customize':
-        setSetupStep('complete');
-        break;
-      default:
-        setSetupStep('complete');
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="personalized-setup">
@@ -84,30 +68,21 @@ export default function PersonalizedSetup() {
   return (
     <div className="personalized-setup">
       
-      {setupStep === 'welcome' && (
-        <WelcomeStep 
-          onNext={() => handleStepComplete('welcome')}
-          userName={userConfig.userName}
-        />
-      )}
-      
-      {setupStep === 'notion' && (
-        <NotionSetupStep 
+      {setupStep === 'setup' && (
+        <SimplifiedSetupStep 
           config={userConfig}
           onUpdate={handleConfigUpdate}
-          onNext={() => handleStepComplete('notion')}
+          onComplete={() => setSetupStep('complete')}
         />
       )}
       
-      {setupStep === 'customize' && (
-        <CustomizeStep 
+      {setupStep === 'complete' && (
+        <CompleteStep 
           config={userConfig}
-          onUpdate={handleConfigUpdate}
-          onNext={() => handleStepComplete('customize')}
-          onBack={() => setSetupStep('notion')}
+          onRestart={() => setSetupStep('setup')}
+          onCustomize={() => setSetupStep('live')}
         />
       )}
-      
       
       {setupStep === 'live' && (
         <LiveStep 
@@ -115,84 +90,45 @@ export default function PersonalizedSetup() {
           onBack={() => setSetupStep('complete')}
         />
       )}
-      
-      {setupStep === 'complete' && (
-        <CompleteStep 
-          config={userConfig}
-          onRestart={() => setSetupStep('welcome')}
-          onCustomize={() => setSetupStep('live')}
-        />
-      )}
     </div>
   );
 }
 
-// Welcome Step Component
-function WelcomeStep({ onNext, userName }) {
-  return (
-    <div className="setup-step welcome-step">
-      <div className="step-content">
-        <div className="welcome-header">
-          <h1>🎉 Welcome to Your Personal Task Center!</h1>
-          <p>Let's set up your personalized notification center in just a few steps.</p>
-        </div>
-        
-        <div className="features-list">
-          <h3>What you'll get:</h3>
-          <ul>
-            <li>✅ Personalized task organization</li>
-            <li>✅ Custom colors and themes</li>
-            <li>✅ Real-time Notion sync</li>
-            <li>✅ Mobile-responsive design</li>
-            <li>✅ Your own unique configuration</li>
-          </ul>
-        </div>
-        
-        <div className="get-started-section">
-          <div className="get-started-content">
-            <div className="get-started-icon">🚀</div>
-            <h3>Ready to Get Started?</h3>
-            <p>Connect your Notion workspace to create your personalized task management center.</p>
-            <button 
-              className="get-started-button"
-              onClick={onNext}
-            >
-              Connect to Notion →
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Notion Setup Step Component
-function NotionSetupStep({ config, onUpdate, onNext }) {
-  const [isConnected, setIsConnected] = useState(!!config.notion.token);
-  
-  console.log('NotionSetupStep render - config:', config);
-  console.log('NotionSetupStep render - config.notion:', config.notion);
-  console.log('NotionSetupStep render - config.notion.databaseId:', config.notion.databaseId);
+// Simplified Setup Step Component - Everything in one form
+function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
+  const [isConnected, setIsConnected] = useState(false);
 
   const handleNotionConnect = (notionData) => {
+    console.log('NotionSetupStep handleNotionConnect called with:', notionData);
+    setIsConnected(true);
     onUpdate({
       notion: {
         ...config.notion,
         ...notionData
       }
     });
-    setIsConnected(true);
+  };
+
+  const handleComplete = () => {
+    if (!config.notion.databaseId) {
+      alert('Please enter your Notion database URL before continuing.');
+      return;
+    }
+    onComplete();
   };
 
   return (
-    <div className="setup-step notion-step">
+    <div className="setup-step simplified-setup-step">
       <div className="step-content">
-        <h2>🔗 Connect to Notion</h2>
-        <p>Connect your Notion workspace to sync your tasks automatically.</p>
+        <div className="setup-header">
+          <div className="setup-icon">🎯</div>
+          <h1>Set Up Your Task Center</h1>
+          <p>Just 2 clicks to get your personalized notification center running!</p>
+        </div>
         
-        <div className="setup-instructions" style={{ 
-          backgroundColor: '#f8fafc', 
-          border: '1px solid #e2e8f0', 
+        <div className="setup-info" style={{ 
+          backgroundColor: '#f0f9ff', 
+          border: '1px solid #0ea5e9', 
           borderRadius: '8px', 
           padding: '20px', 
           margin: '20px 0',
@@ -203,8 +139,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
           <ol style={{ margin: '0', paddingLeft: '20px' }}>
             <li><strong>Notion account</strong> - Make sure you're logged into Notion</li>
             <li><strong>Task database</strong> - A Notion database with your tasks/projects</li>
-            <li><strong>Course database</strong> - A Notion database with your courses/subjects</li>
-            <li><strong>Database IDs</strong> - We'll help you find both database IDs in the next step</li>
+            <li><strong>Database URL</strong> - We'll help you find it below</li>
           </ol>
           
           <div style={{ 
@@ -223,12 +158,11 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
             <div className="connect-prompt">
               <div className="connect-icon">🔗</div>
               <h3>Connect to Notion</h3>
-              <p>Enter your Notion integration token and database URLs to get started.</p>
+              <p>Enter your Notion database URL to get started.</p>
               <button 
                 className="connect-button"
                 onClick={() => {
                   console.log('NotionSetupStep Connect button clicked!');
-                  // Just set the connection state, don't set fake data
                   handleNotionConnect({
                     token: '',
                     databaseId: '',
@@ -236,7 +170,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                   });
                 }}
               >
-                I'll Enter My Details Below
+                I'll Enter My Database URL Below
               </button>
             </div>
           </div>
@@ -244,8 +178,8 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
           <div className="notion-connected">
             <div className="success-message">
               <div className="success-icon">✅</div>
-              <h4>Connected to Notion!</h4>
-              <p>Your workspace is connected and ready to use.</p>
+              <h4>Ready to Connect!</h4>
+              <p>Now just paste your Notion database URL below.</p>
             </div>
             
             <div className="database-setup" style={{ 
@@ -257,7 +191,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
             }}>
               <h3 style={{ margin: '0 0 15px 0', color: '#166534', fontSize: '16px' }}>🗄️ Database Setup</h3>
               <p style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '14px' }}>
-                Now we need to connect to your specific task database. Simply paste your Notion database URL below and we'll handle the rest!
+                Simply paste your Notion database URL below and we'll handle the rest!
               </p>
               
               <div style={{ 
@@ -285,7 +219,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 <div style={{ fontWeight: '600', color: '#0c4a6e', marginBottom: '8px' }}>✅ No Token Required!</div>
                 <p style={{ margin: '0', color: '#0369a1' }}>
                   This app uses a shared integration, so you don't need to create your own Notion integration. 
-                  Just provide your database URLs below and we'll handle the rest!
+                  Just provide your database URL below and we'll handle the rest!
                 </p>
               </div>
               
@@ -329,8 +263,6 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                     const url = e.target.value;
                     console.log('URL input:', url);
                     // Extract database ID from Notion URL - handle different formats
-                    // Pattern 1: notion.so/workspace/databaseId or notion.so/databaseId
-                    // Pattern 2: notion.so/databaseId?v=... (with query params)
                     let match = url.match(/(?:notion\.so|notion\.site|www\.notion\.so)\/(?:[^\/]+\/)?([a-f0-9]{32})(?:\?|$)/);
                     
                     // If no match, try to extract from query parameter
@@ -367,7 +299,7 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
                 </label>
                 <input
                   type="text"
-                  value={config.notion.databaseId}
+                  value={config.notion.databaseId || ''}
                   onChange={(e) => onUpdate({
                     notion: { ...config.notion, databaseId: e.target.value }
                   })}
@@ -396,96 +328,36 @@ function NotionSetupStep({ config, onUpdate, onNext }) {
               </div>
             </div>
             
-            <button 
-              className="next-button" 
-              onClick={() => {
-                console.log('Button clicked, config.notion.databaseId:', config.notion.databaseId);
-                if (!config.notion.databaseId) {
-                  alert('Please fill in the Database ID before continuing.');
-                  return;
-                }
-                onNext();
-              }}
-              disabled={!config.notion.databaseId}
-              style={{
-                backgroundColor: config.notion.databaseId ? '#1dcaf2' : '#9ca3af',
-                opacity: config.notion.databaseId ? 1 : 0.6
-              }}
-            >
-              Continue to Customization →
-            </button>
+            <div className="setup-actions" style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '15px', 
+              marginTop: '30px' 
+            }}>
+              <button 
+                className="complete-button" 
+                onClick={handleComplete}
+                disabled={!config.notion.databaseId}
+                style={{
+                  backgroundColor: config.notion.databaseId ? '#1dcaf2' : '#9ca3af',
+                  cursor: config.notion.databaseId ? 'pointer' : 'not-allowed',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600'
+                }}
+              >
+                🎉 Complete Setup
+              </button>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 }
-
-// Customize Step Component
-function CustomizeStep({ config, onUpdate, onNext, onBack }) {
-  return (
-    <div className="setup-step customize-step">
-      <div className="step-content">
-        <h2>🎨 Customize Your Widget</h2>
-        <p>Make it yours! Choose colors, layout, and preferences.</p>
-        
-        <div style={{ 
-          background: '#f0f0f0', 
-          padding: '10px', 
-          margin: '10px 0', 
-          borderRadius: '5px',
-          fontSize: '12px'
-        }}>
-          <strong>Debug Info:</strong><br/>
-          databaseId: {config.notion.databaseId || 'EMPTY'}<br/>
-          courseDatabaseId: {config.notion.courseDatabaseId || 'EMPTY'}<br/>
-          token: {config.notion.token ? 'SET' : 'EMPTY'}<br/>
-          Button disabled: {(!config.notion.databaseId || !config.notion.courseDatabaseId || !config.notion.token) ? 'YES' : 'NO'}
-        </div>
-        
-        <ConfigPanel 
-          onConfigChange={(updates) => onUpdate(updates)}
-          initialConfig={config}
-        />
-        
-        <div className="setup-actions">
-          <button 
-            className="back-button" 
-            onClick={onBack}
-          >
-            ← Back
-          </button>
-          
-          <button 
-            className="next-button" 
-            onClick={() => {
-              console.log('Button clicked - config:', config);
-              console.log('databaseId:', config.notion.databaseId);
-              console.log('courseDatabaseId:', config.notion.courseDatabaseId);
-              if (!config.notion.databaseId) {
-                alert('Please fill in the Main Database ID before continuing.');
-                return;
-              }
-              if (!config.notion.courseDatabaseId) {
-                alert('Please fill in the Course Database ID before continuing.');
-                return;
-              }
-              onNext();
-            }}
-            disabled={!config.notion.databaseId || !config.notion.courseDatabaseId}
-            style={{
-              backgroundColor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? '#9ca3af' : '#1dcaf2',
-              cursor: (!config.notion.databaseId || !config.notion.courseDatabaseId) ? 'not-allowed' : 'pointer'
-            }}
-          >
-            Complete Setup →
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 
 // Complete Step Component
 function CompleteStep({ config, onRestart, onCustomize }) {
@@ -519,9 +391,6 @@ function CompleteStep({ config, onRestart, onCustomize }) {
             onClick={onCustomize}
           >
             🎨 Make It Yours!
-          </button>
-          <button className="copy-button" onClick={() => navigator.clipboard.writeText(embedUrl)}>
-            Copy Embed URL
           </button>
         </div>
       </div>
@@ -578,23 +447,9 @@ function LiveStep({ config, onBack }) {
           theme: config.theme || {
             primaryColor: '#374151',
             backgroundColor: '#ffffff',
-            borderColor: '#e1e5e9',
-            textColor: '#111827',
-            mutedColor: '#6b7280'
-          },
-          showTitle: config.showTitle !== false,
-          showRefreshButton: config.showRefreshButton !== false,
-          showFilters: config.showFilters !== false,
-          title: config.title || 'My Task Center',
-          sections: {
-            overdue: { enabled: true, title: 'Overdue', showCountdown: true },
-            dueToday: { enabled: true, title: 'Due Today', showCountdown: true },
-            dueTomorrow: { enabled: true, title: 'Due Tomorrow', showCountdown: true },
-            dueThisWeek: { enabled: true, title: 'Due This Week', showCountdown: true },
-            completed: { enabled: true, title: 'Completed', collapsible: true }
-          },
-          defaultCourseFilter: config.defaultCourseFilter || 'all',
-          defaultTypeFilter: config.defaultTypeFilter || 'all'
+            textColor: '#1f2937',
+            accentColor: '#1dcaf2'
+          }
         }} />
       </div>
     </div>
