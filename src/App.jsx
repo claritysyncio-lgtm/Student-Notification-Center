@@ -242,6 +242,9 @@ export default function App() {
         />
       )}
       {!connectionState.isConnected && !connectionState.needsDatabaseSelection && <NotionConnect />}
+      
+      {/* Force cache refresh - remove this comment */}
+      <div style={{display: 'none'}}>v2.0-clean</div>
     </div>
   );
 }
