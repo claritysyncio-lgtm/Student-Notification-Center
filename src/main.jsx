@@ -3,7 +3,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
-import Dashboard from "./pages/Dashboard";
 import "./styles/global.css";
 
 /**
@@ -103,7 +102,8 @@ class ErrorBoundary extends React.Component {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<App />} />
-    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/embed.html" element={<App />} />
+    <Route path="/preview.html" element={<App />} />
     {/* Add more routes here as the application grows */}
   </Routes>
 );

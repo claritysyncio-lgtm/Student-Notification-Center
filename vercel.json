@@ -1,26 +1,17 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
   "routes": [
     {
       "src": "/embed.html",
-      "dest": "/dist/embed.html"
+      "dest": "/embed.html"
     },
     {
       "src": "/legal.html",
-      "dest": "/dist/legal.html"
+      "dest": "/legal.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/$1"
+      "dest": "/$1"
     }
   ]
 }
