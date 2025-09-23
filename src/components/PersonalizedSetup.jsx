@@ -127,6 +127,65 @@ function SimplifiedSetupStep({ config, onUpdate, onComplete }) {
           <div className="setup-icon">🎯</div>
           <h1>Set Up Your Task Center</h1>
           <p>Just 2 clicks to get your personalized notification center running!</p>
+          
+          {/* Temporary Test Buttons - DELETE LATER */}
+          <div style={{ 
+            backgroundColor: '#fef3c7', 
+            border: '2px solid #f59e0b', 
+            borderRadius: '8px', 
+            padding: '15px', 
+            margin: '20px 0',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ margin: '0 0 10px 0', color: '#92400e' }}>🧪 TEST BUTTONS (DELETE LATER)</h3>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a 
+                href="/api/oauth-start" 
+                target="_blank"
+                style={{
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}
+              >
+                Test OAuth Start
+              </a>
+              <a 
+                href="/api/oauth-callback" 
+                target="_blank"
+                style={{
+                  backgroundColor: '#10b981',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}
+              >
+                Test OAuth Callback
+              </a>
+              <a 
+                href="/api/notion" 
+                target="_blank"
+                style={{
+                  backgroundColor: '#8b5cf6',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}
+              >
+                Test Notion API
+              </a>
+            </div>
+            <p style={{ margin: '10px 0 0 0', fontSize: '12px', color: '#92400e' }}>
+              Click these to test if your OAuth endpoints are working
+            </p>
+          </div>
         </div>
         
         <div className="setup-info" style={{ 
