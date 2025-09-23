@@ -62,6 +62,7 @@ export const defaultConfig = {
       enabled: true, 
       title: DEFAULT_SECTION_TITLES.dueThisWeek, 
       showCountdown: true,
+      collapsible: true,
       priority: 4
     },
     completed: { 

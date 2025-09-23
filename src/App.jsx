@@ -186,7 +186,8 @@ export default function App() {
   return (
     <div className="app">
       <NotificationCenter config={defaultConfig} />
-      {!connectionState.isConnected && <NotionConnect />}
+      {/* Temporarily disabled for testing collapsible sections */}
+      {/* {!connectionState.isConnected && <NotionConnect />} */}
     </div>
   );
 }
