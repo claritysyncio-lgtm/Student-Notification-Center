@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://notification-center-for-customers.vercel.app/callback'
+        redirect_uri: 'https://notification-center-for-customers.vercel.app/oauthcallback'
       })
     });
 

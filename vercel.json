@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "api/callback.js",
+      "src": "api/oauthcallback.js",
       "use": "@vercel/node"
     },
     {
@@ -23,8 +23,8 @@
       "dest": "/api/notion.js"
     },
     {
-      "src": "/callback",
-      "dest": "/api/callback.js"
+      "src": "/oauthcallback",
+      "dest": "/api/oauthcallback.js"
     },
     {
       "src": "/embed.html",
