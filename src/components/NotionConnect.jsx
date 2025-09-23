@@ -54,7 +54,7 @@ export default function NotionConnect() {
             <ul>
               <li>📊 Real-time task notifications</li>
               <li>🎯 Personalized dashboard</li>
-              <li>📱 Mobile-friendly interface</li>
+              <li>💻 Desktop and mobile friendly interface</li>
               <li>🔒 Secure integration</li>
             </ul>
           </div>
