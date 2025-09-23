@@ -23,7 +23,25 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Authorization code is required' });
     }
 
+    // Check if environment variables are set
+    if (!process.env.NOTION_CLIENT_ID || !process.env.NOTION_CLIENT_SECRET || !process.env.BASE_URL) {
+      console.error('Missing environment variables:', {
+        NOTION_CLIENT_ID: !!process.env.NOTION_CLIENT_ID,
+        NOTION_CLIENT_SECRET: !!process.env.NOTION_CLIENT_SECRET,
+        BASE_URL: !!process.env.BASE_URL
+      });
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+
     try {
+      const redirectUri = `${process.env.BASE_URL}/oauthcallback.html`;
+      
+      console.log('OAuth request:', {
+        code: code.substring(0, 10) + '...',
+        redirectUri,
+        clientId: process.env.NOTION_CLIENT_ID
+      });
+
       // Exchange authorization code for access token
       const tokenResponse = await fetch('https://api.notion.com/v1/oauth/token', {
         method: 'POST',
@@ -36,14 +54,20 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           grant_type: 'authorization_code',
           code: code,
-          redirect_uri: process.env.BASE_URL + '/oauthcallback.html'
+          redirect_uri: redirectUri
         })
       });
 
       const tokenData = await tokenResponse.json();
 
+      console.log('Notion API response:', {
+        status: tokenResponse.status,
+        ok: tokenResponse.ok,
+        error: tokenData.error
+      });
+
       if (!tokenResponse.ok) {
-        throw new Error(tokenData.error || 'Failed to exchange code for token');
+        throw new Error(tokenData.error || `HTTP ${tokenResponse.status}: Failed to exchange code for token`);
       }
 
       // Return the access token to the frontend
@@ -55,7 +79,10 @@ export default async function handler(req, res) {
 
     } catch (error) {
       console.error('OAuth error:', error);
-      res.status(500).json({ error: 'Failed to complete OAuth flow' });
+      res.status(500).json({ 
+        error: 'Failed to complete OAuth flow',
+        details: error.message 
+      });
     }
   } else {
     res.setHeader('Allow', ['GET']);
