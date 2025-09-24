@@ -36,8 +36,19 @@ export default async function handler(req, res) {
 
       const data = await response.json();
 
+      console.log('Notion API response:', {
+        status: response.status,
+        ok: response.ok,
+        data: data
+      });
+
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch from Notion API');
+        console.error('Notion API error details:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: data
+        });
+        throw new Error(data.message || `Notion API error: ${response.status} - ${data.error || 'Unknown error'}`);
       }
 
       res.status(200).json(data);
