@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import './NotionConnect.css';
 import { OAUTH_CONFIG } from '../config/oauthConfig';
 import DatabaseLinkPage from './DatabaseLinkPage';
-import IntegrationSetupGuide from './IntegrationSetupGuide';
 
 /**
  * NotionConnect Component
@@ -12,7 +11,6 @@ import IntegrationSetupGuide from './IntegrationSetupGuide';
  */
 export default function NotionConnect() {
   const [showDatabaseSetup, setShowDatabaseSetup] = useState(false);
-  const [showIntegrationSetup, setShowIntegrationSetup] = useState(false);
 
   /**
    * Handle Notion OAuth connection initiation
@@ -51,26 +49,6 @@ export default function NotionConnect() {
     setShowDatabaseSetup(false);
   }, []);
 
-  const handleIntegrationSetupComplete = useCallback((databaseId) => {
-    console.log('Integration setup complete, database ID:', databaseId);
-    // The integration token and database ID are already stored by IntegrationSetupGuide
-    // Reload the page to show the notification center
-    window.location.reload();
-  }, []);
-
-  const handleIntegrationSetupCancel = useCallback(() => {
-    setShowIntegrationSetup(false);
-  }, []);
-
-  // Show integration setup guide if requested
-  if (showIntegrationSetup) {
-    return (
-      <IntegrationSetupGuide 
-        onComplete={handleIntegrationSetupComplete}
-        onCancel={handleIntegrationSetupCancel}
-      />
-    );
-  }
 
   // Show database setup page if requested
   if (showDatabaseSetup) {
@@ -115,16 +93,10 @@ export default function NotionConnect() {
 
                   <div className="notion-button-group">
                     <button 
-                      className="notion-button primary" 
-                      onClick={() => setShowIntegrationSetup(true)}
-                    >
-                      Setup Integration (Recommended)
-                    </button>
-                    <button 
-                      className="notion-button secondary" 
+                      className="notion-button" 
                       onClick={() => setShowDatabaseSetup(true)}
                     >
-                      Use OAuth (Legacy)
+                      Get Started
                     </button>
                     <button 
                       className="notion-button secondary" 
@@ -141,8 +113,7 @@ export default function NotionConnect() {
 
         <div className="notion-footer">
           <p className="notion-footer-text">
-            <strong>Recommended:</strong> Create your own Notion integration for full control and reliability. 
-            <strong>Legacy:</strong> Use OAuth for traditional workspace access.
+            Clicking "Get Started" will guide you through connecting your Notion database to the notification center.
           </p>
           
           <div className="notion-website-section">
