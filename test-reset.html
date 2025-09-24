@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset Test</title>
+</head>
+<body>
+    <h1>Testing Reset Functionality</h1>
+    <button onclick="testReset()">Test Reset</button>
+    <button onclick="checkStorage()">Check Storage</button>
+    <div id="output"></div>
+
+    <script>
+        function testReset() {
+            // Simulate the reset logic
+            const urlParams = new URLSearchParams(window.location.search);
+            const shouldReset = urlParams.get('reset') === 'true';
+            
+            document.getElementById('output').innerHTML = `
+                <p>URL has reset=true: ${shouldReset}</p>
+                <p>Current URL: ${window.location.href}</p>
+            `;
+            
+            if (shouldReset) {
+                localStorage.removeItem('notionAccessToken');
+                localStorage.removeItem('notionWorkspace');
+                localStorage.removeItem('notionDatabaseId');
+                document.getElementById('output').innerHTML += '<p style="color: green;">✅ Reset logic would clear localStorage</p>';
+            }
+        }
+        
+        function checkStorage() {
+            const token = localStorage.getItem('notionAccessToken');
+            const workspace = localStorage.getItem('notionWorkspace');
+            const databaseId = localStorage.getItem('notionDatabaseId');
+            
+            document.getElementById('output').innerHTML = `
+                <p>Access Token: ${token ? 'EXISTS' : 'NOT FOUND'}</p>
+                <p>Workspace: ${workspace ? 'EXISTS' : 'NOT FOUND'}</p>
+                <p>Database ID: ${databaseId ? 'EXISTS' : 'NOT FOUND'}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

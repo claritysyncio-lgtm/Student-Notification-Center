@@ -145,7 +145,15 @@ export default function App() {
       const urlParams = new URLSearchParams(window.location.search);
       const shouldReset = urlParams.get('reset') === 'true';
       
+      console.log('🔍 Reset Debug:', {
+        url: window.location.href,
+        search: window.location.search,
+        shouldReset,
+        urlParams: Object.fromEntries(urlParams.entries())
+      });
+      
       if (shouldReset) {
+        console.log('🔄 RESET TRIGGERED - Clearing localStorage');
         // Clear all stored data and start fresh
         localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
@@ -154,6 +162,7 @@ export default function App() {
         // Clean up URL
         window.history.replaceState({}, document.title, window.location.pathname);
         
+        console.log('✅ Reset complete - showing fresh setup');
         setConnectionState({
           isConnected: false,
           isLoading: false,
@@ -161,11 +170,23 @@ export default function App() {
           needsDatabaseSelection: false,
           showDatabaseLinkPage: false
         });
+        
+        // Force a small delay to ensure state is set before continuing
+        setTimeout(() => {
+          console.log('🔄 Forcing page refresh to ensure clean state');
+          window.location.reload();
+        }, 100);
         return;
       }
       
       const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
       const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+      
+      console.log('🔍 localStorage Debug:', {
+        databaseId: databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT FOUND',
+        accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT FOUND',
+        hasBoth: !!(databaseId && accessToken)
+      });
       
       if (databaseId && accessToken) {
         // User is fully connected
