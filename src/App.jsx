@@ -277,6 +277,31 @@ export default function App() {
 
   // Initialize connection on component mount
   useEffect(() => {
+    // Check if this is a fresh visit (no referrer or direct URL access)
+    const isDirectAccess = !document.referrer || document.referrer === window.location.href;
+    const hasUrlParams = window.location.search || window.location.hash;
+    
+    // Check for app version to force cache clearing on updates
+    const currentVersion = '2.1.0';
+    const storedVersion = localStorage.getItem('appVersion');
+    
+    // If it's direct access and no URL params, clear cache to force fresh flow
+    if (isDirectAccess && !hasUrlParams) {
+      console.log('Direct access detected - clearing cache for fresh flow');
+      localStorage.removeItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+      localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
+    }
+    
+    // Force cache clear on version update
+    if (storedVersion !== currentVersion) {
+      console.log('App version updated - clearing cache');
+      localStorage.removeItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+      localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
+      localStorage.setItem('appVersion', currentVersion);
+    }
+    
     initializeConnection();
   }, [initializeConnection]);
 
