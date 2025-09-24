@@ -4,6 +4,7 @@ import NotificationCenter from "./components/NotificationCenter";
 import NotionConnect from "./components/NotionConnect";
 import IntegrationPage from "./components/IntegrationPage";
 import DatabaseLinkPage from "./components/DatabaseLinkPage";
+import IntegrationSetupGuide from "./components/IntegrationSetupGuide";
 import { defaultConfig } from "./config/widgetConfig";
 
 // Constants for localStorage keys - centralized for easier maintenance
@@ -37,7 +38,8 @@ export default function App() {
     isLoading: true,
     error: null,
     needsDatabaseSelection: false,
-    showDatabaseLinkPage: false
+    showDatabaseLinkPage: false,
+    showIntegrationSetup: false
   });
 
   /**

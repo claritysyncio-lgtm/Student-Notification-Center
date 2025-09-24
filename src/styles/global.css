@@ -2101,6 +2101,133 @@ body{
   align-items: center;
 }
 
+/* Integration Setup Guide Styles */
+.notion-integration-setup {
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.notion-progress-steps {
+  padding: 24px 32px;
+  border-bottom: 1px solid #e9e9e7;
+}
+
+.notion-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.notion-step.active {
+  background: #f1f3f4;
+}
+
+.notion-step.completed {
+  background: #e8f5e8;
+}
+
+.notion-step-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e9e9e7;
+  color: #787774;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.notion-step.active .notion-step-number {
+  background: #007AFF;
+  color: white;
+}
+
+.notion-step.completed .notion-step-number {
+  background: #4caf50;
+  color: white;
+}
+
+.notion-step-content {
+  flex: 1;
+}
+
+.notion-step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #37352f;
+  margin-bottom: 4px;
+}
+
+.notion-step-description {
+  font-size: 13px;
+  color: #787774;
+  line-height: 1.4;
+}
+
+.notion-step-instructions {
+  padding: 24px 32px;
+}
+
+.notion-step-instructions h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #37352f;
+  margin-bottom: 16px;
+}
+
+.notion-step-instructions ol {
+  margin-left: 20px;
+  margin-bottom: 24px;
+}
+
+.notion-step-instructions li {
+  font-size: 14px;
+  color: #37352f;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.notion-step-instructions strong {
+  font-weight: 600;
+  color: #007AFF;
+}
+
+.notion-token-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d9d9d7;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  background: #fafafa;
+  color: #37352f;
+}
+
+.notion-token-input:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.notion-action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
 .notion-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
