@@ -90,12 +90,24 @@ export default function NotionConnect() {
             </ul>
           </div>
 
-          <button 
-            className="notion-button" 
-            onClick={() => setShowDatabaseSetup(true)}
-          >
-            Get Started
-          </button>
+                  <div className="notion-button-group">
+                    <button 
+                      className="notion-button" 
+                      onClick={() => setShowDatabaseSetup(true)}
+                    >
+                      Get Started
+                    </button>
+                    <button 
+                      className="notion-button secondary" 
+                      onClick={() => {
+                        localStorage.clear();
+                        window.location.reload();
+                      }}
+                      style={{ marginTop: '12px' }}
+                    >
+                      Start Fresh (Clear All Data)
+                    </button>
+                  </div>
         </div>
 
         <div className="notion-footer">

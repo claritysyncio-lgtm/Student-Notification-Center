@@ -2094,6 +2094,13 @@ body{
   border-color: #d9d9d7;
 }
 
+.notion-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
 .notion-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
