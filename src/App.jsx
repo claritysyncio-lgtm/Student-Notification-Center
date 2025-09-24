@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import NotificationCenter from "./components/NotificationCenter";
 import NotionConnect from "./components/NotionConnect";
 import IntegrationPage from "./components/IntegrationPage";
+import DatabaseLinkPage from "./components/DatabaseLinkPage";
 import { defaultConfig } from "./config/widgetConfig";
 
 // Constants for localStorage keys - centralized for easier maintenance
@@ -35,7 +36,8 @@ export default function App() {
     isConnected: false,
     isLoading: true,
     error: null,
-    needsDatabaseSelection: false
+    needsDatabaseSelection: false,
+    showDatabaseLinkPage: false
   });
 
   /**
@@ -85,6 +87,8 @@ export default function App() {
    */
   const handleSuccessfulAuth = useCallback((token, workspace) => {
     try {
+      console.log('🔐 OAuth successful, storing tokens...');
+      
       // Store authentication data
       localStorage.setItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN, token);
       
@@ -92,11 +96,31 @@ export default function App() {
         localStorage.setItem(STORAGE_KEYS.NOTION_WORKSPACE, workspace);
       }
 
-      setConnectionState({
-        isConnected: true,
-        isLoading: false,
-        error: null
-      });
+      // Check if user already has a database ID
+      const existingDatabaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+      console.log('🔍 Existing database ID:', existingDatabaseId);
+      
+      if (existingDatabaseId) {
+        console.log('✅ User has existing database ID, going to notification center');
+        // User already has a database ID, go directly to notification center
+        setConnectionState({
+          isConnected: true,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: false,
+          showDatabaseLinkPage: false
+        });
+      } else {
+        console.log('🔗 No database ID found, showing database link page');
+        // User needs to set up their database, show database link page
+        setConnectionState({
+          isConnected: false,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: false,
+          showDatabaseLinkPage: true
+        });
+      }
 
       clearUrlParams();
     } catch (error) {
@@ -120,29 +144,32 @@ export default function App() {
       const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
       const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
       
-      if (accessToken && !databaseId) {
-        // User has access token but no database selected
-        setConnectionState({
-          isConnected: false,
-          isLoading: false,
-          error: null,
-          needsDatabaseSelection: true
-        });
-      } else if (databaseId && accessToken) {
+      if (databaseId && accessToken) {
         // User is fully connected
         setConnectionState({
           isConnected: true,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false
+          needsDatabaseSelection: false,
+          showDatabaseLinkPage: false
         });
-      } else {
-        // User needs to connect to Notion
+      } else if (accessToken && !databaseId) {
+        // User has access token but no database selected - show database link page
         setConnectionState({
           isConnected: false,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false
+          needsDatabaseSelection: false,
+          showDatabaseLinkPage: true
+        });
+      } else {
+        // User needs to connect to Notion (database setup will happen in NotionConnect)
+        setConnectionState({
+          isConnected: false,
+          isLoading: false,
+          error: null,
+          needsDatabaseSelection: false,
+          showDatabaseLinkPage: false
         });
       }
     } catch (error) {
@@ -151,7 +178,9 @@ export default function App() {
         isConnected: false,
         isLoading: false,
         error: 'Failed to check existing connection',
-        needsDatabaseSelection: false
+        needsDatabaseSelection: false,
+        showDatabaseLinkPage: false,
+        showDatabaseSetupFirst: true
       });
     }
   }, []);
@@ -171,6 +200,36 @@ export default function App() {
   }, []);
 
   /**
+   * Handle database ID extraction from link page
+   */
+  const handleDatabaseIdExtracted = useCallback((databaseId) => {
+    console.log('Database ID extracted:', databaseId);
+    setConnectionState({
+      isConnected: true,
+      isLoading: false,
+      error: null,
+      needsDatabaseSelection: false,
+      showDatabaseLinkPage: false,
+      showDatabaseSetupFirst: false
+    });
+  }, []);
+
+  /**
+   * Handle database setup completion - proceed to Notion OAuth
+   */
+  const handleDatabaseSetupComplete = useCallback(() => {
+    console.log('Database setup complete, proceeding to Notion OAuth');
+    setConnectionState({
+      isConnected: false,
+      isLoading: false,
+      error: null,
+      needsDatabaseSelection: false,
+      showDatabaseLinkPage: false,
+      showDatabaseSetupFirst: false
+    });
+  }, []);
+
+  /**
    * Handle database selection completion
    */
   const handleDatabaseSelected = useCallback((databaseId) => {
@@ -179,7 +238,24 @@ export default function App() {
       isConnected: true,
       isLoading: false,
       error: null,
-      needsDatabaseSelection: false
+      needsDatabaseSelection: false,
+      showDatabaseLinkPage: false
+    });
+  }, []);
+
+  /**
+   * Handle database link page cancellation
+   */
+  const handleDatabaseLinkCancel = useCallback(() => {
+    // Clear the access token and go back to connection screen
+    localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
+    setConnectionState({
+      isConnected: false,
+      isLoading: false,
+      error: null,
+      needsDatabaseSelection: false,
+      showDatabaseLinkPage: false
     });
   }, []);
 
@@ -194,7 +270,8 @@ export default function App() {
       isConnected: false,
       isLoading: false,
       error: null,
-      needsDatabaseSelection: false
+      needsDatabaseSelection: false,
+      showDatabaseLinkPage: false
     });
   }, []);
 
@@ -235,13 +312,19 @@ export default function App() {
   return (
     <div className="app">
       {connectionState.isConnected && <NotificationCenter config={defaultConfig} />}
+      {connectionState.showDatabaseLinkPage && (
+        <DatabaseLinkPage 
+          onDatabaseIdExtracted={handleDatabaseIdExtracted}
+          onCancel={handleDatabaseLinkCancel}
+        />
+      )}
       {connectionState.needsDatabaseSelection && (
         <IntegrationPage 
           onDatabaseSelected={handleDatabaseSelected}
           onCancel={handleDatabaseSelectionCancel}
         />
       )}
-      {!connectionState.isConnected && !connectionState.needsDatabaseSelection && <NotionConnect />}
+      {!connectionState.isConnected && !connectionState.needsDatabaseSelection && !connectionState.showDatabaseLinkPage && <NotionConnect />}
       
       {/* Force cache refresh - remove this comment */}
       <div style={{display: 'none'}}>v2.0-clean</div>

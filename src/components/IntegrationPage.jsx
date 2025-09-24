@@ -104,27 +104,11 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
                 />
               </div>
             </div>
-            
-            <button 
-              onClick={() => {
-                const assessmentsDatabaseId = '270a5eba-e7ac-8150-843a-cf6e74c5f8fc';
-                localStorage.setItem('notionDatabaseId', assessmentsDatabaseId);
-                onDatabaseSelected(assessmentsDatabaseId);
-              }}
-              disabled={isLoading}
-              className="connect-button"
-            >
-              {isLoading ? '🔄 Connecting...' : '✅ Connect to Assessments'}
-            </button>
-          </div>
-
-          <div className="divider">
-            <span>OR</span>
           </div>
 
           <div className="url-input-section">
             <div className="input-header">
-              <label htmlFor="database-url">Paste your own database URL</label>
+              <label htmlFor="database-url">Enter your database URL</label>
               <button 
                 type="button"
                 className="help-icon"
@@ -157,15 +141,26 @@ export default function IntegrationPage({ onDatabaseSelected, onCancel }) {
             )}
             
             {urlError && <div className="error-message">{urlError}</div>}
-            
-            <button 
-              onClick={handleUrlSubmit}
-              disabled={!databaseUrl.trim() || isLoading}
-              className="connect-button secondary"
-            >
-              {isLoading ? '🔄 Connecting...' : '✅ Connect Your Database'}
-            </button>
           </div>
+            
+          <button 
+            onClick={() => {
+              if (extractedId) {
+                // Use the extracted ID from URL
+                localStorage.setItem('notionDatabaseId', extractedId);
+                onDatabaseSelected(extractedId);
+              } else {
+                // Use the default Assessments database ID
+                const assessmentsDatabaseId = '270a5eba-e7ac-8150-843a-cf6e74c5f8fc';
+                localStorage.setItem('notionDatabaseId', assessmentsDatabaseId);
+                onDatabaseSelected(assessmentsDatabaseId);
+              }
+            }}
+            disabled={isLoading}
+            className="connect-button"
+          >
+            {isLoading ? '🔄 Connecting...' : '✅ Connect to Assessments'}
+          </button>
         </div>
 
         <div className="integration-help">

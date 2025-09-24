@@ -215,6 +215,11 @@ export async function getTasks() {
       console.warn('Using fallback data due to integration issue');
     }
     
+    // Check if it's a database access issue
+    if (error.message.includes('data sources accessible by this API bot')) {
+      console.warn('Database access issue - the database may need to be shared with the integration');
+    }
+    
     return FALLBACK_TASKS;
   }
 }
