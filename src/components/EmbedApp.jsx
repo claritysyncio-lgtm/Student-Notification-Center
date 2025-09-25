@@ -103,39 +103,21 @@ export default function EmbedApp() {
           setHasValidConnection(false);
           setError('No tasks found in your Notion database. Please check your database or set up your connection.');
         } else {
-          // STRICT validation: check for example data patterns
-          const hasExampleData = tasks.some(task => 
-            task.name && (
-              task.name.toLowerCase().includes('example') ||
-              task.name.toLowerCase().includes('sample') ||
-              task.name.toLowerCase().includes('test') ||
-              task.name.toLowerCase().includes('demo') ||
-              task.name === 'Example 1' ||
-              task.name === 'Example 2' ||
-              task.name === 'Example 3' ||
-              task.name === 'Example 4' ||
-              task.name === 'Example 5'
-            )
-          );
-          
-          const hasRealNotionIds = tasks.some(task => 
+          // Check if we have any tasks (not just fallback data)
+          const hasRealTasks = tasks.some(task => 
             task.id && 
             task.id !== "no-data" && 
-            task.id.length > 20 && // Real Notion IDs are much longer
-            /^[a-f0-9-]{32,}$/.test(task.id) // Notion ID format
+            task.name && 
+            task.name !== "No tasks found"
           );
           
-          if (hasExampleData) {
-            console.log('❌ Embed mode - detected example data, connection invalid');
-            setHasValidConnection(false);
-            setError('Example data detected. Please set up your connection with your real Notion database.');
-          } else if (!hasRealNotionIds) {
-            console.log('❌ Embed mode - no valid Notion IDs found, connection invalid');
-            setHasValidConnection(false);
-            setError('Invalid data format. Please reconnect to your Notion database.');
-          } else {
-            console.log('✅ Embed mode - got real data with valid Notion IDs, connection is valid');
+          if (hasRealTasks) {
+            console.log('✅ Embed mode - got real tasks, connection is valid');
             setHasValidConnection(true);
+          } else {
+            console.log('❌ Embed mode - no real tasks found, connection invalid');
+            setHasValidConnection(false);
+            setError('No tasks found in your Notion database. Please check your database or set up your connection.');
           }
         }
       } catch (testError) {
