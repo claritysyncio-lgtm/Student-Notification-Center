@@ -83,11 +83,35 @@ export default function App() {
    * Stores the authentication tokens securely and updates the connection state.
    * Also clears the URL parameters to prevent re-processing on refresh.
    */
-  const handleSuccessfulAuth = useCallback((token, workspace) => {
+  const handleSuccessfulAuth = useCallback(async (token, workspace) => {
     try {
-      console.log('🔐 OAuth successful, storing tokens...');
+      console.log('🔐 OAuth successful, creating session...');
       
-      // Store authentication data
+      // Create server session for embed compatibility
+      try {
+        const sessionResponse = await fetch('/api/session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            accessToken: token,
+            workspaceId: workspace?.id,
+            workspaceName: workspace?.name
+          })
+        });
+        
+        if (sessionResponse.ok) {
+          console.log('✅ Session created successfully');
+        } else {
+          console.warn('⚠️ Session creation failed, falling back to localStorage');
+        }
+      } catch (error) {
+        console.warn('⚠️ Session creation error, falling back to localStorage:', error);
+      }
+      
+      // Also store in localStorage for backward compatibility
       localStorage.setItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN, token);
       
       if (workspace) {

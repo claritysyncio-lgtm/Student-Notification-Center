@@ -114,6 +114,7 @@ async function fetchFromNotion(databaseId, token) {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
+      credentials: 'include', // Include cookies for session support
       body: JSON.stringify({
         databaseId,
         token
@@ -188,17 +189,33 @@ function transformNotionPageToTask(page) {
  */
 export async function getTasks() {
   try {
-    const databaseId = localStorage.getItem('notionDatabaseId');
-    const accessToken = localStorage.getItem('notionAccessToken');
+    // Try to get session data first (for embed compatibility)
+    let sessionData = null;
+    try {
+      const sessionResponse = await fetch('/api/session', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (sessionResponse.ok) {
+        sessionData = await sessionResponse.json();
+        console.log('✅ getTasks - using session data:', sessionData);
+      }
+    } catch (error) {
+      console.log('⚠️ getTasks - no session data, falling back to localStorage');
+    }
+
+    // Fallback to localStorage for main app
+    const databaseId = sessionData?.databaseId || localStorage.getItem('notionDatabaseId');
+    const accessToken = sessionData?.accessToken || localStorage.getItem('notionAccessToken');
     
-    console.log('🔍 Debug - localStorage data:', {
+    console.log('🔍 Debug - credentials check:', {
       databaseId: databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT_FOUND',
-      accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND'
+      accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND',
+      source: sessionData ? 'session' : 'localStorage'
     });
     
     if (!databaseId) {
-      console.warn('❌ No Notion database ID found. Please set it in localStorage:');
-      console.warn('localStorage.setItem("notionDatabaseId", "your-database-id-here")');
+      console.warn('❌ No Notion database ID found. Please connect to Notion.');
       return FALLBACK_TASKS;
     }
     

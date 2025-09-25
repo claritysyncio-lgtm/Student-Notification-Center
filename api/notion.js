@@ -3,10 +3,11 @@
  */
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Set CORS headers for iframe embedding
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Cookie');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -14,10 +15,25 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { databaseId, token } = req.body;
+    // Try to get session data first
+    const sessionId = req.cookies?.session;
+    let accessToken, databaseId;
 
-    if (!databaseId || !token) {
-      return res.status(400).json({ error: 'Database ID and token are required' });
+    if (sessionId && global.sessions?.has(sessionId)) {
+      // Use session data
+      const session = global.sessions.get(sessionId);
+      accessToken = session.accessToken;
+      databaseId = session.databaseId;
+      console.log('Using session data for API call');
+    } else {
+      // Fallback to request body (for backward compatibility)
+      const { databaseId: reqDbId, token } = req.body;
+      if (!reqDbId || !token) {
+        return res.status(401).json({ error: 'No valid session or credentials provided' });
+      }
+      accessToken = token;
+      databaseId = reqDbId;
+      console.log('Using request body data for API call');
     }
 
     try {

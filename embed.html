@@ -3,46 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Center Widget</title>
+    <title>Notification Center Embed</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: transparent;
-            overflow: hidden;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        #root {
-            width: 100%;
-            min-height: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+        .embed-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
         }
-        
-        /* Notion-specific optimizations */
-        .nc-root {
-            width: 100% !important;
-            max-width: 100% !important;
+        .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
-        
-        /* Responsive adjustments for Notion embeds */
-        @media (max-width: 600px) {
-            .nc-root {
-                width: 100% !important;
-            }
-            .nc-callout {
-                padding: 12px !important;
-            }
-            .nc-filters {
-                flex-direction: column;
-                gap: 8px !important;
-            }
+        h2 {
+            color: #2d3748;
+            margin: 0 0 16px 0;
+            font-size: 24px;
+        }
+        p {
+            color: #718096;
+            margin: 0 0 24px 0;
+            line-height: 1.5;
+        }
+        .button {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.2s;
+            margin: 4px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button-secondary {
+            background: #6c757d;
+        }
+        .button-secondary:hover {
+            background: #545b62;
+        }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="module" src="/src/embed.jsx"></script>
+    <div class="embed-container">
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <div>Opening notification center...</div>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div class="icon">🚀</div>
+            <h2>Open Notification Center</h2>
+            <p>
+                For the best experience with all features, please open the notification center in a new window.
+            </p>
+            <a href="https://student-notification-center.vercel.app/" target="_blank" class="button">
+                Open Full App →
+            </a>
+            <a href="https://student-notification-center.vercel.app/" target="_parent" class="button button-secondary">
+                Open Here
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Show loading for 1 second, then show content
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }, 1000);
+
+        // Try to redirect to main app after 3 seconds
+        setTimeout(() => {
+            try {
+                // Try to redirect parent window (if in iframe)
+                if (window.parent !== window) {
+                    window.parent.location.href = 'https://student-notification-center.vercel.app/';
+                } else {
+                    // If not in iframe, redirect current window
+                    window.location.href = 'https://student-notification-center.vercel.app/';
+                }
+            } catch (error) {
+                // If redirect fails, user can click the button
+                console.log('Redirect blocked, user can click button');
+            }
+        }, 3000);
+    </script>
 </body>
 </html>
