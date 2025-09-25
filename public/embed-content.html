@@ -20,6 +20,13 @@
             overflow-x: hidden;
         }
         
+        .embed-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+        
         /* Embed-specific styles */
         .embed-mode {
             background: transparent !important;
@@ -117,7 +124,16 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div id="root">
+        <iframe 
+            src="/embed-app" 
+            class="embed-container"
+            frameborder="0"
+            allowtransparency="true"
+            scrolling="no"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            title="Notification Center Widget">
+        </iframe>
+    </div>
 </body>
 </html>

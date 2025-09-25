@@ -165,8 +165,14 @@ export default function NotificationCenter({ config = defaultConfig }) {
       localStorage.removeItem('notionAccessToken');
       localStorage.removeItem('notionWorkspace');
       
-      // Navigate to the main app page to show the "Make it yours" setup
-      window.location.href = '/';
+      // Check if we're in an iframe (embed context)
+      if (window.parent !== window) {
+        // In iframe, navigate parent window to main app
+        window.parent.location.href = '/';
+      } else {
+        // Not in iframe, navigate current window
+        window.location.href = '/';
+      }
     }
   }, []);
 

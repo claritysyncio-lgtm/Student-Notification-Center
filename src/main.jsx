@@ -105,6 +105,7 @@ const AppRoutes = () => (
     <Route path="/" element={<App />} />
     <Route path="/embed.html" element={<App />} />
     <Route path="/embed-content" element={<EmbedApp />} />
+    <Route path="/embed-app" element={<EmbedApp />} />
     <Route path="/preview.html" element={<App />} />
     {/* Add more routes here as the application grows */}
   </Routes>

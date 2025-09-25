@@ -73,14 +73,14 @@ export default function EmbedApp() {
             This notification center is not connected to your Notion database. 
             Please visit the main app to set up your connection.
           </p>
-          <a 
-            href="/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="setup-link"
-          >
-            Set up connection →
-          </a>
+        <a 
+          href="/" 
+          target="_parent"
+          rel="noopener noreferrer"
+          className="setup-link"
+        >
+          Set up connection →
+        </a>
         </div>
       </div>
     );
