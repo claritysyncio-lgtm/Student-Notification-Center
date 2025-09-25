@@ -1,6 +1,7 @@
 
 import React, { useCallback } from "react";
 import { getTypeColors } from "../styles/colors";
+import { formatDateWithTimezone } from "../utils/dateUtils";
 
 /**
  * TaskItem Component
@@ -40,39 +41,10 @@ export default function TaskItem({
   }, [task.id, task.completed, onToggleComplete]);
 
   /**
-   * Format due date for display with relative time indicators
+   * Format due date for display with timezone-aware relative time indicators
    */
   const formatDueDate = (dueDate) => {
-    if (!dueDate) return '—';
-    
-    try {
-      const date = new Date(dueDate);
-      const now = new Date();
-      const diffTime = date.getTime() - now.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      // Add relative indicators for better UX
-      let relativeIndicator = '';
-      if (diffDays === 0) {
-        relativeIndicator = ' (Today)';
-      } else if (diffDays === 1) {
-        relativeIndicator = ' (Tomorrow)';
-      } else if (diffDays === -1) {
-        relativeIndicator = ' (Yesterday)';
-      } else if (diffDays < 0) {
-        relativeIndicator = ` (${Math.abs(diffDays)} days ago)`;
-      } else if (diffDays <= 7) {
-        relativeIndicator = ` (in ${diffDays} days)`;
-      }
-      
-      return new Date(dueDate).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric'
-      }) + relativeIndicator;
-    } catch (error) {
-      console.warn('Invalid date format:', dueDate);
-      return 'Invalid Date';
-    }
+    return formatDateWithTimezone(dueDate);
   };
 
   /**

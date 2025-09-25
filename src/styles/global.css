@@ -1695,8 +1695,8 @@ body{
   right: 0;
   bottom: 0;
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   z-index: 5;
 }
 
@@ -3131,4 +3131,16 @@ body{
     width: 100%;
     max-width: 300px;
   }
+}
+
+/* Timezone display styling */
+.nc-timezone-info {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }

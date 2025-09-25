@@ -6,6 +6,7 @@ import CompletedSection from "./CompletedSection";
 import Dropdown from "./Dropdown";
 import TaskItem from "./TaskItem";
 import { defaultConfig, generateThemeCSS } from "../config/widgetConfig";
+import { getDateRangesInTimezone, getUserTimezone } from "../utils/dateUtils";
 
 /**
  * NotificationCenter Component
@@ -111,26 +112,12 @@ export default function NotificationCenter({ config = defaultConfig }) {
     });
   }, [tasks, courseFilter, typeFilter]);
 
-  // Memoized date calculations - recalculated daily
+  // Memoized date calculations - recalculated daily with timezone detection
   const dateRanges = useMemo(() => {
-    const now = new Date();
-    const today = now.toISOString().slice(0, 10);
-    
-    // Calculate tomorrow
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().slice(0, 10);
-    
-    // Calculate end of week (7 days from now)
-    const weekEnd = new Date(now);
-    weekEnd.setDate(weekEnd.getDate() + 7);
-    const weekEndStr = weekEnd.toISOString().slice(0, 10);
-    
-    return { 
-      today, 
-      tomorrow: tomorrowStr, 
-      weekEnd: weekEndStr 
-    };
+    const ranges = getDateRangesInTimezone();
+    console.log('Detected timezone:', ranges.timezone);
+    console.log('Date ranges:', { today: ranges.today, tomorrow: ranges.tomorrow, weekEnd: ranges.weekEnd });
+    return ranges;
   }, []); // Empty dependency array - we want this to recalculate daily
 
   // Memoized task categorization
@@ -142,8 +129,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
         task.due && task.due < today && !task.completed
       ),
       dueToday: filteredTasks.filter(task => 
-        !task.completed && (task.due === today || 
-        new Date(task.due).toDateString() === new Date().toDateString())
+        !task.completed && task.due === today
       ),
       dueTomorrow: filteredTasks.filter(task => 
         !task.completed && task.due === tomorrow
@@ -238,6 +224,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
               Reset
             </button>
           )}
+          
         </header>
       </div>
 

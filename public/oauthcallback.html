@@ -73,10 +73,13 @@
                         localStorage.setItem('notionWorkspaceId', data.workspace_id);
                         localStorage.setItem('notionWorkspaceName', data.workspace_name);
                         
-                        console.log('OAuth successful! Access token stored.');
+                        // Clear any existing database ID to ensure user goes through database setup
+                        localStorage.removeItem('notionDatabaseId');
+                        
+                        console.log('OAuth successful! Access token stored, database ID cleared.');
                         
                         // Redirect back to the main notification center
-                        // This should trigger the database selection screen since no database ID is set
+                        // This will now trigger the database selection screen
                         window.location.href = '/';
                     } else {
                         throw new Error(data.error || 'Failed to complete authentication');

@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import './NotionConnect.css';
 import { OAUTH_CONFIG } from '../config/oauthConfig';
-import DatabaseLinkPage from './DatabaseLinkPage';
 
 /**
  * NotionConnect Component
@@ -10,7 +9,6 @@ import DatabaseLinkPage from './DatabaseLinkPage';
  * Provides information about the integration and handles the OAuth flow initiation.
  */
 export default function NotionConnect() {
-  const [showDatabaseSetup, setShowDatabaseSetup] = useState(false);
 
   /**
    * Handle Notion OAuth connection initiation
@@ -32,34 +30,6 @@ export default function NotionConnect() {
     }
   }, []);
 
-  /**
-   * Handle database setup completion - proceed to OAuth
-   */
-  const handleDatabaseSetupComplete = useCallback((databaseId) => {
-    console.log('Database setup complete, database ID:', databaseId);
-    // The database ID should already be stored by DatabaseLinkPage
-    // Now proceed to OAuth
-    handleConnectToNotion();
-  }, [handleConnectToNotion]);
-
-  /**
-   * Handle database setup cancellation
-   */
-  const handleDatabaseSetupCancel = useCallback(() => {
-    setShowDatabaseSetup(false);
-  }, []);
-
-
-  // Show database setup page if requested
-  if (showDatabaseSetup) {
-    return (
-      <DatabaseLinkPage 
-        onDatabaseIdExtracted={handleDatabaseSetupComplete}
-        onCancel={handleDatabaseSetupCancel}
-        isFirstStep={true}
-      />
-    );
-  }
 
   return (
     <div className="notion-connect-page">
@@ -94,9 +64,9 @@ export default function NotionConnect() {
                   <div className="notion-button-group">
                     <button 
                       className="notion-button" 
-                      onClick={() => setShowDatabaseSetup(true)}
+                      onClick={handleConnectToNotion}
                     >
-                      Get Started
+                      Connect to Notion
                     </button>
                     <button 
                       className="notion-button secondary" 
@@ -113,7 +83,7 @@ export default function NotionConnect() {
 
         <div className="notion-footer">
           <p className="notion-footer-text">
-            Clicking "Get Started" will guide you through connecting your Notion database to the notification center.
+            Clicking "Connect to Notion" will authenticate with Notion, then guide you through setting up your database.
           </p>
           
           <div className="notion-website-section">
