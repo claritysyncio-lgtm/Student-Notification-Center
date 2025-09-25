@@ -165,11 +165,8 @@ export default function NotificationCenter({ config = defaultConfig }) {
       localStorage.removeItem('notionAccessToken');
       localStorage.removeItem('notionWorkspace');
       
-      // Clear any URL parameters
-      window.history.replaceState({}, document.title, window.location.pathname);
-      
-      // Force page reload to start fresh
-      window.location.reload();
+      // Navigate to the main app page to show the "Make it yours" setup
+      window.location.href = '/';
     }
   }, []);
 
