@@ -131,13 +131,19 @@
 
         // Request authentication data from parent window
         function requestAuthData() {
-            console.log('🔍 Requesting auth data from parent window...');
+            console.log('🔍 Checking for authentication...');
             
-            // Try to get from localStorage first (works in some embed contexts)
+            // Try localStorage first
             try {
                 const token = localStorage.getItem('notionAccessToken');
                 const databaseId = localStorage.getItem('notionDatabaseId');
                 const workspace = localStorage.getItem('notionWorkspace');
+                
+                console.log('🔍 localStorage check:', {
+                    hasToken: !!token,
+                    hasDatabaseId: !!databaseId,
+                    tokenPreview: token ? token.substring(0, 8) + '...' : 'none'
+                });
                 
                 if (token && databaseId) {
                     console.log('✅ Found auth data in localStorage');
@@ -146,24 +152,21 @@
                     return;
                 }
             } catch (error) {
-                console.log('⚠️ localStorage not accessible in embed context');
+                console.log('⚠️ localStorage not accessible:', error);
             }
             
-            // Send message to parent requesting auth data
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'REQUEST_AUTH_DATA',
-                    source: 'notification-center-embed'
-                }, '*');
-            }
-            
-            // Try to get from session API as fallback
+            // Try session API
+            console.log('🔍 Trying session API...');
             fetch('/api/session', {
                 method: 'GET',
                 credentials: 'include'
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('📡 Session API response:', response.status, response.ok);
+                return response.json();
+            })
             .then(data => {
+                console.log('📊 Session data:', data);
                 if (data.hasSession && data.databaseId && data.accessToken) {
                     console.log('✅ Found session data');
                     authData = {
@@ -173,13 +176,23 @@
                     };
                     loadNotificationCenter();
                 } else {
+                    console.log('❌ No valid session data');
                     showConnectMessage();
                 }
             })
             .catch(error => {
-                console.log('⚠️ Session API not available');
+                console.log('⚠️ Session API error:', error);
                 showConnectMessage();
             });
+            
+            // Also try postMessage as backup
+            if (window.parent !== window) {
+                console.log('📤 Sending message to parent...');
+                window.parent.postMessage({
+                    type: 'REQUEST_AUTH_DATA',
+                    source: 'notification-center-embed'
+                }, '*');
+            }
         }
         
         function showConnectMessage() {
@@ -194,6 +207,15 @@
                     <button class="error-button" onclick="openMainApp()">
                         Connect to Notion
                     </button>
+                    <div style="margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; font-size: 12px; color: #6c757d;">
+                        <strong>Debug Info:</strong><br>
+                        URL: ${window.location.href}<br>
+                        Referrer: ${document.referrer || 'None'}<br>
+                        Is iframe: ${window.parent !== window ? 'Yes' : 'No'}<br>
+                        <button onclick="requestAuthData()" style="margin-top: 8px; padding: 4px 8px; font-size: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Retry Connection
+                        </button>
+                    </div>
                 </div>
             `;
         }
