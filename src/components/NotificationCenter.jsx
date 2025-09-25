@@ -165,6 +165,9 @@ export default function NotificationCenter({ config = defaultConfig }) {
       localStorage.removeItem('notionAccessToken');
       localStorage.removeItem('notionWorkspace');
       
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('localStorageChanged'));
+      
       // Check if we're in an iframe (embed context)
       if (window.parent !== window) {
         // In iframe, navigate parent window to main app
