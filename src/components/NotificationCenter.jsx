@@ -165,7 +165,8 @@ export default function NotificationCenter({ config = defaultConfig }) {
       isTopLevel: window.top === window,
       parentWindow: window.parent,
       topWindow: window.top,
-      currentWindow: window
+      currentWindow: window,
+      referrer: document.referrer
     });
     
     if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
@@ -182,22 +183,54 @@ export default function NotificationCenter({ config = defaultConfig }) {
       window.dispatchEvent(new CustomEvent('localStorageChanged'));
       console.log('📡 Dispatched localStorageChanged event');
       
-      // Check if we're in an iframe (embed context)
-      if (window.parent !== window) {
-        console.log('🖼️ In iframe context, navigating top-level window');
-        // In iframe, navigate the top-level window to main app
+      // Try multiple navigation strategies for different embed contexts
+      const navigateToMain = () => {
+        const mainAppUrl = window.location.origin + '/';
+        console.log('🎯 Attempting to navigate to:', mainAppUrl);
+        
+        // Strategy 1: Try to navigate the top window (works in most embeds)
         try {
-          window.top.location.href = '/';
+          if (window.top && window.top !== window) {
+            console.log('🖼️ Strategy 1: Navigating top window');
+            window.top.location.href = mainAppUrl;
+            return true;
+          }
         } catch (error) {
-          console.log('❌ Cannot access top window, trying parent:', error);
-          // Fallback to parent if top is not accessible
-          window.parent.location.href = '/';
+          console.log('❌ Strategy 1 failed:', error.message);
         }
-      } else {
-        console.log('🖥️ Not in iframe, navigating current window');
-        // Not in iframe, navigate current window
-        window.location.href = '/';
-      }
+        
+        // Strategy 2: Try to navigate the parent window
+        try {
+          if (window.parent && window.parent !== window) {
+            console.log('🖼️ Strategy 2: Navigating parent window');
+            window.parent.location.href = mainAppUrl;
+            return true;
+          }
+        } catch (error) {
+          console.log('❌ Strategy 2 failed:', error.message);
+        }
+        
+        // Strategy 3: Open new window/tab (fallback for restricted embeds)
+        try {
+          console.log('🖼️ Strategy 3: Opening new window');
+          const newWindow = window.open(mainAppUrl, '_blank');
+          if (newWindow) {
+            newWindow.focus();
+            return true;
+          }
+        } catch (error) {
+          console.log('❌ Strategy 3 failed:', error.message);
+        }
+        
+        // Strategy 4: Navigate current window (last resort)
+        console.log('🖼️ Strategy 4: Navigating current window');
+        window.location.href = mainAppUrl;
+        return true;
+      };
+      
+      // Execute navigation
+      navigateToMain();
+      
     } else {
       console.log('❌ User cancelled reset');
     }
@@ -345,7 +378,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
         <button 
           className="reset-button" 
           onClick={handleReset} 
-          title="Reset and start fresh"
+          title="Reset and start fresh - this will clear all data and take you to the setup page"
         >
           Reset connection
         </button>

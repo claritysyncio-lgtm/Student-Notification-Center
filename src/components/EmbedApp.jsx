@@ -91,7 +91,15 @@ export default function EmbedApp() {
       if (e.key === STORAGE_KEYS.NOTION_DATABASE_ID || 
           e.key === STORAGE_KEYS.NOTION_ACCESS_TOKEN) {
         console.log('🔄 Embed mode - localStorage changed, re-checking connection...');
-        checkConnection();
+        // If the key was removed (set to null), immediately show not connected
+        if (e.newValue === null) {
+          console.log('🗑️ Embed mode - connection data removed, showing not connected state');
+          setHasValidConnection(false);
+          setError('Connection has been reset. Please set up your connection again.');
+          setIsReady(true);
+        } else {
+          checkConnection();
+        }
       }
     };
 
@@ -101,7 +109,18 @@ export default function EmbedApp() {
     // Also listen for custom events (from same window)
     const handleCustomStorageChange = () => {
       console.log('🔄 Embed mode - custom storage event, re-checking connection...');
-      checkConnection();
+      // Check if localStorage was cleared
+      const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+      const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+      
+      if (!databaseId || !accessToken) {
+        console.log('🗑️ Embed mode - connection data cleared, showing not connected state');
+        setHasValidConnection(false);
+        setError('Connection has been reset. Please set up your connection again.');
+        setIsReady(true);
+      } else {
+        checkConnection();
+      }
     };
     
     window.addEventListener('localStorageChanged', handleCustomStorageChange);
