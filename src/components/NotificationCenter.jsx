@@ -5,7 +5,6 @@ import Section from "./Section";
 import CompletedSection from "./CompletedSection";
 import Dropdown from "./Dropdown";
 import TaskItem from "./TaskItem";
-import DebugPanel from "./DebugPanel";
 import { defaultConfig, generateThemeCSS } from "../config/widgetConfig";
 import { getDateRangesInTimezone, getUserTimezone } from "../utils/dateUtils";
 
@@ -156,28 +155,9 @@ export default function NotificationCenter({ config = defaultConfig }) {
     console.log('Tasks refreshed successfully');
   }, []);
 
-  /**
-   * Handle reset button - clear all data and start fresh
-   */
-  const handleReset = useCallback(() => {
-    if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
-      // Clear all localStorage data
-      localStorage.removeItem('notionDatabaseId');
-      localStorage.removeItem('notionAccessToken');
-      localStorage.removeItem('notionWorkspace');
-      
-      // Clear any URL parameters
-      window.history.replaceState({}, document.title, window.location.pathname);
-      
-      // Force page reload to start fresh
-      window.location.reload();
-    }
-  }, []);
-
   return (
     <div className="nc-root">
       <style>{generateThemeCSS(config.theme || {})}</style>
-      <DebugPanel />
       
       <div className="nc-callout">
         {config.showTitle && (
@@ -202,40 +182,31 @@ export default function NotificationCenter({ config = defaultConfig }) {
             </div>
           )}
           
-          <div className="nc-header-actions">
-            {config.showRefreshButton && (
-              <button 
-                className="refresh-button" 
-                onClick={handleRefresh} 
-                title="Refresh tasks"
-                disabled={loading}
-              >
-                <svg 
-                  width="16" 
-                  height="16" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                  className={loading ? 'spinning' : ''}
-                >
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                  <path d="M21 3v5h-5"/>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                  <path d="M3 21v-5h5"/>
-                </svg>
-              </button>
-            )}
+          {config.showRefreshButton && (
             <button 
-              className="reset-button" 
-              onClick={handleReset} 
-              title="Reset and start fresh"
+              className="refresh-button" 
+              onClick={handleRefresh} 
+              title="Refresh tasks"
+              disabled={loading}
             >
-              🔄 Reset
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className={loading ? 'spinning' : ''}
+              >
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M3 21v-5h5"/>
+              </svg>
             </button>
-          </div>
+          )}
           
         </header>
       </div>

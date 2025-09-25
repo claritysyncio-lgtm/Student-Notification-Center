@@ -1,9 +1,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import NotificationCenter from "./components/NotificationCenter";
-import NotionConnect from "./components/NotionConnect";
-import IntegrationPage from "./components/IntegrationPage";
-import DatabaseLinkPage from "./components/DatabaseLinkPage";
+import MakeItYours from "./components/MakeItYours";
+import SimpleDatabaseSetup from "./components/SimpleDatabaseSetup";
 import { defaultConfig } from "./config/widgetConfig";
 
 // Constants for localStorage keys - centralized for easier maintenance
@@ -36,8 +35,7 @@ export default function App() {
     isConnected: false,
     isLoading: true,
     error: null,
-    needsDatabaseSelection: false,
-    showDatabaseLinkPage: false
+    showDatabaseSetup: false
   });
 
   /**
@@ -107,18 +105,16 @@ export default function App() {
           isConnected: true,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false,
-          showDatabaseLinkPage: false
+          showDatabaseSetup: false
         });
       } else {
-        console.log('🔗 No database ID found, showing database link page');
-        // User needs to set up their database, show database link page
+        console.log('🔗 No database ID found, showing database setup');
+        // User needs to set up their database
         setConnectionState({
           isConnected: false,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false,
-          showDatabaseLinkPage: true
+          showDatabaseSetup: true
         });
       }
 
@@ -194,26 +190,23 @@ export default function App() {
           isConnected: true,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false,
-          showDatabaseLinkPage: false
+          showDatabaseSetup: false
         });
       } else if (accessToken && !databaseId) {
-        // User has access token but no database selected - show database link page
+        // User has access token but no database selected - show database setup
         setConnectionState({
           isConnected: false,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false,
-          showDatabaseLinkPage: true
+          showDatabaseSetup: true
         });
       } else {
-        // User needs to connect to Notion (database setup will happen in NotionConnect)
+        // User needs to connect to Notion
         setConnectionState({
           isConnected: false,
           isLoading: false,
           error: null,
-          needsDatabaseSelection: false,
-          showDatabaseLinkPage: false
+          showDatabaseSetup: false
         });
       }
     } catch (error) {
@@ -244,80 +237,19 @@ export default function App() {
   }, []);
 
   /**
-   * Handle database ID extraction from link page
+   * Handle database connection completion
    */
-  const handleDatabaseIdExtracted = useCallback((databaseId) => {
-    console.log('Database ID extracted:', databaseId);
+  const handleDatabaseConnected = useCallback(() => {
+    console.log('✅ Database connected, going to notification center');
     setConnectionState({
       isConnected: true,
       isLoading: false,
       error: null,
-      needsDatabaseSelection: false,
-      showDatabaseLinkPage: false,
-      showDatabaseSetupFirst: false
+      showDatabaseSetup: false
     });
   }, []);
 
-  /**
-   * Handle database setup completion - proceed to Notion OAuth
-   */
-  const handleDatabaseSetupComplete = useCallback(() => {
-    console.log('Database setup complete, proceeding to Notion OAuth');
-    setConnectionState({
-      isConnected: false,
-      isLoading: false,
-      error: null,
-      needsDatabaseSelection: false,
-      showDatabaseLinkPage: false,
-      showDatabaseSetupFirst: false
-    });
-  }, []);
 
-  /**
-   * Handle database selection completion
-   */
-  const handleDatabaseSelected = useCallback((databaseId) => {
-    console.log('Database selected:', databaseId);
-    setConnectionState({
-      isConnected: true,
-      isLoading: false,
-      error: null,
-      needsDatabaseSelection: false,
-      showDatabaseLinkPage: false
-    });
-  }, []);
-
-  /**
-   * Handle database link page cancellation
-   */
-  const handleDatabaseLinkCancel = useCallback(() => {
-    // Clear the access token and go back to connection screen
-    localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
-    setConnectionState({
-      isConnected: false,
-      isLoading: false,
-      error: null,
-      needsDatabaseSelection: false,
-      showDatabaseLinkPage: false
-    });
-  }, []);
-
-  /**
-   * Handle database selection cancellation
-   */
-  const handleDatabaseSelectionCancel = useCallback(() => {
-    // Clear the access token and go back to connection screen
-    localStorage.removeItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.NOTION_WORKSPACE);
-    setConnectionState({
-      isConnected: false,
-      isLoading: false,
-      error: null,
-      needsDatabaseSelection: false,
-      showDatabaseLinkPage: false
-    });
-  }, []);
 
   // Initialize connection on component mount
   useEffect(() => {
@@ -356,22 +288,15 @@ export default function App() {
   return (
     <div className="app">
       {connectionState.isConnected && <NotificationCenter config={defaultConfig} />}
-      {connectionState.showDatabaseLinkPage && (
-        <DatabaseLinkPage 
-          onDatabaseIdExtracted={handleDatabaseIdExtracted}
-          onCancel={handleDatabaseLinkCancel}
+      {connectionState.showDatabaseSetup && (
+        <SimpleDatabaseSetup 
+          onDatabaseConnected={handleDatabaseConnected}
         />
       )}
-      {connectionState.needsDatabaseSelection && (
-        <IntegrationPage 
-          onDatabaseSelected={handleDatabaseSelected}
-          onCancel={handleDatabaseSelectionCancel}
-        />
-      )}
-      {!connectionState.isConnected && !connectionState.needsDatabaseSelection && !connectionState.showDatabaseLinkPage && <NotionConnect />}
+      {!connectionState.isConnected && !connectionState.showDatabaseSetup && <MakeItYours />}
       
       {/* Force cache refresh - remove this comment */}
-      <div style={{display: 'none'}}>v2.1-reset-button</div>
+      <div style={{display: 'none'}}>v3.0-simplified</div>
     </div>
   );
 }
