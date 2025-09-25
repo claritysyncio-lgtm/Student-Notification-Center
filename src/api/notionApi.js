@@ -177,20 +177,32 @@ export async function getTasks() {
     const databaseId = localStorage.getItem('notionDatabaseId');
     const accessToken = localStorage.getItem('notionAccessToken');
     
+    console.log('🔍 Debug - localStorage data:', {
+      databaseId: databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT_FOUND',
+      accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND'
+    });
+    
     if (!databaseId) {
-      console.warn('No Notion database ID found. Please set it in localStorage:');
+      console.warn('❌ No Notion database ID found. Please set it in localStorage:');
       console.warn('localStorage.setItem("notionDatabaseId", "your-database-id-here")');
       return FALLBACK_TASKS;
     }
     
     if (!accessToken) {
-      console.warn('No Notion access token found. Please reconnect to Notion.');
+      console.warn('❌ No Notion access token found. Please reconnect to Notion.');
       return FALLBACK_TASKS;
     }
     
-    console.log('Fetching tasks from Notion database:', databaseId);
+    console.log('🚀 Fetching tasks from Notion database:', databaseId);
     
     const data = await fetchFromNotion(databaseId, accessToken);
+    
+    console.log('📊 Raw Notion API response:', {
+      hasResults: !!data.results,
+      resultsLength: data.results?.length || 0,
+      resultsType: Array.isArray(data.results) ? 'array' : typeof data.results,
+      sampleResult: data.results?.[0] ? 'has data' : 'empty'
+    });
     
     if (!data.results || !Array.isArray(data.results)) {
       throw new Error(`${ERROR_TYPES.VALIDATION_ERROR}: Invalid response format from Notion API`);
@@ -198,7 +210,7 @@ export async function getTasks() {
     
     const tasks = data.results.map(transformNotionPageToTask);
     
-    console.log(`Successfully fetched ${tasks.length} tasks from Notion`);
+    console.log(`✅ Successfully fetched ${tasks.length} tasks from Notion:`, tasks);
     return tasks;
     
   } catch (error) {

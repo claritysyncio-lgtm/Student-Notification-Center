@@ -41,10 +41,15 @@ export default function NotificationCenter({ config = defaultConfig }) {
     try {
       setLoading(true);
       setError(null);
+      console.log('🔄 NotificationCenter: Starting to load tasks...');
       const taskData = await getTasks();
+      console.log('📋 NotificationCenter: Received task data:', {
+        taskCount: taskData.length,
+        tasks: taskData
+      });
       setTasks(taskData);
     } catch (err) {
-      console.error('Failed to load tasks:', err);
+      console.error('❌ NotificationCenter: Failed to load tasks:', err);
       setError(err);
     } finally {
       setLoading(false);
@@ -107,7 +112,14 @@ export default function NotificationCenter({ config = defaultConfig }) {
   const categorizedTasks = useMemo(() => {
     const { today, tomorrow, weekEnd } = dateRanges;
     
-    return {
+    console.log('🗓️ Task categorization debug:', {
+      totalTasks: tasks.length,
+      filteredTasks: filteredTasks.length,
+      dateRanges: { today, tomorrow, weekEnd },
+      sampleTask: filteredTasks[0] || 'no tasks'
+    });
+    
+    const categorized = {
       overdue: filteredTasks.filter(task => 
         task.due && task.due < today && !task.completed
       ),
@@ -122,6 +134,16 @@ export default function NotificationCenter({ config = defaultConfig }) {
       ),
       completed: filteredTasks.filter(task => task.completed)
     };
+    
+    console.log('📊 Categorized tasks:', {
+      overdue: categorized.overdue.length,
+      dueToday: categorized.dueToday.length,
+      dueTomorrow: categorized.dueTomorrow.length,
+      dueThisWeek: categorized.dueThisWeek.length,
+      completed: categorized.completed.length
+    });
+    
+    return categorized;
   }, [filteredTasks, dateRanges]);
 
   /**
