@@ -50,14 +50,19 @@ export default function EmbedApp() {
         console.log('📊 Embed mode - received tasks:', {
           taskCount: tasks.length,
           tasks: tasks,
-          isFallbackData: tasks.length === 1 && tasks[0].id === "no-data"
+          isFallbackData: tasks.length === 1 && tasks[0].id === "no-data",
+          firstTask: tasks[0] || 'no tasks'
         });
         
         // Check if we got fallback data (which means connection failed)
         if (tasks.length === 1 && tasks[0].id === "no-data") {
           console.log('❌ Embed mode - got fallback data, connection invalid');
           setHasValidConnection(false);
-          setError('Connection expired or invalid. Please reconnect to Notion.');
+          setError('Not connected to Notion. Please set up your connection first.');
+        } else if (tasks.length === 0) {
+          console.log('❌ Embed mode - no tasks found, but connection might be valid');
+          setHasValidConnection(false);
+          setError('No tasks found in your Notion database. Please check your database or set up your connection.');
         } else {
           console.log('✅ Embed mode - got real data, connection is valid');
           setHasValidConnection(true);
@@ -123,17 +128,16 @@ export default function EmbedApp() {
         <div className="error-content">
           <h3>Not Connected</h3>
           <p>
-            This notification center is not connected to your Notion database. 
-            Please visit the main app to set up your connection.
+            {error || 'This notification center is not connected to your Notion database. Please visit the main app to set up your connection.'}
           </p>
-        <a 
-          href="/" 
-          target="_parent"
-          rel="noopener noreferrer"
-          className="setup-link"
-        >
-          Set up connection →
-        </a>
+          <a 
+            href="/" 
+            target="_top"
+            rel="noopener noreferrer"
+            className="setup-link"
+          >
+            Set up connection →
+          </a>
         </div>
       </div>
     );

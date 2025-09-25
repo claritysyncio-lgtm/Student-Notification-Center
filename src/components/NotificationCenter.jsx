@@ -162,7 +162,9 @@ export default function NotificationCenter({ config = defaultConfig }) {
     console.log('🔄 Reset button clicked');
     console.log('🔍 Window context check:', {
       isIframe: window.parent !== window,
+      isTopLevel: window.top === window,
       parentWindow: window.parent,
+      topWindow: window.top,
       currentWindow: window
     });
     
@@ -182,9 +184,15 @@ export default function NotificationCenter({ config = defaultConfig }) {
       
       // Check if we're in an iframe (embed context)
       if (window.parent !== window) {
-        console.log('🖼️ In iframe context, navigating parent window');
-        // In iframe, navigate parent window to main app
-        window.parent.location.href = '/';
+        console.log('🖼️ In iframe context, navigating top-level window');
+        // In iframe, navigate the top-level window to main app
+        try {
+          window.top.location.href = '/';
+        } catch (error) {
+          console.log('❌ Cannot access top window, trying parent:', error);
+          // Fallback to parent if top is not accessible
+          window.parent.location.href = '/';
+        }
       } else {
         console.log('🖥️ Not in iframe, navigating current window');
         // Not in iframe, navigate current window

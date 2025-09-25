@@ -103,7 +103,7 @@ class ErrorBoundary extends React.Component {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<App />} />
-    <Route path="/embed.html" element={<App />} />
+    <Route path="/embed.html" element={<EmbedApp />} />
     <Route path="/embed-content" element={<EmbedApp />} />
     <Route path="/embed-app" element={<EmbedApp />} />
     <Route path="/preview.html" element={<App />} />
