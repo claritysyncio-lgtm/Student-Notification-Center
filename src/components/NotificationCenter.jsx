@@ -310,7 +310,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
       {/* Subtle reset button at the bottom */}
       <div className="nc-reset-section">
         <button 
-          className="nc-reset-button" 
+          className="reset-button" 
           onClick={handleReset} 
           title="Reset and start fresh"
         >
