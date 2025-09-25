@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Center Widget</title>
+    <title>Notification Center Widget - Direct</title>
     <style>
         body {
             margin: 0;
@@ -24,13 +24,6 @@
         .nc-root {
             width: 100% !important;
             max-width: 100% !important;
-            background: transparent !important;
-        }
-        
-        /* Hide setup elements in embed mode */
-        .make-it-yours-container,
-        .simple-database-setup {
-            display: none !important;
         }
         
         /* Responsive adjustments for Notion embeds */
@@ -49,15 +42,7 @@
     </style>
 </head>
 <body>
-    <div id="root">
-        <iframe 
-            src="/embed-content" 
-            class="embed-container"
-            frameborder="0"
-            allowtransparency="true"
-            scrolling="no"
-            sandbox="allow-scripts allow-same-origin allow-forms">
-        </iframe>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
