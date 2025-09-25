@@ -61,6 +61,7 @@ export default async function handler(req, res) {
     const session = sessions.get(sessionId);
     res.status(200).json({
       hasSession: true,
+      accessToken: session.accessToken,
       databaseId: session.databaseId,
       workspaceId: session.workspaceId,
       workspaceName: session.workspaceName

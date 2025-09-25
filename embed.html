@@ -133,15 +133,7 @@
         function requestAuthData() {
             console.log('🔍 Requesting auth data from parent window...');
             
-            // Send message to parent requesting auth data
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'REQUEST_AUTH_DATA',
-                    source: 'notification-center-embed'
-                }, '*');
-            }
-            
-            // Also try to get from localStorage as fallback
+            // Try to get from localStorage first (works in some embed contexts)
             try {
                 const token = localStorage.getItem('notionAccessToken');
                 const databaseId = localStorage.getItem('notionDatabaseId');
@@ -155,6 +147,68 @@
                 }
             } catch (error) {
                 console.log('⚠️ localStorage not accessible in embed context');
+            }
+            
+            // Send message to parent requesting auth data
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'REQUEST_AUTH_DATA',
+                    source: 'notification-center-embed'
+                }, '*');
+            }
+            
+            // Try to get from session API as fallback
+            fetch('/api/session', {
+                method: 'GET',
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.hasSession && data.databaseId && data.accessToken) {
+                    console.log('✅ Found session data');
+                    authData = {
+                        token: data.accessToken,
+                        databaseId: data.databaseId,
+                        workspace: data.workspaceName
+                    };
+                    loadNotificationCenter();
+                } else {
+                    showConnectMessage();
+                }
+            })
+            .catch(error => {
+                console.log('⚠️ Session API not available');
+                showConnectMessage();
+            });
+        }
+        
+        function showConnectMessage() {
+            const root = document.getElementById('root');
+            root.innerHTML = `
+                <div class="error-container">
+                    <div class="error-icon">🔐</div>
+                    <div class="error-title">Not Connected</div>
+                    <div class="error-message">
+                        To use the notification center in Notion, please connect your account first.
+                    </div>
+                    <button class="error-button" onclick="openMainApp()">
+                        Connect to Notion
+                    </button>
+                </div>
+            `;
+        }
+        
+        function openMainApp() {
+            // Try to open main app in parent window
+            if (window.parent !== window) {
+                try {
+                    window.parent.location.href = 'https://student-notification-center.vercel.app/';
+                } catch (error) {
+                    // If that fails, open in new tab
+                    window.open('https://student-notification-center.vercel.app/', '_blank');
+                }
+            } else {
+                window.location.href = 'https://student-notification-center.vercel.app/';
             }
         }
 
