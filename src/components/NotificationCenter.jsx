@@ -27,20 +27,12 @@ export default function NotificationCenter({ config = defaultConfig }) {
   const [typeFilter, setTypeFilter] = useState(config.defaultTypeFilter || "All Types");
   const [completedOpen, setCompletedOpen] = useState(false);
   const [dueThisWeekOpen, setDueThisWeekOpen] = useState(true);
-  const [showResetButton, setShowResetButton] = useState(false);
 
   // Load tasks on component mount
   useEffect(() => {
     loadTasks();
   }, []);
 
-  // Show reset button after 3 seconds for testing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowResetButton(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
   /**
    * Load tasks from Notion API
@@ -59,15 +51,6 @@ export default function NotificationCenter({ config = defaultConfig }) {
     }
   };
 
-  /**
-   * Reset the app to show the database link page (for testing)
-   */
-  const handleReset = () => {
-    localStorage.removeItem('notionDatabaseId');
-    localStorage.removeItem('notionAccessToken');
-    localStorage.removeItem('notionWorkspace');
-    window.location.reload();
-  };
 
   /**
    * Handle task completion toggle with optimistic updates
@@ -200,28 +183,6 @@ export default function NotificationCenter({ config = defaultConfig }) {
                 <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
                 <path d="M3 21v-5h5"/>
               </svg>
-            </button>
-          )}
-          {showResetButton && (
-            <button
-              onClick={handleReset}
-              className="reset-button"
-              title="Reset to test database link page"
-              style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                background: '#dc2626',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                zIndex: 1000
-              }}
-            >
-              Reset
             </button>
           )}
           
