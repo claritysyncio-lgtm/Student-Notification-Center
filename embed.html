@@ -132,11 +132,37 @@
             display: inline-block;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-bottom: 16px;
         }
         
         .cta-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .direct-link {
+            background: #f8f9fa;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .direct-link-text {
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        
+        .direct-link-url {
+            font-family: monospace;
+            font-size: 12px;
+            color: #667eea;
+            word-break: break-all;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #e1e5e9;
         }
         
         .features {
@@ -162,28 +188,6 @@
             margin-top: 24px;
             font-size: 12px;
             color: #a0aec0;
-        }
-        
-        .loading {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #e2e8f0;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
         
         @media (max-width: 600px) {
@@ -255,73 +259,18 @@
             </div>
         </div>
         
-        <button class="cta-button" onclick="goToNotionAuth()">
+        <a href="https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user" target="_parent" class="cta-button">
             Connect to Notion →
-        </button>
+        </a>
         
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span>Opening notification center...</span>
+        <div class="direct-link">
+            <div class="direct-link-text">If the button doesn't work, copy and paste this link:</div>
+            <div class="direct-link-url">https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user</div>
         </div>
         
         <div class="footer">
             Powered by <strong>ClaritySync</strong> • Seamless Notion Integration
         </div>
     </div>
-
-    <script>
-        const NOTION_AUTH_URL = 'https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user';
-        
-        function goToNotionAuth() {
-            console.log('🚀 Redirecting to Notion authorization...');
-            showLoading();
-            
-            // Try multiple methods to ensure redirect works
-            try {
-                // Method 1: Try to redirect parent window
-                if (window.parent !== window) {
-                    console.log('📤 Redirecting parent window...');
-                    window.parent.location.href = NOTION_AUTH_URL;
-                } else {
-                    console.log('📤 Redirecting current window...');
-                    window.location.href = NOTION_AUTH_URL;
-                }
-            } catch (error) {
-                console.log('❌ Parent redirect failed, trying alternative...');
-                try {
-                    // Method 2: Try window.open
-                    window.open(NOTION_AUTH_URL, '_parent');
-                } catch (error2) {
-                    console.log('❌ Window.open failed, trying location.replace...');
-                    try {
-                        // Method 3: Try location.replace
-                        window.location.replace(NOTION_AUTH_URL);
-                    } catch (error3) {
-                        console.log('❌ All redirect methods failed');
-                        // Show error message
-                        document.getElementById('loading').innerHTML = `
-                            <div style="color: #dc3545; text-align: center;">
-                                <div style="font-size: 24px; margin-bottom: 8px;">⚠️</div>
-                                <div>Redirect blocked. Please click the link below:</div>
-                                <a href="${NOTION_AUTH_URL}" target="_blank" style="color: #007bff; text-decoration: underline; margin-top: 8px; display: inline-block;">
-                                    Open Notion Authorization
-                                </a>
-                            </div>
-                        `;
-                    }
-                }
-            }
-        }
-        
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
-        }
-        
-        // Auto-redirect to Notion OAuth after 3 seconds
-        setTimeout(() => {
-            console.log('⏰ Auto-redirecting to Notion...');
-            goToNotionAuth();
-        }, 3000);
-    </script>
 </body>
 </html>
