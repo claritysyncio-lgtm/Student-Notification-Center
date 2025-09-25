@@ -21,22 +21,34 @@ export default function EmbedApp() {
   const [isReady, setIsReady] = useState(false);
   const [hasValidConnection, setHasValidConnection] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Force embed to start in "not connected" state
+  console.log('🚀 EmbedApp initialized - starting in not connected state');
 
   /**
    * Check if user has valid connection data by testing the API
    */
   const checkConnection = useCallback(async () => {
     try {
+      // Clear any existing state first
+      setHasValidConnection(false);
+      setError(null);
+      
       const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
       const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+      const workspace = localStorage.getItem(STORAGE_KEYS.NOTION_WORKSPACE);
       
       console.log('🔍 Embed mode - checking connection:', {
         databaseId: databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT_FOUND',
-        accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND'
+        accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND',
+        workspace: workspace ? `${workspace.substring(0, 8)}...` : 'NOT_FOUND',
+        allLocalStorageKeys: Object.keys(localStorage),
+        currentUrl: window.location.href,
+        referrer: document.referrer
       });
       
       if (!databaseId || !accessToken) {
-        console.log('❌ Embed mode - missing connection data');
+        console.log('❌ Embed mode - missing connection data, showing not connected state');
         setHasValidConnection(false);
         setError('Not connected to Notion. Please set up your connection first.');
         setIsReady(true);
@@ -64,8 +76,23 @@ export default function EmbedApp() {
           setHasValidConnection(false);
           setError('No tasks found in your Notion database. Please check your database or set up your connection.');
         } else {
-          console.log('✅ Embed mode - got real data, connection is valid');
-          setHasValidConnection(true);
+          // Additional validation: check if tasks have real Notion IDs (not fallback data)
+          const hasRealTasks = tasks.some(task => 
+            task.id && 
+            task.id !== "no-data" && 
+            task.id.length > 10 && // Notion IDs are typically longer
+            !task.id.includes('fallback') &&
+            !task.id.includes('example')
+          );
+          
+          if (hasRealTasks) {
+            console.log('✅ Embed mode - got real data with valid Notion IDs, connection is valid');
+            setHasValidConnection(true);
+          } else {
+            console.log('❌ Embed mode - tasks appear to be fallback/example data, connection invalid');
+            setHasValidConnection(false);
+            setError('Connection appears to be invalid. Please set up your connection again.');
+          }
         }
       } catch (testError) {
         console.log('❌ Embed mode - connection test error:', testError);
@@ -165,6 +192,29 @@ export default function EmbedApp() {
   return (
     <div className="embed-app">
       <NotificationCenter config={defaultConfig} />
+      
+      {/* Debug panel for troubleshooting */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{
+          position: 'fixed',
+          bottom: '10px',
+          right: '10px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '10px',
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 9999,
+          maxWidth: '300px'
+        }}>
+          <div><strong>Embed Debug Info:</strong></div>
+          <div>Ready: {isReady ? 'Yes' : 'No'}</div>
+          <div>Valid Connection: {hasValidConnection ? 'Yes' : 'No'}</div>
+          <div>Error: {error || 'None'}</div>
+          <div>URL: {window.location.href}</div>
+          <div>Referrer: {document.referrer || 'None'}</div>
+        </div>
+      )}
     </div>
   );
 }
