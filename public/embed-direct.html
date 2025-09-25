@@ -19,17 +19,18 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-        .embed-container {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-        }
         
         /* Notion-specific optimizations */
         .nc-root {
             width: 100% !important;
             max-width: 100% !important;
+            background: transparent !important;
+        }
+        
+        /* Hide setup elements in embed mode */
+        .make-it-yours-container,
+        .simple-database-setup {
+            display: none !important;
         }
         
         /* Responsive adjustments for Notion embeds */

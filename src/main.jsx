@@ -3,6 +3,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
+import EmbedApp from "./components/EmbedApp";
 import "./styles/global.css";
 
 /**
@@ -103,6 +104,7 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<App />} />
     <Route path="/embed.html" element={<App />} />
+    <Route path="/embed-content" element={<EmbedApp />} />
     <Route path="/preview.html" element={<App />} />
     {/* Add more routes here as the application grows */}
   </Routes>
