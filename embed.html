@@ -12,338 +12,37 @@
             background: transparent;
             overflow: hidden;
         }
-        .embed-container {
+        #root {
             width: 100%;
             min-height: 400px;
             max-height: 80vh;
             overflow-y: auto;
             overflow-x: hidden;
         }
-        .embed-content {
-            padding: 20px;
-            background: #ffffff;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            margin: 10px;
+        
+        /* Notion-specific optimizations */
+        .nc-root {
+            width: 100% !important;
+            max-width: 100% !important;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e1e5e9;
-        }
-        .title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0;
-        }
-        .refresh-btn {
-            background: #4299e1;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .refresh-btn:hover {
-            background: #3182ce;
-        }
-        .task-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .task-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f7fafc;
-        }
-        .task-item:last-child {
-            border-bottom: none;
-        }
-        .task-checkbox {
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .task-content {
-            flex: 1;
-        }
-        .task-name {
-            font-size: 14px;
-            color: #2d3748;
-            margin: 0 0 2px 0;
-        }
-        .task-meta {
-            font-size: 12px;
-            color: #718096;
-        }
-        .task-tag {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: 500;
-            margin-left: 8px;
-        }
-        .tag-final { background: #c6f6d5; color: #22543d; }
-        .tag-quiz { background: #fef5e7; color: #744210; }
-        .tag-midterm { background: #fed7d7; color: #742a2a; }
-        .tag-presentation { background: #e2e8f0; color: #2d3748; }
-        .tag-exam { background: #bee3f8; color: #2a4365; }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #718096;
-        }
-        .error {
-            text-align: center;
-            padding: 20px;
-            background: #fed7d7;
-            border: 1px solid #feb2b2;
-            border-radius: 4px;
-            color: #742a2a;
-        }
-        .setup-link {
-            display: inline-block;
-            padding: 8px 16px;
-            background: #4299e1;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-        .setup-link:hover {
-            background: #3182ce;
+        
+        /* Responsive adjustments for Notion embeds */
+        @media (max-width: 600px) {
+            .nc-root {
+                width: 100% !important;
+            }
+            .nc-callout {
+                padding: 12px !important;
+            }
+            .nc-filters {
+                flex-direction: column;
+                gap: 8px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="embed-container">
-        <div class="embed-content">
-            <div class="header">
-                <h2 class="title">Notification Center</h2>
-                <button class="refresh-btn" onclick="loadTasks()">Refresh</button>
-            </div>
-            <div id="content">
-                <div class="loading">Loading your tasks...</div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        console.log('🚀 Embed loaded - redirecting to main app');
-        
-        // Always redirect to main app for full functionality
-        function redirectToMainApp() {
-            console.log('🔄 Redirecting to main app for full access');
-            window.location.href = '/';
-        }
-        
-        function loadTasks() {
-            const content = document.getElementById('content');
-            content.innerHTML = '<div class="loading">Redirecting to main app...</div>';
-            
-            // Check if user has connection data
-            const databaseId = localStorage.getItem('notionDatabaseId');
-            const accessToken = localStorage.getItem('notionAccessToken');
-            
-            console.log('🔍 Checking connection:', {
-                databaseId: databaseId ? 'Found' : 'Not found',
-                accessToken: accessToken ? 'Found' : 'Not found',
-                allKeys: Object.keys(localStorage)
-            });
-            
-            if (!databaseId || !accessToken) {
-                console.log('❌ No connection data found - redirecting to setup');
-                showNotConnected();
-                return;
-            }
-            
-            // If connected, redirect to main app immediately
-            console.log('✅ Found connection data - redirecting to main app');
-            showRedirectMessage();
-            
-            // Redirect after 2 seconds
-            setTimeout(() => {
-                redirectToMainApp();
-            }, 2000);
-        }
-        
-        function displayTasks(tasks) {
-            const content = document.getElementById('content');
-            
-            // Group tasks by status
-            const overdue = tasks.filter(task => {
-                const due = task.properties.Due?.date?.start;
-                if (!due) return false;
-                const dueDate = new Date(due);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return dueDate < today && !task.properties.Completed?.checkbox;
-            });
-            
-            const dueToday = tasks.filter(task => {
-                const due = task.properties.Due?.date?.start;
-                if (!due) return false;
-                const dueDate = new Date(due);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return dueDate.toDateString() === today.toDateString() && !task.properties.Completed?.checkbox;
-            });
-            
-            const upcoming = tasks.filter(task => {
-                const due = task.properties.Due?.date?.start;
-                if (!due) return false;
-                const dueDate = new Date(due);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return dueDate > today && !task.properties.Completed?.checkbox;
-            });
-            
-            let html = '';
-            
-            if (overdue.length > 0) {
-                html += '<h3 style="color: #e53e3e; font-size: 14px; margin: 16px 0 8px 0;">Overdue</h3>';
-                html += renderTaskList(overdue);
-            }
-            
-            if (dueToday.length > 0) {
-                html += '<h3 style="color: #d69e2e; font-size: 14px; margin: 16px 0 8px 0;">Due Today</h3>';
-                html += renderTaskList(dueToday);
-            }
-            
-            if (upcoming.length > 0) {
-                html += '<h3 style="color: #4299e1; font-size: 14px; margin: 16px 0 8px 0;">Upcoming</h3>';
-                html += renderTaskList(upcoming);
-            }
-            
-            if (html === '') {
-                showNoTasks();
-            } else {
-                content.innerHTML = '<ul class="task-list">' + html + '</ul>';
-            }
-        }
-        
-        function renderTaskList(tasks) {
-            return tasks.map(task => {
-                const name = task.properties.Name?.title?.[0]?.text?.content || 'Untitled';
-                const type = task.properties.Type?.select?.name || 'Task';
-                const course = task.properties.Course?.select?.name || 'No Course';
-                const due = task.properties.Due?.date?.start;
-                const completed = task.properties.Completed?.checkbox || false;
-                
-                const dueText = due ? new Date(due).toLocaleDateString() : '';
-                const tagClass = getTagClass(type);
-                
-                return `
-                    <li class="task-item">
-                        <input type="checkbox" class="task-checkbox" ${completed ? 'checked' : ''} 
-                               onchange="toggleTask('${task.id}', this.checked)">
-                        <div class="task-content">
-                            <div class="task-name">${name}</div>
-                            <div class="task-meta">
-                                ${course} ${dueText ? '• Due: ' + dueText : ''}
-                                <span class="task-tag ${tagClass}">${type}</span>
-                            </div>
-                        </div>
-                    </li>
-                `;
-            }).join('');
-        }
-        
-        function getTagClass(type) {
-            const typeMap = {
-                'Final': 'tag-final',
-                'Quiz': 'tag-quiz',
-                'Midterm': 'tag-midterm',
-                'Presentation': 'tag-presentation',
-                'Final Exam': 'tag-exam'
-            };
-            return typeMap[type] || 'tag-presentation';
-        }
-        
-        async function toggleTask(taskId, completed) {
-            try {
-                const response = await fetch(`/api/tasks/${encodeURIComponent(taskId)}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ completed })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to update task');
-                }
-                
-                console.log('✅ Task updated successfully');
-            } catch (error) {
-                console.error('❌ Error updating task:', error);
-                // Revert checkbox
-                event.target.checked = !completed;
-            }
-        }
-        
-        function showNotConnected() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <div class="error">
-                    <h3>Not Connected</h3>
-                    <p>This notification center is not connected to your Notion database.</p>
-                    <a href="/" target="_top" class="setup-link">Set up connection →</a>
-                </div>
-            `;
-        }
-        
-        function showRedirectMessage() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <div style="text-align: center; padding: 20px; background: #c6f6d5; border: 1px solid #9ae6b4; border-radius: 4px; color: #22543d;">
-                    <h3>✅ Connected to Notion!</h3>
-                    <p>Redirecting you to the main app to view your real tasks...</p>
-                    <div style="margin: 10px 0;">
-                        <div style="display: inline-block; width: 20px; height: 20px; border: 2px solid #2f855a; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    </div>
-                    <p style="font-size: 14px; margin-top: 10px;">If you're not redirected automatically, <a href="/" target="_top" style="color: #2f855a; text-decoration: underline;">click here</a></p>
-                </div>
-                <style>
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                </style>
-            `;
-        }
-        
-        function showNoTasks() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #718096;">
-                    <h3>No Tasks Found</h3>
-                    <p>No tasks found in your Notion database.</p>
-                </div>
-            `;
-        }
-        
-        function showError(message) {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <div class="error">
-                    <h3>Error Loading Tasks</h3>
-                    <p>${message}</p>
-                    <button class="refresh-btn" onclick="loadTasks()">Try Again</button>
-                </div>
-            `;
-        }
-        
-        // Load tasks when page loads
-        loadTasks();
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/embed.jsx"></script>
 </body>
 </html>

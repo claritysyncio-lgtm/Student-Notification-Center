@@ -26,20 +26,6 @@ export default defineConfig({
           console.warn('Could not copy legal.html:', error.message)
         }
       }
-    },
-    // Custom plugin to copy embed.html to dist folder
-    {
-      name: 'copy-embed',
-      writeBundle() {
-        try {
-          copyFileSync(
-            resolve(__dirname, 'embed.html'),
-            resolve(__dirname, 'dist/embed.html')
-          )
-        } catch (error) {
-          console.warn('Could not copy embed.html:', error.message)
-        }
-      }
     }
   ],
   
@@ -56,6 +42,10 @@ export default defineConfig({
     sourcemap: false, // Disable sourcemaps for production
     minify: 'esbuild', // Use esbuild for faster minification
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        embed: resolve(__dirname, 'embed.html'),
+      },
       output: {
         // Ensure consistent chunk naming
         chunkFileNames: 'assets/[name]-[hash].js',
