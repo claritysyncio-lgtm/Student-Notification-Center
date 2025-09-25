@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NotificationCenter from "./NotificationCenter";
+import ConnectToNotionScreen from "./ConnectToNotionScreen";
 import { defaultConfig } from "../config/widgetConfig";
 import { getTasks } from "../api/notionApi";
 
@@ -25,31 +26,33 @@ export default function EmbedApp() {
   // Force embed to start in "not connected" state
   console.log('🚀 EmbedApp initialized - starting in not connected state');
   
-  // Clear any potentially cached invalid data
+  // Check for localStorage data on mount
   useEffect(() => {
-    console.log('🧹 Embed mode - clearing potentially cached data');
+    console.log('🧹 Embed mode - checking for localStorage data');
     
-    // Check if we have localStorage data but it might be invalid
+    // Check if we have localStorage data
     const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
     const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
     
+    console.log('🔍 Embed localStorage check:', {
+      databaseId: databaseId ? 'Found' : 'Not found',
+      accessToken: accessToken ? 'Found' : 'Not found',
+      allKeys: Object.keys(localStorage)
+    });
+    
     if (databaseId && accessToken) {
-      console.log('🔍 Embed mode - found localStorage data, will validate it');
-      // Force a small delay to ensure we don't show cached state
+      console.log('✅ Embed mode - found localStorage data, validating connection');
+      // We have data, validate it
       setTimeout(() => {
         checkConnection();
       }, 100);
     } else {
-      console.log('❌ Embed mode - no localStorage data found');
+      console.log('❌ Embed mode - no localStorage data found, showing connect screen');
+      // No data, show connect screen immediately
       setHasValidConnection(false);
-      setError('Not connected to Notion. Please set up your connection first.');
+      setError('No connection data found in embed context');
       setIsReady(true);
     }
-    
-    // Always start in not connected state
-    setHasValidConnection(false);
-    setError(null);
-    setIsReady(false);
   }, [checkConnection]);
 
   /**
@@ -194,31 +197,8 @@ export default function EmbedApp() {
   }
 
   if (!hasValidConnection) {
-    return (
-      <div className="embed-error">
-        <div className="error-icon">⚠️</div>
-        <div className="error-content">
-          <h3>Not Connected</h3>
-          <p>
-            {error || 'This notification center is not connected to your Notion database. Please visit the main app to set up your connection.'}
-          </p>
-          <a 
-            href="/" 
-            target="_top"
-            rel="noopener noreferrer"
-            className="setup-link"
-          >
-            Set up connection →
-          </a>
-          <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
-            <strong>Debug Info:</strong><br/>
-            Ready: {isReady ? 'Yes' : 'No'}<br/>
-            Has Connection: {hasValidConnection ? 'Yes' : 'No'}<br/>
-            Error: {error || 'None'}
-          </div>
-        </div>
-      </div>
-    );
+    // Show connect screen instead of error message
+    return <ConnectToNotionScreen />;
   }
 
   return (
