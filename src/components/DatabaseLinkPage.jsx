@@ -129,6 +129,24 @@ export default function DatabaseLinkPage({ onDatabaseIdExtracted, onCancel, isFi
     }, 10);
   };
 
+  /**
+   * Handle reset button - clear all localStorage and force fresh start
+   */
+  const handleReset = () => {
+    if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
+      // Clear all localStorage data
+      localStorage.removeItem('notionDatabaseId');
+      localStorage.removeItem('notionAccessToken');
+      localStorage.removeItem('notionWorkspace');
+      
+      // Clear any URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Force page reload to start fresh
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="notion-database-setup">
       <div className="notion-setup-header">
@@ -149,6 +167,16 @@ export default function DatabaseLinkPage({ onDatabaseIdExtracted, onCancel, isFi
             ? 'Paste your Notion database link to get started with your personalized notification center.'
             : 'Paste your Notion database link below and we\'ll automatically extract the database ID for you'
           }
+        </div>
+        <div className="notion-setup-reset">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="notion-button reset"
+            title="Clear all data and start fresh"
+          >
+            🔄 Reset & Start Fresh
+          </button>
         </div>
       </div>
 

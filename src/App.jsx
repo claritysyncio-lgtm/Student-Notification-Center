@@ -371,7 +371,7 @@ export default function App() {
       {!connectionState.isConnected && !connectionState.needsDatabaseSelection && !connectionState.showDatabaseLinkPage && <NotionConnect />}
       
       {/* Force cache refresh - remove this comment */}
-      <div style={{display: 'none'}}>v2.0-clean</div>
+      <div style={{display: 'none'}}>v2.1-reset-button</div>
     </div>
   );
 }
