@@ -6,43 +6,154 @@
     <title>Notification Center Widget</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: transparent;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #333;
+        }
+        .embed-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        #root {
-            width: 100%;
-            min-height: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
-        
-        /* Notion-specific optimizations */
-        .nc-root {
-            width: 100% !important;
-            max-width: 100% !important;
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
         }
-        
-        /* Responsive adjustments for Notion embeds */
-        @media (max-width: 600px) {
-            .nc-root {
-                width: 100% !important;
-            }
-            .nc-callout {
-                padding: 12px !important;
-            }
-            .nc-filters {
-                flex-direction: column;
-                gap: 8px !important;
-            }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .task-preview {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        .task-checkbox {
+            margin-right: 12px;
+        }
+        .task-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        .task-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .actions {
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 8px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .footer {
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .status {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div class="embed-container">
+        <div class="header">
+            <h1>📋 Notification Center</h1>
+            <p>Stay on top of your tasks and deadlines</p>
+        </div>
+        
+        <div class="content">
+            <div class="status">
+                ✅ Connected to Notion • Ready to manage tasks
+            </div>
+            
+            <div class="task-preview">
+                <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #495057;">Your Tasks Preview</h3>
+                <div class="task-item">
+                    <input type="checkbox" class="task-checkbox" checked disabled>
+                    <span class="task-text">Complete project proposal</span>
+                    <span class="task-tag">Work</span>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" class="task-checkbox" disabled>
+                    <span class="task-text">Review quarterly reports</span>
+                    <span class="task-tag">Finance</span>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" class="task-checkbox" disabled>
+                    <span class="task-text">Schedule team meeting</span>
+                    <span class="task-tag">Meeting</span>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <a href="https://student-notification-center.vercel.app/" target="_blank" class="btn">
+                    Open Full App →
+                </a>
+                <a href="https://student-notification-center.vercel.app/?reset=true" target="_blank" class="btn btn-secondary">
+                    Reset Connection
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Powered by <strong>ClaritySync</strong> • Seamless Notion Integration
+        </div>
+    </div>
 </body>
 </html>
