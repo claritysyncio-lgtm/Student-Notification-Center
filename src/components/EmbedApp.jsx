@@ -47,6 +47,11 @@ export default function EmbedApp() {
       console.log('🧪 Embed mode - testing connection by fetching tasks...');
       try {
         const tasks = await getTasks();
+        console.log('📊 Embed mode - received tasks:', {
+          taskCount: tasks.length,
+          tasks: tasks,
+          isFallbackData: tasks.length === 1 && tasks[0].id === "no-data"
+        });
         
         // Check if we got fallback data (which means connection failed)
         if (tasks.length === 1 && tasks[0].id === "no-data") {

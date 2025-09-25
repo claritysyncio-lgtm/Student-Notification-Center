@@ -159,23 +159,39 @@ export default function NotificationCenter({ config = defaultConfig }) {
    * Handle reset button click - clear all data and start fresh
    */
   const handleReset = useCallback(() => {
+    console.log('🔄 Reset button clicked');
+    console.log('🔍 Window context check:', {
+      isIframe: window.parent !== window,
+      parentWindow: window.parent,
+      currentWindow: window
+    });
+    
     if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
+      console.log('✅ User confirmed reset');
+      
       // Clear all localStorage data
       localStorage.removeItem('notionDatabaseId');
       localStorage.removeItem('notionAccessToken');
       localStorage.removeItem('notionWorkspace');
       
+      console.log('🗑️ Cleared localStorage data');
+      
       // Dispatch custom event to notify other components
       window.dispatchEvent(new CustomEvent('localStorageChanged'));
+      console.log('📡 Dispatched localStorageChanged event');
       
       // Check if we're in an iframe (embed context)
       if (window.parent !== window) {
+        console.log('🖼️ In iframe context, navigating parent window');
         // In iframe, navigate parent window to main app
         window.parent.location.href = '/';
       } else {
+        console.log('🖥️ Not in iframe, navigating current window');
         // Not in iframe, navigate current window
         window.location.href = '/';
       }
+    } else {
+      console.log('❌ User cancelled reset');
     }
   }, []);
 
