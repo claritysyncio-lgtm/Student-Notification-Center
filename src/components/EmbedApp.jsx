@@ -24,6 +24,26 @@ export default function EmbedApp() {
   
   // Force embed to start in "not connected" state
   console.log('🚀 EmbedApp initialized - starting in not connected state');
+  
+  // Clear any potentially cached invalid data
+  useEffect(() => {
+    console.log('🧹 Embed mode - clearing potentially cached data');
+    
+    // Check if we have localStorage data but it might be invalid
+    const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+    const accessToken = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+    
+    if (databaseId && accessToken) {
+      console.log('🔍 Embed mode - found localStorage data, will validate it');
+    } else {
+      console.log('❌ Embed mode - no localStorage data found');
+    }
+    
+    // Don't clear localStorage here, just ensure we start fresh
+    setHasValidConnection(false);
+    setError(null);
+    setIsReady(false);
+  }, []);
 
   /**
    * Check if user has valid connection data by testing the API
@@ -76,22 +96,39 @@ export default function EmbedApp() {
           setHasValidConnection(false);
           setError('No tasks found in your Notion database. Please check your database or set up your connection.');
         } else {
-          // Additional validation: check if tasks have real Notion IDs (not fallback data)
-          const hasRealTasks = tasks.some(task => 
-            task.id && 
-            task.id !== "no-data" && 
-            task.id.length > 10 && // Notion IDs are typically longer
-            !task.id.includes('fallback') &&
-            !task.id.includes('example')
+          // STRICT validation: check for example data patterns
+          const hasExampleData = tasks.some(task => 
+            task.name && (
+              task.name.toLowerCase().includes('example') ||
+              task.name.toLowerCase().includes('sample') ||
+              task.name.toLowerCase().includes('test') ||
+              task.name.toLowerCase().includes('demo') ||
+              task.name === 'Example 1' ||
+              task.name === 'Example 2' ||
+              task.name === 'Example 3' ||
+              task.name === 'Example 4' ||
+              task.name === 'Example 5'
+            )
           );
           
-          if (hasRealTasks) {
+          const hasRealNotionIds = tasks.some(task => 
+            task.id && 
+            task.id !== "no-data" && 
+            task.id.length > 20 && // Real Notion IDs are much longer
+            /^[a-f0-9-]{32,}$/.test(task.id) // Notion ID format
+          );
+          
+          if (hasExampleData) {
+            console.log('❌ Embed mode - detected example data, connection invalid');
+            setHasValidConnection(false);
+            setError('Example data detected. Please set up your connection with your real Notion database.');
+          } else if (!hasRealNotionIds) {
+            console.log('❌ Embed mode - no valid Notion IDs found, connection invalid');
+            setHasValidConnection(false);
+            setError('Invalid data format. Please reconnect to your Notion database.');
+          } else {
             console.log('✅ Embed mode - got real data with valid Notion IDs, connection is valid');
             setHasValidConnection(true);
-          } else {
-            console.log('❌ Embed mode - tasks appear to be fallback/example data, connection invalid');
-            setHasValidConnection(false);
-            setError('Connection appears to be invalid. Please set up your connection again.');
           }
         }
       } catch (testError) {
