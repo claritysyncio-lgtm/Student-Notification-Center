@@ -47,11 +47,27 @@ export default function EmbedApp() {
         checkConnection();
       }, 100);
     } else {
-      console.log('❌ Embed mode - no localStorage data found, showing connect screen');
-      // No data, show connect screen immediately
+      console.log('❌ Embed mode - no localStorage data found, redirecting to main app');
+      // No data, redirect to main app after a short delay
       setHasValidConnection(false);
       setError('No connection data found in embed context');
       setIsReady(true);
+      
+      // Auto-redirect after 2 seconds
+      setTimeout(() => {
+        if (window.parent !== window) {
+          // We're in an iframe, try to navigate parent
+          try {
+            window.parent.location.href = '/';
+          } catch (error) {
+            // Fallback: open in new tab
+            window.open('/', '_blank');
+          }
+        } else {
+          // Not in iframe, navigate normally
+          window.location.href = '/';
+        }
+      }, 2000);
     }
   }, [checkConnection]);
 
@@ -197,8 +213,49 @@ export default function EmbedApp() {
   }
 
   if (!hasValidConnection) {
-    // Show connect screen instead of error message
-    return <ConnectToNotionScreen />;
+    // Always redirect to main app for reliable functionality
+    return (
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
+        background: '#ffffff',
+        border: '1px solid #e1e5e9',
+        borderRadius: '8px',
+        margin: '10px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🚀</div>
+        <h2 style={{ margin: '0 0 12px 0', color: '#2d3748', fontSize: '18px' }}>
+          Redirecting to Main App
+        </h2>
+        <p style={{ margin: '0 0 20px 0', color: '#718096', fontSize: '14px' }}>
+          Opening the full notification center with all features...
+        </p>
+        <div style={{ margin: '20px 0' }}>
+          <div style={{
+            display: 'inline-block',
+            width: '20px',
+            height: '20px',
+            border: '2px solid #4299e1',
+            borderTop: '2px solid transparent',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}></div>
+        </div>
+        <p style={{ fontSize: '12px', color: '#718096', marginTop: '10px' }}>
+          If you're not redirected automatically, 
+          <a href="/" target="_top" style={{ color: '#4299e1', textDecoration: 'underline', marginLeft: '4px' }}>
+            click here
+          </a>
+        </p>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
   }
 
   return (

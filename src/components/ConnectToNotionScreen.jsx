@@ -14,7 +14,18 @@ export default function ConnectToNotionScreen() {
 
   const handleOpenMainApp = () => {
     // Navigate to main app in the same tab
-    window.location.href = '/';
+    if (window.parent !== window) {
+      // We're in an iframe, try to navigate parent
+      try {
+        window.parent.location.href = '/';
+      } catch (error) {
+        // Fallback: open in new tab
+        window.open('/', '_blank');
+      }
+    } else {
+      // Not in iframe, navigate normally
+      window.location.href = '/';
+    }
   };
 
   return (
