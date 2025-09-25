@@ -183,53 +183,9 @@ export default function NotificationCenter({ config = defaultConfig }) {
       window.dispatchEvent(new CustomEvent('localStorageChanged'));
       console.log('📡 Dispatched localStorageChanged event');
       
-      // Try multiple navigation strategies for different embed contexts
-      const navigateToMain = () => {
-        const mainAppUrl = window.location.origin + '/';
-        console.log('🎯 Attempting to navigate to:', mainAppUrl);
-        
-        // Strategy 1: Try to navigate the top window (works in most embeds)
-        try {
-          if (window.top && window.top !== window) {
-            console.log('🖼️ Strategy 1: Navigating top window');
-            window.top.location.href = mainAppUrl;
-            return true;
-          }
-        } catch (error) {
-          console.log('❌ Strategy 1 failed:', error.message);
-        }
-        
-        // Strategy 2: Try to navigate the parent window
-        try {
-          if (window.parent && window.parent !== window) {
-            console.log('🖼️ Strategy 2: Navigating parent window');
-            window.parent.location.href = mainAppUrl;
-            return true;
-          }
-        } catch (error) {
-          console.log('❌ Strategy 2 failed:', error.message);
-        }
-        
-        // Strategy 3: Open new window/tab (fallback for restricted embeds)
-        try {
-          console.log('🖼️ Strategy 3: Opening new window');
-          const newWindow = window.open(mainAppUrl, '_blank');
-          if (newWindow) {
-            newWindow.focus();
-            return true;
-          }
-        } catch (error) {
-          console.log('❌ Strategy 3 failed:', error.message);
-        }
-        
-        // Strategy 4: Navigate current window (last resort)
-        console.log('🖼️ Strategy 4: Navigating current window');
-        window.location.href = mainAppUrl;
-        return true;
-      };
-      
-      // Execute navigation
-      navigateToMain();
+      // Simple navigation for main site
+      console.log('🖥️ Resetting on main site, navigating to home');
+      window.location.href = '/';
       
     } else {
       console.log('❌ User cancelled reset');
