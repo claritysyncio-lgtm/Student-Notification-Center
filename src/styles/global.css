@@ -93,6 +93,38 @@ body{
   height: 100%;
 }
 
+/* Reset button styles - subtle and callout-like */
+.nc-reset-section {
+  margin-top: 20px;
+  padding: 0 20px 20px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.nc-reset-button {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.nc-reset-button:hover {
+  opacity: 1;
+  color: #374151;
+  border-color: #d1d5db;
+  background: rgba(249, 250, 251, 0.5);
+}
+
+.nc-reset-button:active {
+  transform: translateY(1px);
+}
+
 .app{
   padding: 28px;
   display:flex;

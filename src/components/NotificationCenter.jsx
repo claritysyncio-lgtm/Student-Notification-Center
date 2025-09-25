@@ -155,6 +155,24 @@ export default function NotificationCenter({ config = defaultConfig }) {
     console.log('Tasks refreshed successfully');
   }, []);
 
+  /**
+   * Handle reset button click - clear all data and start fresh
+   */
+  const handleReset = useCallback(() => {
+    if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
+      // Clear all localStorage data
+      localStorage.removeItem('notionDatabaseId');
+      localStorage.removeItem('notionAccessToken');
+      localStorage.removeItem('notionWorkspace');
+      
+      // Clear any URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Force page reload to start fresh
+      window.location.reload();
+    }
+  }, []);
+
   return (
     <div className="nc-root">
       <style>{generateThemeCSS(config.theme || {})}</style>
@@ -291,6 +309,17 @@ export default function NotificationCenter({ config = defaultConfig }) {
           />
         )}
       </main>
+
+      {/* Subtle reset button at the bottom */}
+      <div className="nc-reset-section">
+        <button 
+          className="nc-reset-button" 
+          onClick={handleReset} 
+          title="Reset and start fresh"
+        >
+          Reset connection
+        </button>
+      </div>
     </div>
   );
 }
