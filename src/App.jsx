@@ -38,30 +38,6 @@ export default function App() {
     showDatabaseSetup: false
   });
 
-  /**
-   * Listen for messages from embedded iframes requesting auth data
-   */
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.data.type === 'REQUEST_AUTH_DATA' && event.data.source === 'notification-center-embed') {
-        console.log('📤 Sending auth data to embed');
-        
-        const token = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
-        const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
-        const workspace = localStorage.getItem(STORAGE_KEYS.NOTION_WORKSPACE);
-        
-        if (token && databaseId) {
-          event.source.postMessage({
-            type: 'AUTH_DATA_RESPONSE',
-            data: { token, databaseId, workspace }
-          }, event.origin);
-        }
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
 
   /**
    * Initialize connection state on component mount
@@ -108,35 +84,9 @@ export default function App() {
    * Stores the authentication tokens securely and updates the connection state.
    * Also clears the URL parameters to prevent re-processing on refresh.
    */
-  const handleSuccessfulAuth = useCallback(async (token, workspace) => {
+  const handleSuccessfulAuth = useCallback((token, workspace) => {
     try {
-      console.log('🔐 OAuth successful, creating session...');
-      
-      // Create server session for embed compatibility
-      try {
-        const sessionResponse = await fetch('/api/session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            accessToken: token,
-            workspaceId: workspace?.id,
-            workspaceName: workspace?.name
-          })
-        });
-        
-        if (sessionResponse.ok) {
-          console.log('✅ Session created successfully');
-        } else {
-          console.warn('⚠️ Session creation failed, falling back to localStorage');
-        }
-      } catch (error) {
-        console.warn('⚠️ Session creation error, falling back to localStorage:', error);
-      }
-      
-      // Also store in localStorage for backward compatibility
+      // Store authentication data
       localStorage.setItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN, token);
       
       if (workspace) {
@@ -145,10 +95,8 @@ export default function App() {
 
       // Check if user already has a database ID
       const existingDatabaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
-      console.log('🔍 Existing database ID:', existingDatabaseId);
       
       if (existingDatabaseId) {
-        console.log('✅ User has existing database ID, going to notification center');
         // User already has a database ID, go directly to notification center
         setConnectionState({
           isConnected: true,
@@ -157,7 +105,6 @@ export default function App() {
           showDatabaseSetup: false
         });
       } else {
-        console.log('🔗 No database ID found, showing database setup');
         // User needs to set up their database
         setConnectionState({
           isConnected: false,

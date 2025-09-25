@@ -70,28 +70,11 @@ export default async function handler(req, res) {
         throw new Error(tokenData.error || `HTTP ${tokenResponse.status}: Failed to exchange code for token`);
       }
 
-      // Create session and set HTTP-only cookie
-      const sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
-      
-      // Store session data (in production, use Redis or database)
-      const sessions = global.sessions || (global.sessions = new Map());
-      sessions.set(sessionId, {
-        accessToken: tokenData.access_token,
-        workspaceId: tokenData.workspace_id,
-        workspaceName: tokenData.workspace_name,
-        createdAt: new Date().toISOString()
-      });
-
-      // Set HTTP-only cookies for iframe compatibility
-      res.setHeader('Set-Cookie', [
-        `session=${sessionId}; HttpOnly; Secure; SameSite=None; Max-Age=${7 * 24 * 60 * 60}; Path=/`,
-        `hasSession=true; Secure; SameSite=None; Max-Age=${7 * 24 * 60 * 60}; Path=/`
-      ]);
-
-      // Return success response
+      // Return the access token to the frontend
       res.status(200).json({
-        success: true,
-        message: 'Authentication successful'
+        access_token: tokenData.access_token,
+        workspace_id: tokenData.workspace_id,
+        workspace_name: tokenData.workspace_name
       });
 
     } catch (error) {

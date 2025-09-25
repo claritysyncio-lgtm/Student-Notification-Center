@@ -41,15 +41,10 @@ export default function NotificationCenter({ config = defaultConfig }) {
     try {
       setLoading(true);
       setError(null);
-      console.log('🔄 NotificationCenter: Starting to load tasks...');
       const taskData = await getTasks();
-      console.log('📋 NotificationCenter: Received task data:', {
-        taskCount: taskData.length,
-        tasks: taskData
-      });
       setTasks(taskData);
     } catch (err) {
-      console.error('❌ NotificationCenter: Failed to load tasks:', err);
+      console.error('Failed to load tasks:', err);
       setError(err);
     } finally {
       setLoading(false);
@@ -159,36 +154,17 @@ export default function NotificationCenter({ config = defaultConfig }) {
    * Handle reset button click - clear all data and start fresh
    */
   const handleReset = useCallback(() => {
-    console.log('🔄 Reset button clicked');
-    console.log('🔍 Window context check:', {
-      isIframe: window.parent !== window,
-      isTopLevel: window.top === window,
-      parentWindow: window.parent,
-      topWindow: window.top,
-      currentWindow: window,
-      referrer: document.referrer
-    });
-    
     if (window.confirm('This will clear all your saved data and start fresh. Are you sure?')) {
-      console.log('✅ User confirmed reset');
-      
       // Clear all localStorage data
       localStorage.removeItem('notionDatabaseId');
       localStorage.removeItem('notionAccessToken');
       localStorage.removeItem('notionWorkspace');
       
-      console.log('🗑️ Cleared localStorage data');
-      
       // Dispatch custom event to notify other components
       window.dispatchEvent(new CustomEvent('localStorageChanged'));
-      console.log('📡 Dispatched localStorageChanged event');
       
-      // Simple navigation for main site
-      console.log('🖥️ Resetting on main site, navigating to home');
+      // Navigate to main app page
       window.location.href = '/';
-      
-    } else {
-      console.log('❌ User cancelled reset');
     }
   }, []);
 

@@ -114,7 +114,6 @@ async function fetchFromNotion(databaseId, token) {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      credentials: 'include', // Include cookies for session support
       body: JSON.stringify({
         databaseId,
         token
@@ -167,17 +166,6 @@ function transformNotionPageToTask(page) {
     typeColor: properties.Type?.select?.color || 'default'
   };
   
-  console.log('🔄 Transforming Notion page to task:', {
-    pageId: page.id,
-    originalProperties: {
-      Name: properties.Name,
-      Due: properties.Due,
-      Course: properties.Course,
-      Type: properties.Type,
-      Completed: properties.Completed
-    },
-    transformedTask
-  });
   
   return transformedTask;
 }
@@ -189,59 +177,26 @@ function transformNotionPageToTask(page) {
  */
 export async function getTasks() {
   try {
-    // Try to get session data first (for embed compatibility)
-    let sessionData = null;
-    try {
-      const sessionResponse = await fetch('/api/session', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      if (sessionResponse.ok) {
-        sessionData = await sessionResponse.json();
-        console.log('✅ getTasks - using session data:', sessionData);
-      }
-    } catch (error) {
-      console.log('⚠️ getTasks - no session data, falling back to localStorage');
-    }
-
-    // Fallback to localStorage for main app
-    const databaseId = sessionData?.databaseId || localStorage.getItem('notionDatabaseId');
-    const accessToken = sessionData?.accessToken || localStorage.getItem('notionAccessToken');
-    
-    console.log('🔍 Debug - credentials check:', {
-      databaseId: databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT_FOUND',
-      accessToken: accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND',
-      source: sessionData ? 'session' : 'localStorage'
-    });
+    const databaseId = localStorage.getItem('notionDatabaseId');
+    const accessToken = localStorage.getItem('notionAccessToken');
     
     if (!databaseId) {
-      console.warn('❌ No Notion database ID found. Please connect to Notion.');
+      console.warn('No Notion database ID found. Please connect to Notion.');
       return FALLBACK_TASKS;
     }
     
     if (!accessToken) {
-      console.warn('❌ No Notion access token found. Please reconnect to Notion.');
+      console.warn('No Notion access token found. Please reconnect to Notion.');
       return FALLBACK_TASKS;
     }
     
-    console.log('🚀 Fetching tasks from Notion database:', databaseId);
-    
     const data = await fetchFromNotion(databaseId, accessToken);
-    
-    console.log('📊 Raw Notion API response:', {
-      hasResults: !!data.results,
-      resultsLength: data.results?.length || 0,
-      resultsType: Array.isArray(data.results) ? 'array' : typeof data.results,
-      sampleResult: data.results?.[0] ? 'has data' : 'empty'
-    });
     
     if (!data.results || !Array.isArray(data.results)) {
       throw new Error(`${ERROR_TYPES.VALIDATION_ERROR}: Invalid response format from Notion API`);
     }
     
     const tasks = data.results.map(transformNotionPageToTask);
-    
-    console.log(`✅ Successfully fetched ${tasks.length} tasks from Notion:`, tasks);
     return tasks;
     
   } catch (error) {

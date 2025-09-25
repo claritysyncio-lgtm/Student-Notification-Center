@@ -1,228 +1,153 @@
-# 🔔 Notion Notification Center Template
+# Student Notification Center
 
-A beautiful, customizable notification center widget that integrates with your Notion task database. Perfect for students, professionals, or anyone who wants to stay on top of their tasks directly in Notion.
+A React-based notification center that integrates with Notion to display and manage tasks from your Notion database.
 
-## ✨ Features
+## Features
 
-- **Real-time Notion Integration**: Syncs with your Notion task database
-- **Smart Task Organization**: Automatically categorizes tasks by due date (Overdue, Due Today, Due Tomorrow, Due This Week)
-- **Customizable Design**: Full theme customization with color pickers
-- **Filter Controls**: Filter by course and task type
-- **Responsive Design**: Works perfectly in Notion embeds
-- **Easy Setup**: Guided configuration with live preview
+- **Notion Integration**: Connect to your Notion workspace and database
+- **Task Management**: View, filter, and manage tasks from Notion
+- **Real-time Updates**: Refresh tasks to get the latest data
+- **Responsive Design**: Works on desktop and mobile devices
+- **Clean UI**: Notion-inspired design with modern aesthetics
 
-## 🚀 Quick Start
+## Tech Stack
 
-### 1. Setup Your Notion Database
+- **Frontend**: React 18, Vite, React Router
+- **Styling**: CSS with Notion-inspired design
+- **Backend**: Vercel Serverless Functions
+- **API**: Notion API v1
+- **Authentication**: OAuth 2.0 with Notion
 
-Create a Notion database with these properties:
-- **Name** (Title): Task name
-- **Due** (Date): Due date
-- **Course** (Relation or Formula): Course name
-- **Type** (Select): Task type (Assignment, Quiz, Lab, etc.)
-- **Worth %** (Number): Grade percentage
-- **Done** (Checkbox): Completion status
-
-### 2. Create Notion Integration
-
-1. Go to [notion.so/my-integrations](https://notion.so/my-integrations)
-2. Click "New integration"
-3. Give it a name (e.g., "Notification Center")
-4. Select your workspace
-5. Copy the "Internal Integration Token"
-6. Share your database with the integration
-
-### 3. Deploy the Widget
-
-#### Option A: Use the Live Demo
-1. Visit the setup page
-2. Enter your Notion credentials
-3. Customize the appearance
-4. Copy the embed URL
-
-#### Option B: Self-Host
-1. Clone this repository
-2. Run `npm install`
-3. Set up environment variables
-4. Deploy to your hosting platform
-
-### 4. Embed in Notion
-
-1. In Notion, type `/embed`
-2. Paste your embed URL
-3. Resize the embed block as needed
-
-## 🎨 Customization
-
-The widget is fully customizable through the configuration panel:
-
-### Display Settings
-- Show/hide title
-- Toggle refresh button
-- Enable/disable filters
-- Configure sections
-
-### Theme Colors
-- Primary color
-- Background color
-- Border color
-- Text colors
-
-### Notion Integration
-- Database ID
-- Integration token
-- Course database (optional)
-
-## 📁 File Structure
+## Project Structure
 
 ```
 src/
-├── components/
-│   ├── NotificationCenter.jsx    # Main widget component
-│   ├── ConfigPanel.jsx          # Configuration interface
+├── components/           # React components
+│   ├── NotificationCenter.jsx    # Main notification center
+│   ├── MakeItYours.jsx          # OAuth initiation component
+│   ├── SimpleDatabaseSetup.jsx  # Database selection
 │   ├── Section.jsx              # Task section component
 │   ├── TaskItem.jsx             # Individual task component
 │   └── ...
-├── config/
-│   └── widgetConfig.js          # Configuration system
-└── styles/
-    └── global.css               # Styling and themes
+├── api/                 # API integration
+│   └── notionApi.js     # Notion API client
+├── config/              # Configuration files
+│   ├── oauthConfig.js   # OAuth settings
+│   └── widgetConfig.js  # Widget configuration
+├── styles/              # Global styles
+│   └── global.css       # Main stylesheet
+├── utils/               # Utility functions
+│   └── dateUtils.js     # Date handling utilities
+├── App.jsx              # Main app component
+└── main.jsx             # Application entry point
+
+api/                     # Vercel serverless functions
+├── oauth.js             # OAuth callback handler
+├── notion.js            # Notion API proxy
+└── databases.js         # Database listing API
 ```
 
-## 🔧 Configuration
+## Setup
 
-The widget uses a JSON configuration system. You can:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd student-notification-center
+   ```
 
-1. Use the visual configuration panel
-2. Manually edit the configuration JSON
-3. Export/import configurations
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Example Configuration
+3. **Set up environment variables**
+   Create a `.env.local` file:
+   ```
+   VITE_NOTION_CLIENT_ID=your_notion_client_id
+   VITE_NOTION_CLIENT_SECRET=your_notion_client_secret
+   VITE_BASE_URL=https://your-domain.vercel.app
+   ```
 
-```json
-{
-  "title": "My Tasks",
-  "showTitle": true,
-  "showRefreshButton": true,
-  "showFilters": true,
-  "sections": {
-    "overdue": { "enabled": true, "title": "Overdue", "showCountdown": true },
-    "dueToday": { "enabled": true, "title": "Due Today", "showCountdown": false },
-    "dueTomorrow": { "enabled": true, "title": "Due Tomorrow", "showCountdown": false },
-    "dueThisWeek": { "enabled": true, "title": "Due This Week", "showCountdown": true },
-    "completed": { "enabled": true, "title": "Completed", "collapsible": true }
-  },
-  "theme": {
-    "primaryColor": "#374151",
-    "backgroundColor": "#ffffff",
-    "borderColor": "#e1e5e9",
-    "textColor": "#111827",
-    "mutedColor": "#6b7280"
-  },
-  "notion": {
-    "databaseId": "your-database-id",
-    "token": "your-integration-token"
-  }
-}
-```
+4. **Set up Notion Integration**
+   - Go to [Notion Integrations](https://www.notion.so/my-integrations)
+   - Create a new integration
+   - Copy the Client ID and Client Secret
+   - Add the integration to your Notion database
 
-## 🛠️ Development
+5. **Run development server**
+   ```bash
+   npm run dev
+   ```
 
-### Prerequisites
-- Node.js 16+
-- npm or yarn
-- Notion account with database access
+## Deployment
 
-### Local Development
+This project is configured for Vercel deployment:
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
-4. Open `http://localhost:5173` for setup
-5. Open `http://localhost:5173/embed.html` for embed preview
+1. **Connect to Vercel**
+   - Import the repository in Vercel
+   - Set environment variables in Vercel dashboard
 
-### Building for Production
+2. **Deploy**
+   ```bash
+   npm run build
+   vercel --prod
+   ```
 
-```bash
-npm run build
-```
+## Usage
 
-The built files will be in the `dist/` directory.
+1. **Connect to Notion**
+   - Click "Make it yours" button
+   - Authorize with Notion
+   - Select your database
 
-## 🚀 Deployment
+2. **View Tasks**
+   - Tasks are automatically loaded from your Notion database
+   - Use filters to view specific courses or types
+   - Toggle task completion status
 
-### Vercel (Recommended)
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically
+3. **Refresh Data**
+   - Click the refresh button to get latest tasks
+   - Use the reset button to start over
 
-### Netlify
-1. Connect your repository to Netlify
-2. Set build command: `npm run build`
-3. Set publish directory: `dist`
-4. Add environment variables
+## API Endpoints
 
-### Other Platforms
-The widget can be deployed to any static hosting platform that supports:
-- Static file serving
-- Environment variables
-- Custom domains
+- `GET /api/oauth` - OAuth callback handler
+- `POST /api/notion` - Notion API proxy
+- `GET /api/databases` - List available databases
 
-## 📱 Mobile Support
+## Configuration
 
-The widget is fully responsive and works great on:
-- Desktop Notion
-- Mobile Notion apps
-- Tablet devices
+### OAuth Configuration
+Edit `src/config/oauthConfig.js` to update OAuth settings.
 
-## 🔒 Security
+### Widget Configuration
+Edit `src/config/widgetConfig.js` to customize the notification center appearance.
 
-- All Notion API calls are made server-side
-- Integration tokens are never exposed to the client
-- CORS is properly configured
-- No sensitive data is stored in localStorage
-
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-**"Cannot reach backend API"**
-- Check that your server is running
-- Verify environment variables are set
-- Ensure CORS is configured correctly
+1. **OAuth not working**
+   - Check that Client ID and Secret are correct
+   - Ensure redirect URI matches your domain
 
-**"Missing Notion credentials"**
-- Verify your integration token is correct
-- Check that the database ID is valid
-- Ensure the integration has access to the database
+2. **Tasks not loading**
+   - Verify database ID is correct
+   - Check that integration has access to database
+   - Ensure database has required properties
 
-**Tasks not showing**
-- Check your database properties match the expected format
-- Verify the integration has read access
-- Check the browser console for errors
+3. **Styling issues**
+   - Check browser console for CSS errors
+   - Verify all style imports are correct
 
-### Getting Help
+## Contributing
 
-1. Check the browser console for error messages
-2. Verify your Notion database structure
-3. Test your integration token with the Notion API
-4. Review the configuration settings
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## 📄 License
+## License
 
-This template is provided as-is for educational and commercial use. Feel free to modify and distribute according to your needs.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit issues and pull requests.
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in this repository
-- Check the troubleshooting section
-- Review the Notion API documentation
-
----
-
-**Made with ❤️ for the Notion community**
+This project is licensed under the MIT License.
