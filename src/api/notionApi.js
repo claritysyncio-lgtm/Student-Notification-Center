@@ -155,7 +155,7 @@ async function fetchFromNotion(databaseId, token) {
 function transformNotionPageToTask(page) {
   const properties = page.properties;
   
-  return {
+  const transformedTask = {
     id: page.id,
     name: properties.Name?.title?.[0]?.text?.content || 'Untitled Task',
     due: properties.Due?.date?.start || null,
@@ -165,6 +165,20 @@ function transformNotionPageToTask(page) {
     completed: properties.Completed?.checkbox || false,
     typeColor: properties.Type?.select?.color || 'default'
   };
+  
+  console.log('🔄 Transforming Notion page to task:', {
+    pageId: page.id,
+    originalProperties: {
+      Name: properties.Name,
+      Due: properties.Due,
+      Course: properties.Course,
+      Type: properties.Type,
+      Completed: properties.Completed
+    },
+    transformedTask
+  });
+  
+  return transformedTask;
 }
 
 /**

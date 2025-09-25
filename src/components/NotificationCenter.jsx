@@ -5,6 +5,7 @@ import Section from "./Section";
 import CompletedSection from "./CompletedSection";
 import Dropdown from "./Dropdown";
 import TaskItem from "./TaskItem";
+import DebugPanel from "./DebugPanel";
 import { defaultConfig, generateThemeCSS } from "../config/widgetConfig";
 import { getDateRangesInTimezone, getUserTimezone } from "../utils/dateUtils";
 
@@ -158,6 +159,7 @@ export default function NotificationCenter({ config = defaultConfig }) {
   return (
     <div className="nc-root">
       <style>{generateThemeCSS(config.theme || {})}</style>
+      <DebugPanel />
       
       <div className="nc-callout">
         {config.showTitle && (

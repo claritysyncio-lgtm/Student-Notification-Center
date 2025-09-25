@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    
+    <div class="test-section">
+        <h2>LocalStorage Test</h2>
+        <button onclick="checkLocalStorage()">Check LocalStorage</button>
+        <div id="localStorageResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>API Endpoint Test</h2>
+        <button onclick="testNotionAPI()">Test Notion API</button>
+        <div id="apiResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Database ID Test</h2>
+        <input type="text" id="databaseId" placeholder="Enter database ID" style="width: 300px; padding: 5px;">
+        <button onclick="setDatabaseId()">Set Database ID</button>
+        <div id="databaseResult" class="result"></div>
+    </div>
+
+    <script>
+        function checkLocalStorage() {
+            const result = document.getElementById('localStorageResult');
+            const databaseId = localStorage.getItem('notionDatabaseId');
+            const accessToken = localStorage.getItem('notionAccessToken');
+            const workspace = localStorage.getItem('notionWorkspace');
+            
+            result.innerHTML = `
+                <strong>LocalStorage Contents:</strong><br>
+                Database ID: ${databaseId ? `${databaseId.substring(0, 8)}...` : 'NOT_FOUND'}<br>
+                Access Token: ${accessToken ? `${accessToken.substring(0, 8)}...` : 'NOT_FOUND'}<br>
+                Workspace: ${workspace || 'NOT_FOUND'}
+            `;
+            
+            if (!databaseId || !accessToken) {
+                result.className = 'result error';
+            } else {
+                result.className = 'result success';
+            }
+        }
+        
+        async function testNotionAPI() {
+            const result = document.getElementById('apiResult');
+            result.innerHTML = 'Testing API...';
+            result.className = 'result';
+            
+            try {
+                const databaseId = localStorage.getItem('notionDatabaseId');
+                const accessToken = localStorage.getItem('notionAccessToken');
+                
+                if (!databaseId || !accessToken) {
+                    throw new Error('Missing database ID or access token in localStorage');
+                }
+                
+                const response = await fetch('/api/notion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        databaseId,
+                        token: accessToken
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <strong>API Test Success!</strong><br>
+                        Status: ${response.status}<br>
+                        Results: ${data.results ? data.results.length : 0} tasks found<br>
+                        Sample: ${JSON.stringify(data.results?.[0] || 'No tasks', null, 2)}
+                    `;
+                    result.className = 'result success';
+                } else {
+                    throw new Error(`API Error: ${response.status} - ${data.error || 'Unknown error'}`);
+                }
+            } catch (error) {
+                result.innerHTML = `<strong>API Test Failed:</strong><br>${error.message}`;
+                result.className = 'result error';
+            }
+        }
+        
+        function setDatabaseId() {
+            const databaseId = document.getElementById('databaseId').value.trim();
+            if (databaseId) {
+                localStorage.setItem('notionDatabaseId', databaseId);
+                document.getElementById('databaseResult').innerHTML = 
+                    `<strong>Database ID Set:</strong> ${databaseId.substring(0, 8)}...`;
+                document.getElementById('databaseResult').className = 'result success';
+            } else {
+                document.getElementById('databaseResult').innerHTML = 
+                    '<strong>Error:</strong> Please enter a database ID';
+                document.getElementById('databaseResult').className = 'result error';
+            }
+        }
+        
+        // Auto-check localStorage on page load
+        window.onload = checkLocalStorage;
+    </script>
+</body>
+</html>
