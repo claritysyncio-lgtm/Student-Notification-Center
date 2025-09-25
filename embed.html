@@ -137,14 +137,17 @@
     </div>
 
     <script>
-        console.log('🚀 Embed loaded - starting fresh');
+        console.log('🚀 Embed loaded - redirecting to main app');
         
-        // Clear any old data first
-        localStorage.removeItem('embedCache');
+        // Always redirect to main app for full functionality
+        function redirectToMainApp() {
+            console.log('🔄 Redirecting to main app for full access');
+            window.location.href = '/';
+        }
         
         function loadTasks() {
             const content = document.getElementById('content');
-            content.innerHTML = '<div class="loading">Loading your tasks...</div>';
+            content.innerHTML = '<div class="loading">Redirecting to main app...</div>';
             
             // Check if user has connection data
             const databaseId = localStorage.getItem('notionDatabaseId');
@@ -157,14 +160,19 @@
             });
             
             if (!databaseId || !accessToken) {
-                console.log('❌ No connection data found');
+                console.log('❌ No connection data found - redirecting to setup');
                 showNotConnected();
                 return;
             }
             
-            // For now, show a simple message that we found the data
-            console.log('✅ Found connection data, showing setup message');
-            showConnectedButRedirect();
+            // If connected, redirect to main app immediately
+            console.log('✅ Found connection data - redirecting to main app');
+            showRedirectMessage();
+            
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                redirectToMainApp();
+            }, 2000);
         }
         
         function displayTasks(tasks) {
@@ -293,20 +301,23 @@
             `;
         }
         
-        function showConnectedButRedirect() {
+        function showRedirectMessage() {
             const content = document.getElementById('content');
             content.innerHTML = `
                 <div style="text-align: center; padding: 20px; background: #c6f6d5; border: 1px solid #9ae6b4; border-radius: 4px; color: #22543d;">
                     <h3>✅ Connected to Notion!</h3>
-                    <p>You have a valid connection. Click below to view your tasks in the main app.</p>
-                    <a href="/" target="_top" class="setup-link">View Tasks →</a>
-                    <div style="margin-top: 10px; font-size: 12px; color: #2f855a;">
-                        <strong>Debug Info:</strong><br/>
-                        Database ID: Found<br/>
-                        Access Token: Found<br/>
-                        Status: Ready to use
+                    <p>Redirecting you to the main app to view your real tasks...</p>
+                    <div style="margin: 10px 0;">
+                        <div style="display: inline-block; width: 20px; height: 20px; border: 2px solid #2f855a; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
                     </div>
+                    <p style="font-size: 14px; margin-top: 10px;">If you're not redirected automatically, <a href="/" target="_top" style="color: #2f855a; text-decoration: underline;">click here</a></p>
                 </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
             `;
         }
         
