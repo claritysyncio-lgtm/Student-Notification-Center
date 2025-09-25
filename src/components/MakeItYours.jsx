@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { OAUTH_CONFIG } from '../config/oauthConfig';
 
 /**
  * MakeItYours Component
@@ -19,9 +20,16 @@ export default function MakeItYours({ onSetupComplete }) {
       setIsConnecting(true);
       setError('');
 
-      // Redirect to OAuth flow
-      const oauthUrl = '/api/oauth';
-      window.location.href = oauthUrl;
+      // Validate OAuth configuration before redirecting
+      if (!OAUTH_CONFIG.OAUTH_AUTHORIZE_URL) {
+        console.error('OAuth configuration is missing');
+        setError('OAuth configuration error. Please contact support.');
+        setIsConnecting(false);
+        return;
+      }
+      
+      console.log('Initiating Notion OAuth flow...');
+      window.location.href = OAUTH_CONFIG.OAUTH_AUTHORIZE_URL;
     } catch (err) {
       console.error('Error starting setup:', err);
       setError('Failed to start setup. Please try again.');
