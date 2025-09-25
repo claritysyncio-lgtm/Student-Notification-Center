@@ -255,8 +255,8 @@
             </div>
         </div>
         
-        <a href="https://student-notification-center.vercel.app/" target="_parent" class="cta-button" onclick="showLoading()">
-            Open Full App →
+        <a href="https://api.notion.com/v1/oauth/authorize?client_id=277d872b-594c-8009-a497-003712a5baf8&response_type=code&owner=user&redirect_uri=https://student-notification-center.vercel.app/oauthcallback.html" target="_parent" class="cta-button" onclick="showLoading()">
+            Connect to Notion →
         </a>
         
         <div class="loading" id="loading">
@@ -272,25 +272,20 @@
     <script>
         function showLoading() {
             document.getElementById('loading').style.display = 'flex';
-            
-            // Auto-redirect after 1 second if the button click didn't work
-            setTimeout(() => {
-                try {
-                    if (window.parent !== window) {
-                        window.parent.location.href = 'https://student-notification-center.vercel.app/';
-                    } else {
-                        window.location.href = 'https://student-notification-center.vercel.app/';
-                    }
-                } catch (error) {
-                    // If redirect fails, user can click the button again
-                    document.getElementById('loading').style.display = 'none';
-                }
-            }, 1000);
         }
         
-        // Auto-redirect after 5 seconds
+        // Auto-redirect to Notion OAuth after 5 seconds
         setTimeout(() => {
-            showLoading();
+            try {
+                if (window.parent !== window) {
+                    window.parent.location.href = 'https://api.notion.com/v1/oauth/authorize?client_id=277d872b-594c-8009-a497-003712a5baf8&response_type=code&owner=user&redirect_uri=https://student-notification-center.vercel.app/oauthcallback.html';
+                } else {
+                    window.location.href = 'https://api.notion.com/v1/oauth/authorize?client_id=277d872b-594c-8009-a497-003712a5baf8&response_type=code&owner=user&redirect_uri=https://student-notification-center.vercel.app/oauthcallback.html';
+                }
+            } catch (error) {
+                // If redirect fails, user can click the button
+                console.log('Auto-redirect failed, user can click button');
+            }
         }, 5000);
     </script>
 </body>
