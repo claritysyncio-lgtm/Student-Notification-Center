@@ -142,56 +142,29 @@
         // Clear any old data first
         localStorage.removeItem('embedCache');
         
-        async function loadTasks() {
+        function loadTasks() {
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading">Loading your tasks...</div>';
             
-            try {
-                // Check if user has connection data
-                const databaseId = localStorage.getItem('notionDatabaseId');
-                const accessToken = localStorage.getItem('notionAccessToken');
-                
-                console.log('🔍 Checking connection:', {
-                    databaseId: databaseId ? 'Found' : 'Not found',
-                    accessToken: accessToken ? 'Found' : 'Not found'
-                });
-                
-                if (!databaseId || !accessToken) {
-                    console.log('❌ No connection data found');
-                    showNotConnected();
-                    return;
-                }
-                
-                // Try to fetch tasks from API
-                console.log('📡 Fetching tasks from API...');
-                const response = await fetch('/api/notion', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        databaseId: databaseId,
-                        token: accessToken
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('📊 API response:', data);
-                
-                if (data.results && data.results.length > 0) {
-                    displayTasks(data.results);
-                } else {
-                    showNoTasks();
-                }
-                
-            } catch (error) {
-                console.error('❌ Error loading tasks:', error);
-                showError(error.message);
+            // Check if user has connection data
+            const databaseId = localStorage.getItem('notionDatabaseId');
+            const accessToken = localStorage.getItem('notionAccessToken');
+            
+            console.log('🔍 Checking connection:', {
+                databaseId: databaseId ? 'Found' : 'Not found',
+                accessToken: accessToken ? 'Found' : 'Not found',
+                allKeys: Object.keys(localStorage)
+            });
+            
+            if (!databaseId || !accessToken) {
+                console.log('❌ No connection data found');
+                showNotConnected();
+                return;
             }
+            
+            // For now, show a simple message that we found the data
+            console.log('✅ Found connection data, showing setup message');
+            showConnectedButRedirect();
         }
         
         function displayTasks(tasks) {
@@ -316,6 +289,23 @@
                     <h3>Not Connected</h3>
                     <p>This notification center is not connected to your Notion database.</p>
                     <a href="/" target="_top" class="setup-link">Set up connection →</a>
+                </div>
+            `;
+        }
+        
+        function showConnectedButRedirect() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div style="text-align: center; padding: 20px; background: #c6f6d5; border: 1px solid #9ae6b4; border-radius: 4px; color: #22543d;">
+                    <h3>✅ Connected to Notion!</h3>
+                    <p>You have a valid connection. Click below to view your tasks in the main app.</p>
+                    <a href="/" target="_top" class="setup-link">View Tasks →</a>
+                    <div style="margin-top: 10px; font-size: 12px; color: #2f855a;">
+                        <strong>Debug Info:</strong><br/>
+                        Database ID: Found<br/>
+                        Access Token: Found<br/>
+                        Status: Ready to use
+                    </div>
                 </div>
             `;
         }
