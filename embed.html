@@ -91,10 +91,10 @@
             <p>
                 For the best experience with all features, please open the notification center in a new window.
             </p>
-            <a href="https://student-notification-center.vercel.app/" target="_blank" class="button">
+            <a href="https://student-notification-center.vercel.app/" target="_parent" class="button">
                 Open Full App →
             </a>
-            <a href="https://student-notification-center.vercel.app/" target="_parent" class="button button-secondary">
+            <a href="https://student-notification-center.vercel.app/" target="_top" class="button button-secondary">
                 Open Here
             </a>
         </div>
@@ -112,7 +112,8 @@
             try {
                 // Try to redirect parent window (if in iframe)
                 if (window.parent !== window) {
-                    window.parent.location.href = 'https://student-notification-center.vercel.app/';
+                    // Use target="_parent" approach for better Notion compatibility
+                    window.location.href = 'https://student-notification-center.vercel.app/';
                 } else {
                     // If not in iframe, redirect current window
                     window.location.href = 'https://student-notification-center.vercel.app/';
