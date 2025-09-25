@@ -82,6 +82,9 @@
             font-weight: 500;
             margin: 8px;
             transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
         }
         .btn:hover {
             background: #5a6fd8;
@@ -142,12 +145,12 @@
             </div>
             
             <div class="actions">
-                <a href="https://student-notification-center.vercel.app/" target="_blank" class="btn">
+                <button onclick="window.location.href='https://student-notification-center.vercel.app/'" class="btn">
                     Open Full App →
-                </a>
-                <a href="https://student-notification-center.vercel.app/?reset=true" target="_blank" class="btn btn-secondary">
+                </button>
+                <button onclick="window.location.href='https://student-notification-center.vercel.app/?reset=true'" class="btn btn-secondary">
                     Reset Connection
-                </a>
+                </button>
             </div>
         </div>
         
