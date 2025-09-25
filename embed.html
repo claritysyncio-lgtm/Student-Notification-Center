@@ -255,9 +255,9 @@
             </div>
         </div>
         
-        <a href="https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user" target="_parent" class="cta-button" onclick="showLoading()">
+        <button class="cta-button" onclick="goToNotionAuth()">
             Connect to Notion →
-        </a>
+        </button>
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
@@ -270,23 +270,58 @@
     </div>
 
     <script>
+        const NOTION_AUTH_URL = 'https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user';
+        
+        function goToNotionAuth() {
+            console.log('🚀 Redirecting to Notion authorization...');
+            showLoading();
+            
+            // Try multiple methods to ensure redirect works
+            try {
+                // Method 1: Try to redirect parent window
+                if (window.parent !== window) {
+                    console.log('📤 Redirecting parent window...');
+                    window.parent.location.href = NOTION_AUTH_URL;
+                } else {
+                    console.log('📤 Redirecting current window...');
+                    window.location.href = NOTION_AUTH_URL;
+                }
+            } catch (error) {
+                console.log('❌ Parent redirect failed, trying alternative...');
+                try {
+                    // Method 2: Try window.open
+                    window.open(NOTION_AUTH_URL, '_parent');
+                } catch (error2) {
+                    console.log('❌ Window.open failed, trying location.replace...');
+                    try {
+                        // Method 3: Try location.replace
+                        window.location.replace(NOTION_AUTH_URL);
+                    } catch (error3) {
+                        console.log('❌ All redirect methods failed');
+                        // Show error message
+                        document.getElementById('loading').innerHTML = `
+                            <div style="color: #dc3545; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">⚠️</div>
+                                <div>Redirect blocked. Please click the link below:</div>
+                                <a href="${NOTION_AUTH_URL}" target="_blank" style="color: #007bff; text-decoration: underline; margin-top: 8px; display: inline-block;">
+                                    Open Notion Authorization
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+        
         function showLoading() {
             document.getElementById('loading').style.display = 'flex';
         }
         
-        // Auto-redirect to Notion OAuth after 5 seconds
+        // Auto-redirect to Notion OAuth after 3 seconds
         setTimeout(() => {
-            try {
-                if (window.parent !== window) {
-                    window.parent.location.href = 'https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user';
-                } else {
-                    window.location.href = 'https://www.notion.so/install-integration?response_type=code&client_id=277d872b-594c-8009-a497-003712a5baf8&redirect_uri=https%3A%2F%2Fstudent-notification-center.vercel.app%2Foauthcallback.html&owner=user';
-                }
-            } catch (error) {
-                // If redirect fails, user can click the button
-                console.log('Auto-redirect failed, user can click button');
-            }
-        }, 5000);
+            console.log('⏰ Auto-redirecting to Notion...');
+            goToNotionAuth();
+        }, 3000);
     </script>
 </body>
 </html>
