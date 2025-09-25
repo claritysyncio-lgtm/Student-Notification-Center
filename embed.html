@@ -12,61 +12,111 @@
             background: transparent;
             overflow: hidden;
         }
-        #root {
+        .embed-container {
             width: 100%;
             min-height: 400px;
             max-height: 80vh;
             overflow-y: auto;
             overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        /* Notion-specific optimizations */
-        .nc-root {
-            width: 100% !important;
-            max-width: 100% !important;
+        .embed-content {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin: 20px;
+            max-width: 400px;
         }
-        
-        /* Responsive adjustments for Notion embeds */
-        @media (max-width: 600px) {
-            .nc-root {
-                width: 100% !important;
-            }
-            .nc-callout {
-                padding: 12px !important;
-            }
-            .nc-filters {
-                flex-direction: column;
-                gap: 8px !important;
-            }
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .error-content h3 {
+            margin: 0 0 12px 0;
+            color: #495057;
+        }
+        .error-content p {
+            margin: 0 0 16px 0;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+        .setup-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .setup-link:hover {
+            background: #0056b3;
+        }
+        .debug-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #495057;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div id="root">
-        <iframe 
-            src="/embed-app" 
-            style="width: 100%; height: 100%; border: none;"
-            title="Notification Center Widget">
-        </iframe>
+    <div class="embed-container">
+        <div class="embed-content">
+            <div class="error-icon">⚠️</div>
+            <div class="error-content">
+                <h3>Not Connected</h3>
+                <p>
+                    This notification center is not connected to your Notion database. 
+                    Please visit the main app to set up your connection.
+                </p>
+                <a href="/" target="_top" rel="noopener noreferrer" class="setup-link">
+                    Set up connection →
+                </a>
+                <div class="debug-info">
+                    <strong>Debug Info:</strong><br/>
+                    Ready: Yes<br/>
+                    Has Connection: No<br/>
+                    Error: Not connected to Notion<br/>
+                    <br/>
+                    <strong>To connect:</strong><br/>
+                    1. Click "Set up connection" above<br/>
+                    2. Authorize with Notion<br/>
+                    3. Select your database<br/>
+                    4. Return to this embed
+                </div>
+            </div>
+        </div>
     </div>
     <script>
-        console.log('Embed.html loaded, loading embed-app');
-        // If iframe fails to load, show error
-        setTimeout(() => {
-            const iframe = document.querySelector('iframe');
-            if (!iframe.contentDocument || iframe.contentDocument.body.innerHTML === '') {
-                console.log('Iframe failed to load, showing fallback');
-                document.getElementById('root').innerHTML = `
-                    <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; margin: 20px;">
-                        <h3>Not Connected</h3>
-                        <p>This notification center is not connected to your Notion database.</p>
-                        <a href="/" target="_top" style="display: inline-block; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">
-                            Set up connection →
-                        </a>
-                    </div>
-                `;
+        console.log('Embed.html loaded - showing not connected state');
+        
+        // Check if there's any localStorage data
+        const checkConnection = () => {
+            const databaseId = localStorage.getItem('notionDatabaseId');
+            const accessToken = localStorage.getItem('notionAccessToken');
+            
+            console.log('Checking localStorage:', {
+                databaseId: databaseId ? 'Found' : 'Not found',
+                accessToken: accessToken ? 'Found' : 'Not found'
+            });
+            
+            if (databaseId && accessToken) {
+                console.log('Found localStorage data, redirecting to main app');
+                // If there's data but we're in embed, redirect to main app
+                window.location.href = '/';
             }
-        }, 3000);
+        };
+        
+        // Check connection after a short delay
+        setTimeout(checkConnection, 1000);
     </script>
 </body>
 </html>
