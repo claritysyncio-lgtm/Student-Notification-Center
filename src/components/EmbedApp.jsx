@@ -22,9 +22,42 @@ export default function EmbedApp() {
   const [isReady, setIsReady] = useState(false);
   const [hasValidConnection, setHasValidConnection] = useState(false);
   const [error, setError] = useState(null);
+  const [env, setEnv] = useState(null);
   
   // Force embed to start in "not connected" state
   console.log('🚀 EmbedApp initialized - starting in not connected state');
+
+  // Debug environment dump
+  useEffect(() => {
+    const envData = {
+      href: window.location.href,
+      origin: window.location.origin,
+      referrer: document.referrer,
+      isTop: window.top === window.self,
+      isParent: window.parent !== window,
+      localStorageToken: localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN),
+      localStorageDB: localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID),
+      allLocalStorage: Object.keys(localStorage).reduce((acc, key) => {
+        acc[key] = localStorage.getItem(key);
+        return acc;
+      }, {}),
+      cookies: document.cookie,
+      userAgent: navigator.userAgent,
+      serviceWorkers: null
+    };
+
+    // Check for service workers
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        envData.serviceWorkers = regs.length;
+        setEnv(envData);
+      });
+    } else {
+      setEnv(envData);
+    }
+
+    console.log('🔍 EMBED ENV DEBUG:', envData);
+  }, []);
   
   // Check for localStorage data on mount
   useEffect(() => {
@@ -203,11 +236,83 @@ export default function EmbedApp() {
     };
   }, [checkConnection]);
 
+  // Show debug info first
+  if (env) {
+    return (
+      <div style={{fontFamily:'system-ui',padding:16, background:'#f8f9fa', border:'1px solid #dee2e6', borderRadius:'8px', margin:'10px'}}>
+        <h3 style={{margin:'0 0 16px 0', color:'#495057'}}>🔍 Embed Environment Debug</h3>
+        <pre style={{whiteSpace:'pre-wrap', fontSize:'12px', background:'white', padding:'12px', borderRadius:'4px', border:'1px solid #e9ecef', overflow:'auto', maxHeight:'400px'}}>{JSON.stringify(env, null, 2)}</pre>
+        <div style={{marginTop:'16px', textAlign:'center'}}>
+          <button 
+            onClick={() => setEnv(null)} 
+            style={{background:'#007bff', color:'white', border:'none', padding:'8px 16px', borderRadius:'4px', cursor:'pointer', marginRight:'8px'}}
+          >
+            Hide Debug & Continue
+          </button>
+          <a 
+            href="https://student-notification-center.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{background:'#6c757d', color:'white', border:'none', padding:'8px 16px', borderRadius:'4px', cursor:'pointer', textDecoration:'none', display:'inline-block'}}
+          >
+            Open Main App
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   if (!isReady) {
     return (
       <div className="embed-loading">
         <div className="loading-spinner"></div>
         <div className="loading-text">Loading notification center...</div>
+      </div>
+    );
+  }
+
+  // Strict gating - never show NotificationCenter unless we have real tokens
+  const token = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+  const db = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+
+  if (!token || !db) {
+    return (
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
+        background: '#ffffff',
+        border: '1px solid #e1e5e9',
+        borderRadius: '8px',
+        margin: '10px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔐</div>
+        <h2 style={{ margin: '0 0 12px 0', color: '#2d3748', fontSize: '18px' }}>
+          Please connect your Notion account
+        </h2>
+        <p style={{ margin: '0 0 20px 0', color: '#718096', fontSize: '14px' }}>
+          Notion blocks shared storage inside embeds — connect inside the app.
+        </p>
+        <a 
+          href="https://student-notification-center.vercel.app/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-block',
+            background: '#007bff',
+            color: 'white',
+            textDecoration: 'none',
+            padding: '12px 24px',
+            borderRadius: '6px',
+            fontWeight: '500',
+            fontSize: '16px'
+          }}
+        >
+          Open Notification Center (full window) →
+        </a>
+        <div style={{ marginTop: '16px', fontSize: '12px', color: '#6c757d' }}>
+          <strong>Debug Info:</strong> Token: {token ? 'Found' : 'Missing'} | DB: {db ? 'Found' : 'Missing'}
+        </div>
       </div>
     );
   }
