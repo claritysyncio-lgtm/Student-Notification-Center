@@ -35,15 +35,22 @@ export default function EmbedApp() {
     
     if (databaseId && accessToken) {
       console.log('🔍 Embed mode - found localStorage data, will validate it');
+      // Force a small delay to ensure we don't show cached state
+      setTimeout(() => {
+        checkConnection();
+      }, 100);
     } else {
       console.log('❌ Embed mode - no localStorage data found');
+      setHasValidConnection(false);
+      setError('Not connected to Notion. Please set up your connection first.');
+      setIsReady(true);
     }
     
-    // Don't clear localStorage here, just ensure we start fresh
+    // Always start in not connected state
     setHasValidConnection(false);
     setError(null);
     setIsReady(false);
-  }, []);
+  }, [checkConnection]);
 
   /**
    * Check if user has valid connection data by testing the API
