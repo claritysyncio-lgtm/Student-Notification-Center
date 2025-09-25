@@ -228,6 +228,12 @@ export default function EmbedApp() {
           >
             Set up connection →
           </a>
+          <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+            <strong>Debug Info:</strong><br/>
+            Ready: {isReady ? 'Yes' : 'No'}<br/>
+            Has Connection: {hasValidConnection ? 'Yes' : 'No'}<br/>
+            Error: {error || 'None'}
+          </div>
         </div>
       </div>
     );
