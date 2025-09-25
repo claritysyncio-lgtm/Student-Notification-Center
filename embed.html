@@ -7,120 +7,360 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            overflow: hidden;
         }
-        .embed-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 30px;
-            text-align: center;
-            max-width: 500px;
+        #root {
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
-        .icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #2d3748;
-            margin: 0 0 16px 0;
-            font-size: 24px;
-        }
-        p {
-            color: #718096;
-            margin: 0 0 24px 0;
-            line-height: 1.5;
-        }
-        .button {
-            display: inline-block;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 16px;
-            transition: background-color 0.2s;
-            margin: 4px;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        .button-secondary {
-            background: #6c757d;
-        }
-        .button-secondary:hover {
-            background: #545b62;
-        }
-        .loading {
+        
+        /* Loading screen */
+        .loading-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            justify-content: center;
+            height: 100vh;
+            background: white;
+            padding: 20px;
         }
+        
         .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #007bff;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .loading-text {
+            color: #6c757d;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            color: #dc3545;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .error-message {
+            color: #6c757d;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .error-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .error-button:hover {
+            background: #0056b3;
+        }
+        
+        /* Notion-specific optimizations */
+        .nc-root {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        /* Responsive adjustments for Notion embeds */
+        @media (max-width: 600px) {
+            .nc-root {
+                width: 100% !important;
+            }
+            .nc-callout {
+                padding: 12px !important;
+            }
+            .nc-filters {
+                flex-direction: column;
+                gap: 8px !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="embed-container">
-        <div id="loading" class="loading">
+    <div id="root">
+        <div class="loading-container">
             <div class="spinner"></div>
-            <div>Opening notification center...</div>
-        </div>
-        
-        <div id="content" style="display: none;">
-            <div class="icon">🚀</div>
-            <h2>Open Notification Center</h2>
-            <p>
-                For the best experience with all features, please open the notification center in a new window.
-            </p>
-            <a href="https://student-notification-center.vercel.app/" target="_parent" class="button">
-                Open Full App →
-            </a>
-            <a href="https://student-notification-center.vercel.app/" target="_top" class="button button-secondary">
-                Open Here
-            </a>
+            <div class="loading-text">Loading notification center...</div>
         </div>
     </div>
 
     <script>
-        // Show loading for 1 second, then show content
-        setTimeout(() => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-        }, 1000);
+        // Global state
+        let authData = null;
+        let isLoaded = false;
 
-        // Try to redirect to main app after 3 seconds
-        setTimeout(() => {
+        // Request authentication data from parent window
+        function requestAuthData() {
+            console.log('🔍 Requesting auth data from parent window...');
+            
+            // Send message to parent requesting auth data
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'REQUEST_AUTH_DATA',
+                    source: 'notification-center-embed'
+                }, '*');
+            }
+            
+            // Also try to get from localStorage as fallback
             try {
-                // Try to redirect parent window (if in iframe)
-                if (window.parent !== window) {
-                    // Use target="_parent" approach for better Notion compatibility
-                    window.location.href = 'https://student-notification-center.vercel.app/';
-                } else {
-                    // If not in iframe, redirect current window
-                    window.location.href = 'https://student-notification-center.vercel.app/';
+                const token = localStorage.getItem('notionAccessToken');
+                const databaseId = localStorage.getItem('notionDatabaseId');
+                const workspace = localStorage.getItem('notionWorkspace');
+                
+                if (token && databaseId) {
+                    console.log('✅ Found auth data in localStorage');
+                    authData = { token, databaseId, workspace };
+                    loadNotificationCenter();
+                    return;
                 }
             } catch (error) {
-                // If redirect fails, user can click the button
-                console.log('Redirect blocked, user can click button');
+                console.log('⚠️ localStorage not accessible in embed context');
+            }
+        }
+
+        // Load the notification center
+        function loadNotificationCenter() {
+            if (isLoaded) return;
+            isLoaded = true;
+            
+            console.log('🚀 Loading notification center with auth data:', {
+                hasToken: !!authData?.token,
+                hasDatabaseId: !!authData?.databaseId,
+                tokenPreview: authData?.token ? authData.token.substring(0, 8) + '...' : 'none'
+            });
+
+            // Create a simple notification center interface
+            const root = document.getElementById('root');
+            root.innerHTML = `
+                <div style="padding: 20px; background: white; min-height: 100vh;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e1e5e9;">
+                        <h2 style="margin: 0; color: #2d3748; font-size: 20px;">📋 Notification Center</h2>
+                        <button onclick="refreshTasks()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="tasks-container">
+                        <div style="text-align: center; padding: 40px; color: #6c757d;">
+                            <div class="spinner" style="width: 24px; height: 24px; margin: 0 auto 16px;"></div>
+                            Loading tasks...
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #e1e5e9; text-align: center;">
+                        <button onclick="resetConnection()" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                            🔄 Reset Connection
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Load tasks
+            loadTasks();
+        }
+
+        // Load tasks from Notion API
+        async function loadTasks() {
+            try {
+                const tasksContainer = document.getElementById('tasks-container');
+                
+                if (!authData?.token || !authData?.databaseId) {
+                    tasksContainer.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #dc3545;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">🔐</div>
+                            <h3 style="margin: 0 0 12px 0;">Not Connected</h3>
+                            <p style="margin: 0 0 20px 0; color: #6c757d;">Please connect to Notion to view your tasks.</p>
+                            <button onclick="requestAuthData()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                                Connect to Notion
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Show loading
+                tasksContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <div class="spinner" style="width: 24px; height: 24px; margin: 0 auto 16px;"></div>
+                        Loading tasks...
+                    </div>
+                `;
+
+                // Fetch tasks from API
+                const response = await fetch('/api/notion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        databaseId: authData.databaseId,
+                        token: authData.token
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const tasks = data.results || [];
+
+                if (tasks.length === 0) {
+                    tasksContainer.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #6c757d;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+                            <h3 style="margin: 0 0 12px 0;">No Tasks Found</h3>
+                            <p style="margin: 0;">Your Notion database is empty or no tasks match your criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Display tasks
+                const tasksHtml = tasks.map(task => {
+                    const properties = task.properties || {};
+                    const name = properties.Name?.title?.[0]?.text?.content || 'Untitled Task';
+                    const due = properties.Due?.date?.start || null;
+                    const course = properties.Course?.select?.name || 'No Course';
+                    const completed = properties.Completed?.checkbox || false;
+                    const type = properties.Type?.select?.name || 'Task';
+                    
+                    return `
+                        <div style="background: white; border: 1px solid #e1e5e9; border-radius: 8px; padding: 16px; margin-bottom: 12px; transition: all 0.2s;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="checkbox" ${completed ? 'checked' : ''} onchange="toggleTask('${task.id}', this.checked)" style="width: 16px; height: 16px; cursor: pointer;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; color: #2d3748; margin-bottom: 4px;">${name}</div>
+                                    <div style="font-size: 14px; color: #6c757d;">
+                                        <span style="background: #e9ecef; padding: 2px 8px; border-radius: 12px; margin-right: 8px;">${course}</span>
+                                        <span style="background: #e9ecef; padding: 2px 8px; border-radius: 12px;">${type}</span>
+                                        ${due ? `<span style="color: #dc3545; margin-left: 8px;">📅 ${new Date(due).toLocaleDateString()}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                tasksContainer.innerHTML = tasksHtml;
+
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                const tasksContainer = document.getElementById('tasks-container');
+                tasksContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+                        <h3 style="margin: 0 0 12px 0;">Error Loading Tasks</h3>
+                        <p style="margin: 0 0 20px 0; color: #6c757d;">${error.message}</p>
+                        <button onclick="loadTasks()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Toggle task completion
+        async function toggleTask(taskId, completed) {
+            try {
+                // This would need to be implemented in your API
+                console.log('Toggle task:', taskId, completed);
+                // For now, just reload tasks
+                loadTasks();
+            } catch (error) {
+                console.error('Error toggling task:', error);
+            }
+        }
+
+        // Refresh tasks
+        function refreshTasks() {
+            loadTasks();
+        }
+
+        // Reset connection
+        function resetConnection() {
+            authData = null;
+            isLoaded = false;
+            const root = document.getElementById('root');
+            root.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Resetting connection...</div>
+                </div>
+            `;
+            setTimeout(() => {
+                requestAuthData();
+            }, 1000);
+        }
+
+        // Listen for messages from parent window
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'AUTH_DATA_RESPONSE') {
+                console.log('✅ Received auth data from parent:', event.data);
+                authData = event.data.data;
+                loadNotificationCenter();
+            }
+        });
+
+        // Start the process
+        requestAuthData();
+
+        // Fallback: if no response after 3 seconds, show error
+        setTimeout(() => {
+            if (!isLoaded && !authData) {
+                const root = document.getElementById('root');
+                root.innerHTML = `
+                    <div class="error-container">
+                        <div class="error-icon">🔐</div>
+                        <div class="error-title">Not Connected</div>
+                        <div class="error-message">
+                            Unable to access your Notion connection data. Please open the main app to connect first.
+                        </div>
+                        <button class="error-button" onclick="requestAuthData()">
+                            Try Again
+                        </button>
+                    </div>
+                `;
             }
         }, 3000);
     </script>

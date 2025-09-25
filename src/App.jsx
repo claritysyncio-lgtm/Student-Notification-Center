@@ -39,6 +39,31 @@ export default function App() {
   });
 
   /**
+   * Listen for messages from embedded iframes requesting auth data
+   */
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data.type === 'REQUEST_AUTH_DATA' && event.data.source === 'notification-center-embed') {
+        console.log('📤 Sending auth data to embed');
+        
+        const token = localStorage.getItem(STORAGE_KEYS.NOTION_ACCESS_TOKEN);
+        const databaseId = localStorage.getItem(STORAGE_KEYS.NOTION_DATABASE_ID);
+        const workspace = localStorage.getItem(STORAGE_KEYS.NOTION_WORKSPACE);
+        
+        if (token && databaseId) {
+          event.source.postMessage({
+            type: 'AUTH_DATA_RESPONSE',
+            data: { token, databaseId, workspace }
+          }, event.origin);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  /**
    * Initialize connection state on component mount
    * 
    * This function handles the OAuth callback flow and checks for
