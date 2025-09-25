@@ -26,6 +26,20 @@ export default defineConfig({
           console.warn('Could not copy legal.html:', error.message)
         }
       }
+    },
+    // Custom plugin to copy embed.html to dist folder
+    {
+      name: 'copy-embed',
+      writeBundle() {
+        try {
+          copyFileSync(
+            resolve(__dirname, 'embed.html'),
+            resolve(__dirname, 'dist/embed.html')
+          )
+        } catch (error) {
+          console.warn('Could not copy embed.html:', error.message)
+        }
+      }
     }
   ],
   
