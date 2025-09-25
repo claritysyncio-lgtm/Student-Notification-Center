@@ -88,6 +88,15 @@ export default function MakeItYours({ onSetupComplete }) {
               </>
             )}
           </button>
+          
+          <a 
+            href="https://claritysync.io/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="visit-website-button"
+          >
+            Visit our website
+          </a>
         </div>
 
         <div className="make-it-yours-features">
@@ -189,6 +198,10 @@ export default function MakeItYours({ onSetupComplete }) {
 
         .make-it-yours-actions {
           margin-bottom: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          align-items: center;
         }
 
         .make-it-yours-button {
@@ -234,6 +247,28 @@ export default function MakeItYours({ onSetupComplete }) {
 
         .button-icon {
           font-size: 1.3rem;
+        }
+
+        .visit-website-button {
+          background: transparent;
+          color: #6b7280;
+          border: 1px solid #d1d5db;
+          padding: 12px 24px;
+          font-size: 1rem;
+          font-weight: 500;
+          border-radius: 50px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .visit-website-button:hover {
+          background: #f9fafb;
+          border-color: #9ca3af;
+          color: #374151;
+          text-decoration: none;
         }
 
         .make-it-yours-features {
