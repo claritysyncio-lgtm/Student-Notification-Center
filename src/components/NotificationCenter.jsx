@@ -244,6 +244,19 @@ export default function NotificationCenter({ config = defaultConfig }) {
         </div>
       )}
 
+      {!loading && !error && tasks.length === 0 && (
+        <div className="nc-empty">
+          <h3>No Tasks Found</h3>
+          <p>
+            It looks like you haven't connected to Notion yet, or your database is empty.
+            <br />
+            <a href="https://student-notification-center.vercel.app/" target="_blank" rel="noopener noreferrer">
+              Click here to set up your Notion connection
+            </a>
+          </p>
+        </div>
+      )}
+
       <main className="nc-main">
         {config.sections?.overdue?.enabled && categorizedTasks.overdue.length > 0 && (
           <Section 

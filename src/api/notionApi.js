@@ -224,12 +224,12 @@ export async function getTasks() {
     
     if (!databaseId) {
       console.warn('No Notion database ID found. Please connect to Notion.');
-      return FALLBACK_TASKS;
+      return [];
     }
     
     if (!accessToken) {
       console.warn('No Notion access token found. Please reconnect to Notion.');
-      return FALLBACK_TASKS;
+      return [];
     }
     
     const data = await fetchFromNotion(databaseId, accessToken);
@@ -260,7 +260,7 @@ export async function getTasks() {
       console.warn('Database access issue - the database may need to be shared with the integration');
     }
     
-    return FALLBACK_TASKS;
+    return [];
   }
 }
 
