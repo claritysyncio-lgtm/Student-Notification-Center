@@ -45,6 +45,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         embed: resolve(__dirname, 'embed.html'),
+        debug: resolve(__dirname, 'debug.html'),
       },
       output: {
         // Ensure consistent chunk naming
