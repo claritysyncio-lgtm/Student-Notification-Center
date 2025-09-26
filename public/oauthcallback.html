@@ -78,9 +78,13 @@
                         
                         console.log('OAuth successful! Access token stored, database ID cleared.');
                         
-                        // Redirect back to the main notification center
-                        // This will now trigger the database selection screen
-                        window.location.href = '/';
+                        // Redirect back to the main notification center with URL parameters
+                        // This will trigger the database selection screen
+                        const params = new URLSearchParams({
+                            token: data.access_token,
+                            workspace: data.workspace_name || data.workspace_id
+                        });
+                        window.location.href = `/?${params.toString()}`;
                     } else {
                         throw new Error(data.error || 'Failed to complete authentication');
                     }
