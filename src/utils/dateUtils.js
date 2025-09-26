@@ -52,7 +52,9 @@ export function getDaysDifferenceInTimezone(date1, date2) {
  * @returns {string} Relative indicator string
  */
 export function getRelativeDateIndicator(dueDate) {
-  const diffDays = getDaysDifferenceInTimezone(dueDate, new Date());
+  // TEMPORARY: Use hardcoded "today" for mock data
+  const mockToday = '2025-09-25';
+  const diffDays = getDaysDifferenceInTimezone(dueDate, mockToday);
   
   if (diffDays === 0) {
     return ' (Today)';
@@ -97,6 +99,21 @@ export function formatDateWithTimezone(dueDate) {
  * @returns {Object} Object with today, tomorrow, and weekEnd date strings
  */
 export function getDateRangesInTimezone() {
+  // TEMPORARY: Hardcode dates for mock data screenshot
+  // Today is September 25, 2025
+  const today = '2025-09-25';
+  const tomorrow = '2025-09-26';
+  const weekEnd = '2025-10-02';
+  
+  return { 
+    today, 
+    tomorrow, 
+    weekEnd,
+    timezone: 'Mock Data Mode' // Include timezone for debugging
+  };
+  
+  // Original code (commented out for mock data):
+  /*
   const now = new Date();
   const timezone = getUserTimezone();
   
@@ -118,4 +135,5 @@ export function getDateRangesInTimezone() {
     weekEnd: weekEndStr,
     timezone // Include timezone for debugging
   };
+  */
 }

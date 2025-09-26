@@ -32,18 +32,60 @@ const ERROR_TYPES = {
 };
 
 /**
- * Fallback data structure when Notion API is unavailable
- * Provides a user-friendly message instead of empty state
+ * Mock school data for demonstration purposes
+ * Shows realistic academic tasks across different time categories
+ * Today is September 25, 2025
  */
 const FALLBACK_TASKS = [
   {
-    id: "no-data",
-    name: "No tasks found",
-    due: null,
-    course: "Setup Required",
+    id: "overdue-1",
+    name: "Physics Lab Report - Newton's Laws",
+    due: "2025-09-23", // Overdue (2 days ago)
+    course: "Physics",
     grade: 0,
-    type: "Info",
+    type: "Lab Report",
     completed: false,
+    typeColor: "red"
+  },
+  {
+    id: "today-1",
+    name: "Math Homework - Derivatives",
+    due: "2025-09-25", // Today (Sep 25)
+    course: "Calculus",
+    grade: 0,
+    type: "Homework",
+    completed: false,
+    typeColor: "blue"
+  },
+  {
+    id: "tomorrow-1", 
+    name: "Biology Quiz - Cell Structure",
+    due: "2025-09-26", // Tomorrow (Sep 26)
+    course: "Biology",
+    grade: 0,
+    type: "Quiz",
+    completed: false,
+    typeColor: "yellow"
+  },
+  {
+    id: "week-1",
+    name: "History Essay - Civil War",
+    due: "2025-09-28", // This week (Sep 28)
+    course: "American History",
+    grade: 0,
+    type: "Essay",
+    completed: false,
+    typeColor: "green"
+  },
+  {
+    id: "completed-1",
+    name: "Chemistry Problem Set",
+    due: "2025-09-24", // Yesterday (Sep 24) - completed
+    course: "Chemistry",
+    grade: 92,
+    type: "Problem Set",
+    completed: true,
+    typeColor: "purple"
   }
 ];
 

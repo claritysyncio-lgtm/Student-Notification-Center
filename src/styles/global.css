@@ -204,18 +204,19 @@ body{
 }
 
 .refresh-button {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: transparent;
+  border: none;
   border-radius: 50%;
   padding: 0;
+  margin: 0;
   cursor: pointer;
   color: #6b7280;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   position: absolute;
   top: -20px;
@@ -223,9 +224,8 @@ body{
 }
 
 .refresh-button:hover {
-  background: #e5e7eb;
+  background: #f3f4f6;
   color: #374151;
-  border-color: #9ca3af;
 }
 
 .refresh-button:active {
